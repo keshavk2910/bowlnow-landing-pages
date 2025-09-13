@@ -1,0 +1,336 @@
+<style>
+  /* import Swiper styles */
+  @import url('https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css');
+
+  :root {
+    --bg: #111;
+    --card-bg: #0f0f0f;
+    --accent: #fff;
+    --radius: 14px;
+  }
+
+  .parties-events-section {
+    background-color: var(--bg);
+    padding: 60px 20px 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+  }
+  .slider-container {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    perspective: 1000px; /* for 3D depth */
+  }
+
+  /* allow previews outside the container */
+  .bowling-carousel.swiper {
+    padding: 10px 0 40px;
+    overflow: visible;
+  }
+
+  .swiper-wrapper {
+    align-items: center;
+  }
+
+  .swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* card that scales */
+  .slide-content {
+    width: 92%;
+    max-width: 820px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    transform: scale(0.85) translateZ(-60px);
+    transition: transform 600ms cubic-bezier(0.2, 0.9, 0.2, 1), opacity 600ms;
+    opacity: 0.75;
+    transform-style: preserve-3d;
+  }
+
+  /* center the active slide bigger and in front */
+  .swiper-slide-active .slide-content {
+    transform: scale(1) translateZ(0);
+    opacity: 1;
+    z-index: 5;
+  }
+
+  /* ensure prev/next look slightly smaller (explicit) */
+  .swiper-slide-prev .slide-content,
+  .swiper-slide-next .slide-content {
+    transform: scale(0.85) translateZ(-60px);
+    opacity: 0.75;
+    z-index: 3;
+  }
+  .swiper-slide-prev .slide-content .slide-text,
+  .swiper-slide-next .slide-content .slide-text {
+    opacity: 0;
+    visibility: hidden;
+  }
+  .slide-image {
+    width: 100%;
+    height: 460px;
+    object-fit: cover;
+    border-radius: 12px;
+    display: block;
+  }
+
+  .slide-text {
+    padding: 28px 36px 40px;
+    text-align: center;
+    color: var(--accent);
+    visibility: visible;
+    opacity: 1;
+    transition: all 0.6s ease;
+  }
+
+  .slide-title {
+    font-family: var(--headlinefont, 'Inter', sans-serif);
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 12px;
+    line-height: 1.3;
+  }
+
+  .slide-description {
+    font-family: var(--contentfont, 'Inter', sans-serif);
+    font-size: 15px;
+    margin: 0;
+    opacity: 0.95;
+    line-height: 1.6;
+  }
+
+  /* navigation arrows - left and right, vertically centered */
+  .swiper-button-prev,
+  .swiper-button-next {
+    position: absolute;
+    bottom: 10px;
+    top: auto;
+    right: 30px;
+    left: auto;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #fff;
+    color: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    z-index: 20;
+    cursor: pointer;
+  }
+
+  .swiper-button-prev {
+    right: 90px;
+  }
+
+  /* make the default Swiper arrows visible / sized */
+  .swiper-button-prev::after,
+  .swiper-button-next::after {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111;
+  }
+
+  /* responsive tweaks */
+  @media (max-width: 1100px) {
+    .slide-image {
+      height: 420px;
+    }
+    .slide-content {
+      max-width: 720px;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .section-title {
+      font-size: 36px;
+    }
+    .slide-image {
+      height: 360px;
+    }
+    .slide-content {
+      width: 95%;
+    }
+    /* move arrows slightly inward on smaller screens */
+    .swiper-button-prev {
+      left: 6px;
+    }
+    .swiper-button-next {
+      right: 6px;
+    }
+  }
+
+  @media (max-width: 650px) {
+    /* smaller devices: show 1 slide but allow peek */
+    .swiper-button-prev,
+    .swiper-button-next {
+      width: 40px;
+      height: 40px;
+    }
+    .slide-image {
+      height: 300px;
+    }
+  }
+  .section-title {
+    font-family: var(--headlinefont, 'Inter', sans-serif);
+    font-size: 48px;
+    color: var(--accent);
+    margin-bottom: 40px;
+    text-align: center;
+    letter-spacing: 2px;
+  }
+</style>
+
+<div class="parties-events-section">
+  <h2 class="section-title">PARTIES &amp; EVENTS</h2>
+  <div class="slider-container">
+    <div class="bowling-carousel swiper">
+      <div class="swiper-wrapper">
+        <!-- Slide 1 -->
+        <div class="swiper-slide">
+          <div class="slide-content">
+            <img
+              class="slide-image"
+              src="https://partners.bowlnow.com/wp-content/uploads/2025/04/22bb_result-1024x662-1.webp"
+              alt="Company Bowling Party"
+            />
+            <div class="slide-text">
+              <h3 class="slide-title">
+                How to Throw a Successful Company Bowling Party
+              </h3>
+              <p class="slide-description">
+                Are you on the lookout for an exciting and engaging way to bring
+                your team…
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="swiper-slide">
+          <div class="slide-content">
+            <img
+              class="slide-image"
+              src="https://partners.bowlnow.com/wp-content/uploads/2025/04/cc33_result-1024x662.webp"
+              alt="Company Event Cost Guide"
+            />
+            <div class="slide-text">
+              <h3 class="slide-title">
+                The Ultimate Guide: How Much Does It Cost to Have a Company
+                Event at a Bowling Alley?
+              </h3>
+              <p class="slide-description">
+                Are you searching for the perfect venue to host a company event
+                that will leave…
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="swiper-slide">
+          <div class="slide-content">
+            <img
+              class="slide-image"
+              src="https://partners.bowlnow.com/wp-content/uploads/2025/03/iStock-938976884_result-1024x683.webp"
+              alt="Summer Bowling Activity"
+            />
+            <div class="slide-text">
+              <h3 class="slide-title">
+                Bowl Your Way Through the Heat: Why Bowling Should Be Your New
+                Favorite Summer Activity
+              </h3>
+              <p class="slide-description">
+                Summer is the time for outdoors, barbeques, pool parties, and
+                beaches! But if you're not…
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- Slide 4 -->
+        <div class="swiper-slide">
+          <div class="slide-content">
+            <img
+              class="slide-image"
+              src="https://partners.bowlnow.com/wp-content/uploads/2025/03/iStock-938976884_result-1024x683.webp"
+              alt="Summer Bowling Activity"
+            />
+            <div class="slide-text">
+              <h3 class="slide-title">
+                Bowl Your Way Through the Heat: Why Bowling Should Be Your New
+                Favorite Summer Activity
+              </h3>
+              <p class="slide-description">
+                Summer is the time for outdoors, barbeques, pool parties, and
+                beaches! But if you're not…
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- Slide 5 -->
+        <div class="swiper-slide">
+          <div class="slide-content">
+            <img
+              class="slide-image"
+              src="https://partners.bowlnow.com/wp-content/uploads/2025/03/iStock-938976884_result-1024x683.webp"
+              alt="Summer Bowling Activity"
+            />
+            <div class="slide-text">
+              <h3 class="slide-title">
+                Bowl Your Way Through the Heat: Why Bowling Should Be Your New
+                Favorite Summer Activity
+              </h3>
+              <p class="slide-description">
+                Summer is the time for outdoors, barbeques, pool parties, and
+                beaches! But if you're not…
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- add more static slides here if needed -->
+      </div>
+    </div>
+
+    <!-- nav buttons (left / right) -->
+    <div class="swiper-button-prev" aria-label="Previous"></div>
+    <div class="swiper-button-next" aria-label="Next"></div>
+  </div>
+</div>
+
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const swiper = new Swiper('.bowling-carousel', {
+      slidesPerView: 2.2,
+      spaceBetween: 1,
+      slideToClickedSlide: true,
+      loop: true,
+      centeredSlides: true,
+      roundLengths: true,
+      centeredSlidesBounds: true,
+      autoplay: {
+        delay: 4000,
+        disableOnInteraction: false,
+      },
+      effect: 'slide',
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      // breakpoints: {
+      //   320: { slidesPerView: 1.05, spaceBetween: 14 },
+      //   640: { slidesPerView: 1.25, spaceBetween: 18 },
+      //   900: { slidesPerView: 1.6, spaceBetween: 22 },
+      //   1024: { slidesPerView: 1.8, spaceBetween: 30 },
+      // },
+    });
+  });
+</script>

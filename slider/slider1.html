@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- Go High Level Custom Code Element - Basic Slider -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+
+    <style>
+      /* Basic Container */
+      .bowling-specials-section {
+        padding: 20px 0;
+        width: 100%;
+        position: relative;
+        max-width: 100%;
+      }
+
+      .specials-carousel-container {
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 0 20px;
+        overflow: hidden; /* fix scrollbar issue */
+      }
+
+      .specials-swiper {
+        position: relative;
+        overflow: hidden; /* ensures no extra scroll */
+      }
+
+      /* Basic Slide Content */
+      .bowling-slide-container {
+        width: 100%;
+        height: 600px;
+        position: relative;
+        border-radius: 15px;
+        overflow: hidden;
+      }
+
+      .bowling-slide-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      /* Overlay: bottom → top gradient */
+      .bowling-slide-container::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        background: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.75) 0%,
+          rgba(0, 0, 0, 0.4) 40%,
+          rgba(0, 0, 0, 0) 100%
+        );
+        z-index: 1;
+      }
+
+      .bowling-slide-content {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 40px;
+        color: white;
+        z-index: 2; /* above overlay */
+      }
+
+      .bowling-slide-title {
+        font-family: var(--headlinefont);
+        font-size: 32px;
+        font-weight: bold;
+        margin-bottom: 15px;
+      }
+
+      .bowling-slide-description {
+        font-family: var(--contentfont);
+        font-size: 16px;
+        margin-bottom: 20px;
+        opacity: 0.9;
+      }
+
+      .bowling-know-more-btn {
+        font-family: var(--contentfont);
+        display: inline-block;
+        padding: 12px 25px;
+        background: transparent;
+        border: 2px solid white;
+        border-radius: 25px;
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .bowling-know-more-btn:hover {
+        background: white;
+        color: black;
+      }
+
+      /* Navigation Arrows */
+      .specials-nav-button {
+        position: absolute;
+        bottom: 40px;
+        width: 50px;
+        height: 50px;
+        background: rgba(255, 255, 255, 0.9);
+        border: none;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 10;
+      }
+
+      .specials-nav-button-prev {
+        right: 90px;
+      }
+
+      .specials-nav-button-next {
+        right: 30px;
+      }
+
+      .specials-nav-button svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      /* Pagination */
+      .specials-pagination {
+        bottom: -50px;
+      }
+    </style>
+
+    <div class="bowling-specials-section">
+      <div class="specials-carousel-container">
+        <div class="specials-carousel">
+          <div class="specials-swiper swiper">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide">
+                <div class="bowling-slide-container">
+                  <img
+                    src="https://partners.bowlnow.com/wp-content/uploads/2025/03/iStock-938976884_result-1024x683.webp"
+                    alt="Open Bowling"
+                    class="bowling-slide-image"
+                  />
+                  <div class="bowling-slide-content">
+                    <h2 class="bowling-slide-title">Open Bowling</h2>
+                    <p class="bowling-slide-description">
+                      Bowling is fun for the whole family. Everyone can bowl,
+                      nobody has to sit on the side line.
+                    </p>
+                    <a href="#" class="bowling-know-more-btn">Know More</a>
+                  </div>
+                </div>
+              </div>
+              <div class="swiper-slide">
+                <div class="bowling-slide-container">
+                  <img
+                    src="https://partners.bowlnow.com/wp-content/uploads/2025/04/cc33_result-1024x662.webp"
+                    alt="Specials"
+                    class="bowling-slide-image"
+                  />
+                  <div class="bowling-slide-content">
+                    <h2 class="bowling-slide-title">Specials</h2>
+                    <p class="bowling-slide-description">
+                      EXPERIENCE A WALLET-FRIENDLY WAY TO ROLL. LEARN MORE ABOUT
+                      OUR AMAZING SPECIALS!
+                    </p>
+                    <a href="#" class="bowling-know-more-btn">Know More</a>
+                  </div>
+                </div>
+              </div>
+              <div class="swiper-slide">
+                <div class="bowling-slide-container">
+                  <img
+                    src="https://partners.bowlnow.com/wp-content/uploads/2025/04/22bb_result-1024x662-1.webp"
+                    alt="Company Events"
+                    class="bowling-slide-image"
+                  />
+                  <div class="bowling-slide-content">
+                    <h2 class="bowling-slide-title">Company Events</h2>
+                    <p class="bowling-slide-description">
+                      Perfect venue for team building and corporate
+                      celebrations. Create memorable experiences for your team.
+                    </p>
+                    <a href="#" class="bowling-know-more-btn">Know More</a>
+                  </div>
+                </div>
+              </div>
+              <div class="swiper-slide">
+                <div class="bowling-slide-container">
+                  <img
+                    src="https://partners.bowlnow.com/wp-content/uploads/2025/03/iStock-938976884_result-1024x683.webp"
+                    alt="Birthday Parties"
+                    class="bowling-slide-image"
+                  />
+                  <div class="bowling-slide-content">
+                    <h2 class="bowling-slide-title">Birthday Parties</h2>
+                    <p class="bowling-slide-description">
+                      Celebrate your special day with friends and family. Make
+                      your birthday unforgettable with our party packages.
+                    </p>
+                    <a href="#" class="bowling-know-more-btn">Know More</a>
+                  </div>
+                </div>
+              </div>
+              <div class="swiper-slide">
+                <div class="bowling-slide-container">
+                  <img
+                    src="https://partners.bowlnow.com/wp-content/uploads/2025/04/cc33_result-1024x662.webp"
+                    alt="League Bowling"
+                    class="bowling-slide-image"
+                  />
+                  <div class="bowling-slide-content">
+                    <h2 class="bowling-slide-title">League Bowling</h2>
+                    <p class="bowling-slide-description">
+                      Join our competitive leagues and improve your skills.
+                      Weekly tournaments and friendly competition await.
+                    </p>
+                    <a href="#" class="bowling-know-more-btn">Know More</a>
+                  </div>
+                </div>
+              </div>
+              <div class="swiper-slide">
+                <div class="bowling-slide-container">
+                  <img
+                    src="https://partners.bowlnow.com/wp-content/uploads/2025/04/22bb_result-1024x662-1.webp"
+                    alt="Weekend Deals"
+                    class="bowling-slide-image"
+                  />
+                  <div class="bowling-slide-content">
+                    <h2 class="bowling-slide-title">Weekend Deals</h2>
+                    <p class="bowling-slide-description">
+                      Amazing weekend offers and discounts. Get more fun for
+                      less with our special weekend packages.
+                    </p>
+                    <a href="#" class="bowling-know-more-btn">Know More</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Navigation Arrows -->
+            <div class="specials-nav-button specials-nav-button-prev">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="256"
+                height="256"
+                viewBox="0 0 256 256"
+              >
+                <g transform="translate(1.41 1.41) scale(2.81 2.81)">
+                  <path
+                    d="M 65.75 90 c 0.896 0 1.792 -0.342 2.475 -1.025 c 1.367 -1.366 1.367 -3.583 0 -4.949 L 29.2 45 L 68.225 5.975 c 1.367 -1.367 1.367 -3.583 0 -4.95 c -1.367 -1.366 -3.583 -1.366 -4.95 0 l -41.5 41.5 c -1.367 1.366 -1.367 3.583 0 4.949 l 41.5 41.5 C 63.958 89.658 64.854 90 65.75 90 z"
+                    fill="#000000"
+                  />
+                </g>
+              </svg>
+            </div>
+            <div class="specials-nav-button specials-nav-button-next">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="256"
+                height="256"
+                viewBox="0 0 256 256"
+              >
+                <g transform="translate(1.41 1.41) scale(2.81 2.81)">
+                  <path
+                    d="M 24.25 90 c -0.896 0 -1.792 -0.342 -2.475 -1.025 c -1.367 -1.366 -1.367 -3.583 0 -4.949 L 60.8 45 L 21.775 5.975 c -1.367 -1.367 -1.367 -3.583 0 -4.95 c 1.367 -1.366 3.583 -1.366 4.95 0 l 41.5 41.5 c 1.367 1.366 1.367 3.583 0 4.949 l -41.5 41.5 C 26.042 89.658 25.146 90 24.25 90 z"
+                    fill="#000000"
+                  />
+                </g>
+              </svg>
+            </div>
+
+            <!-- Pagination -->
+            <div class="specials-pagination swiper-pagination"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+      // Swiper init
+      const swiper = new Swiper('.specials-swiper', {
+        slidesPerView: 2.2,
+        spaceBetween: 30,
+        loop: true,
+        centeredSlides: true,
+        roundLengths: true,
+        centeredSlidesBounds: true,
+        autoplay: {
+          delay: 4000,
+        },
+        navigation: {
+          nextEl: '.specials-nav-button-next',
+          prevEl: '.specials-nav-button-prev',
+        },
+        pagination: {
+          el: '.specials-pagination',
+          clickable: true,
+        },
+        breakpoints: {
+          0: { slidesPerView: 1 },
+          768: { slidesPerView: 1.4 },
+          1200: { slidesPerView: 2.2 },
+        },
+      });
+    </script>
+  </body>
+</html>

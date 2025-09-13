@@ -1,0 +1,336 @@
+import { useState } from 'react'
+import LandingPageTemplate from './templates/LandingPageTemplate'
+import PartiesTemplate from './templates/PartiesTemplate'
+import EventsTemplate from './templates/EventsTemplate'
+import BookingsTemplate from './templates/BookingsTemplate'
+import CheckoutTemplate from './templates/CheckoutTemplate'
+import BowlingTemplate from './templates/BowlingTemplate'
+import TemplatePageOne from './templates/TemplatePageOne'
+import BuilderTemplateRenderer from './builder/BuilderTemplateRenderer'
+
+const TEMPLATE_COMPONENTS = {
+  'landing': LandingPageTemplate,
+  'parties': PartiesTemplate,
+  'events': EventsTemplate,
+  'bookings': BookingsTemplate,
+  'checkout': CheckoutTemplate,
+  'bowling': BowlingTemplate,
+  'template-page-one': TemplatePageOne
+}
+
+export default function TemplateRenderer({ template, content, site, page, sessionId }) {
+  const [loading, setLoading] = useState(false)
+
+  async function handleFormSubmit(formData, formType = 'lead') {
+    setLoading(true)
+    
+    try {
+      // Get attribution data from localStorage
+      const attributionData = JSON.parse(localStorage.getItem('attribution_data') || '{}')
+      
+      const submissionData = {
+        session_id: sessionId,
+        site_id: site.id,
+        page_id: page.id,
+        form_data: formData,
+        form_type: formType,
+        utm_data: attributionData.utm_params || {},
+        attribution_data: attributionData
+      }
+
+      const response = await fetch('/api/forms/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submissionData)
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to submit form')
+      }
+
+      const result = await response.json()
+
+      // Track conversion event
+      await fetch('/api/tracking/conversion', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          session_id: sessionId,
+          conversion_type: 'form_submit',
+          page_id: page.id,
+          attribution_data: attributionData
+        })
+      })
+
+      // Fire tracking pixels for form submission
+      if (typeof window !== 'undefined') {
+        // Facebook Pixel
+        if (window.fbq) {
+          window.fbq('track', 'Lead', {
+            content_name: page?.name || site.client_name,
+            content_category: template?.type || 'page'
+          })
+        }
+
+        // Google Analytics
+        if (window.gtag) {
+          window.gtag('event', 'generate_lead', {
+            currency: 'USD',
+            value: 0,
+            content_name: page?.name || site.client_name
+          })
+        }
+      }
+
+      return result
+
+    } catch (error) {
+      console.error('Error submitting form:', error)
+      throw error
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function handleCheckoutClick(planId, planData) {
+    // Checkout functionality for builder templates
+    setLoading(true)
+
+    try {
+      const attributionData = JSON.parse(localStorage.getItem('attribution_data') || '{}')
+
+      const checkoutResponse = await fetch('/api/checkout/create-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          plan_id: planId,
+          session_id: sessionId,
+          site_id: site.id,
+          attribution_data: attributionData,
+          success_url: `${window.location.origin}/${site.slug}/thank-you?session_id={CHECKOUT_SESSION_ID}`,
+          cancel_url: window.location.href
+        })
+      })
+
+      if (!checkoutResponse.ok) {
+        throw new Error('Failed to create checkout session')
+      }
+
+      const { url } = await checkoutResponse.json()
+      window.location.href = url
+
+    } catch (error) {
+      console.error('Error starting checkout:', error)
+      throw error
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Check if this is a builder template
+  if (template?.is_builder_template && template?.builder_data) {
+    return (
+      <BuilderTemplateRenderer
+        builderData={template.builder_data}
+        site={site}
+        page={page}
+        sessionId={sessionId}
+        onFormSubmit={handleFormSubmit}
+        onCheckoutClick={handleCheckoutClick}
+      />
+    )
+  }
+
+  // Determine which template component to use
+  const templateType = template?.type || page?.page_type || 'landing'
+  const TemplateComponent = TEMPLATE_COMPONENTS[templateType] || LandingPageTemplate
+
+  // Common props passed to all templates
+  const templateProps = {
+    content,
+    site,
+    page,
+    sessionId,
+    onFormSubmit: handleFormSubmit,
+    onCheckoutClick: handleCheckoutClick,
+    loading
+  }
+
+  async function handleFormSubmit(formData, formType = 'lead') {
+    setLoading(true)
+    
+    try {
+      // Get attribution data from localStorage
+      const attributionData = JSON.parse(localStorage.getItem('attribution_data') || '{}')
+      
+      const submissionData = {
+        session_id: sessionId,
+        site_id: site.id,
+        page_id: page.id,
+        form_data: formData,
+        form_type: formType,
+        utm_data: attributionData.utm_params || {},
+        attribution_data: attributionData
+      }
+
+      const response = await fetch('/api/forms/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submissionData)
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to submit form')
+      }
+
+      const result = await response.json()
+
+      // Track conversion event
+      await fetch('/api/tracking/conversion', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          session_id: sessionId,
+          conversion_type: 'form_submit',
+          page_id: page.id,
+          attribution_data: attributionData
+        })
+      })
+
+      // Fire tracking pixels for form submission
+      if (typeof window !== 'undefined') {
+        // Facebook Pixel
+        if (window.fbq) {
+          window.fbq('track', 'Lead', {
+            content_name: page?.name || site.client_name,
+            content_category: templateType
+          })
+        }
+
+        // Google Analytics
+        if (window.gtag) {
+          window.gtag('event', 'generate_lead', {
+            currency: 'USD',
+            value: 0,
+            content_name: page?.name || site.client_name
+          })
+        }
+      }
+
+      return result
+
+    } catch (error) {
+      console.error('Error submitting form:', error)
+      throw error
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function handleCheckoutClick(planId, planData) {
+    setLoading(true)
+
+    try {
+      // Get attribution data
+      const attributionData = JSON.parse(localStorage.getItem('attribution_data') || '{}')
+
+      // Track checkout start conversion
+      await fetch('/api/tracking/conversion', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          session_id: sessionId,
+          conversion_type: 'checkout_start',
+          conversion_value: planData.price,
+          page_id: page.id,
+          attribution_data: attributionData,
+          metadata: { plan_id: planId, plan_name: planData.name }
+        })
+      })
+
+      // Fire tracking pixels for checkout start
+      if (typeof window !== 'undefined') {
+        // Facebook Pixel
+        if (window.fbq) {
+          window.fbq('track', 'InitiateCheckout', {
+            value: planData.price,
+            currency: planData.currency || 'USD',
+            content_name: planData.name,
+            content_category: templateType
+          })
+        }
+
+        // Google Analytics
+        if (window.gtag) {
+          window.gtag('event', 'begin_checkout', {
+            currency: planData.currency || 'USD',
+            value: planData.price,
+            items: [{
+              item_id: planId,
+              item_name: planData.name,
+              category: templateType,
+              quantity: 1,
+              price: planData.price
+            }]
+          })
+        }
+      }
+
+      // Create checkout session
+      const checkoutResponse = await fetch('/api/checkout/create-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          plan_id: planId,
+          session_id: sessionId,
+          site_id: site.id,
+          attribution_data: attributionData,
+          success_url: `${window.location.origin}/${site.slug}/thank-you?session_id={CHECKOUT_SESSION_ID}`,
+          cancel_url: window.location.href
+        })
+      })
+
+      if (!checkoutResponse.ok) {
+        throw new Error('Failed to create checkout session')
+      }
+
+      const { url } = await checkoutResponse.json()
+      
+      // Redirect to Stripe checkout
+      window.location.href = url
+
+    } catch (error) {
+      console.error('Error starting checkout:', error)
+      throw error
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (!TemplateComponent) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Template Not Found</h1>
+          <p className="text-gray-600">Template type "{templateType}" is not supported.</p>
+        </div>
+      </div>
+    )
+  }
+
+  return <TemplateComponent {...templateProps} />
+}

@@ -1,0 +1,58 @@
+{
+  "id": "789e0123-e89b-12d3-a456-426614174006",
+  "funnel_id": "456e7890-e89b-12d3-a456-426614174001",
+  "template_id": "template-bookings-001",
+  "page_order": 1,
+  "slug": "home",
+  "content": {
+    "title": "Book Your Perfect Experience - Premium Services",
+    "meta_description": "Reserve your spot today with our premium booking system. Choose from standard, premium, or VIP packages with professional service.",
+    
+    "hero_title": "Reserve Your Spot Today",
+    "hero_subtitle": "Choose your perfect experience",
+    "hero_background": "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1920&h=1080&fit=crop",
+    
+    "services": [
+      {
+        "name": "Standard Package",
+        "price": 50,
+        "duration": "2 hours",
+        "description": "Perfect for individuals or small groups",
+        "features": ["2-hour session", "Basic equipment included", "Staff assistance", "Light refreshments"],
+        "popular": false
+      },
+      {
+        "name": "Premium Experience",
+        "price": 85,
+        "duration": "3 hours", 
+        "description": "Enhanced experience with premium amenities",
+        "features": ["3-hour session", "Premium equipment", "Priority support", "Complimentary refreshments", "Photo package"],
+        "popular": true
+      },
+      {
+        "name": "VIP Package",
+        "price": 150,
+        "duration": "4 hours",
+        "description": "The ultimate luxury experience",
+        "features": ["4-hour VIP session", "Dedicated host", "Gourmet catering", "Professional photography", "Exclusive lounge access", "Custom setup"],
+        "popular": false
+      }
+    ],
+    
+    "pricing_table": {
+      "currency": "USD",
+      "includes_tax": false,
+      "tax_rate": 8.5
+    }
+  },
+  "tracking_pixels": {},
+  "is_published": true,
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "templates": {
+    "id": "template-bookings-001",
+    "name": "Bookings Management Design",
+    "type": "bookings",
+    "category": "management"
+  }
+}

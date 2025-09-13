@@ -1,0 +1,89 @@
+{
+  "id": "789e0123-e89b-12d3-a456-426614174002",
+  "funnel_id": "456e7890-e89b-12d3-a456-426614174001",
+  "template_id": "template-bowling-001",
+  "page_order": 1,
+  "slug": "home",
+  "content": {
+    "title": "Pleasant Hill Lanes - Family Bowling Since 1962",
+    "meta_description": "Family owned and operated bowling center in Pleasant Hill. Birthday parties, corporate events, leagues, and open bowling since 1962.",
+    
+    "hero_title": "Family Owned and Operated Bowling Center",
+    "hero_subtitle": "Since 1962",
+    "hero_background": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1920&h=1080&fit=crop",
+    "hero_cta_text": "Book Now",
+    "hero_cta_link": "#booking",
+    
+    "about_title": "Our Story",
+    "about_text": "Opened in 1962 by Robert Maclary, Pleasant Hill Lanes has been serving the community for over 60 years. We're a family-owned bowling center that's dedicated to providing fun for all ages. From casual open bowling to competitive leagues, birthday parties to corporate events, we create memories that last a lifetime.",
+    "about_image": "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=600&h=400&fit=crop",
+    
+    "features": [
+      {
+        "title": "Open Bowling",
+        "description": "Walk-in bowling available daily with modern lanes and automatic scoring",
+        "icon": "🎳"
+      },
+      {
+        "title": "Daily Specials", 
+        "description": "Great deals throughout the week including student discounts",
+        "icon": "💰"
+      },
+      {
+        "title": "Bowling Leagues",
+        "description": "Join our competitive leagues for bowlers of all skill levels",
+        "icon": "🏆"
+      },
+      {
+        "title": "Party Packages",
+        "description": "Perfect venue for birthday parties and special celebrations",
+        "icon": "🎉"
+      }
+    ],
+    
+    "carousel_title": "Latest News & Events",
+    "carousel_items": [
+      {
+        "title": "Summer Bowling Special",
+        "description": "Beat the heat with our cool summer bowling packages! Enjoy discounted rates, free shoe rentals, and refreshing beverages. Perfect for families looking for indoor fun during hot summer days.",
+        "image": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop",
+        "link": "#specials"
+      },
+      {
+        "title": "Corporate Team Building",
+        "description": "Strengthen your team with our corporate bowling packages. Professional event coordination, catering options, and private lane reservations available. Great for employee appreciation and team bonding.",
+        "image": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=600&fit=crop",
+        "link": "#events"
+      },
+      {
+        "title": "Birthday Party Packages",
+        "description": "Make it a strike celebration! Our birthday party packages include lane time, shoe rentals, party host, decorations, and delicious food options. Create memories that will last a lifetime.",
+        "image": "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800&h=600&fit=crop",
+        "link": "#parties"
+      }
+    ],
+    
+    "contact_title": "Visit Us Today",
+    "phone": "(555) 123-4567",
+    "address": "123 Main Street\nPleasant Hill, CA 94523",
+    "hours": "Monday - Thursday: 10am - 10pm\nFriday - Saturday: 10am - 12am\nSunday: 12pm - 10pm",
+    
+    "social_links": {
+      "facebook": "https://facebook.com/pleasanthilllanes",
+      "instagram": "https://instagram.com/pleasanthilllanes",
+      "twitter": "https://twitter.com/pleasanthilllanes"
+    }
+  },
+  "tracking_pixels": {
+    "custom_analytics": "<!-- Custom analytics code -->"
+  },
+  "is_published": true,
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "templates": {
+    "id": "template-bowling-001",
+    "name": "Bowling Alley Design",
+    "type": "bowling",
+    "category": "entertainment"
+  }
+}

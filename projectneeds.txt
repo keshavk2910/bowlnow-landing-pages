@@ -1,0 +1,20 @@
+we're building this project like squarespace wix like builder for closed system of pre made templates we will need forms for individual pages to be made that are predesigned we can potentially add dynamic drag and drop builder with predefined items like standard ones H1-H6, text sections columns etc just like elementor this all will be saved like industry standrda templates and database supabase
+
+First we need to make 4 default templates that we will make in like landing page design 1, parties design, events design, bookings etc
+
+we want this url pattern like partners.bowlnow.com/{client-name}/page name 
+
+we need sites managment where we can make client name based db relations parent then landing pages which connect to client names so for partied landing page we get partners.bowlnow.com/pleast-hill/parties or birthday parties thatever is set for that pages name and load template dynamic based on data filled in form for template name partied like Title, hero title, hero background image, slider 1 images which will be dynamic min 3 sliders should have inbuilt title, button link form fields, slider 2, slider 3 for all of them whatever are available based on template selected, step 1 select site, step 2 select template step 3 fill form setp 4 page made and submit takes you to that page
+
+we need full ads tracking made on these pages and we will have inbuild stripe checkout based on subscription options or one time payment options saved under sites which should be all configurable with forms
+
+so all things inhouse from landig till checkout
+we need dynamic pixel and analytics tracking per site based ids which will be filled in site addition form
+
+we need to connect this with go highlevel api agency level and have location id saved under sites individual and do api calls agency level and push tracking data, contacts, opportinities etc from form fills in template pages under site id and checkouts happening 
+
+each site gets there sub path dynamic made in nextjs pages 
+
+lets come up with a plan first itteration needs forms to add sites then demo template with all tracking a form and demo stripe checkout page made for all so it will be partners.bowlnow.com/pleasent-hills/checkout so site name slug will be used all around 
+
+template names should based on pre saved list of names and linked template but it can be configured too so we need those relations too

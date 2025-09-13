@@ -1,0 +1,52 @@
+{
+  "id": "789e0123-e89b-12d3-a456-426614174004",
+  "funnel_id": "456e7890-e89b-12d3-a456-426614174001",
+  "template_id": "template-parties-001",
+  "page_order": 1,
+  "slug": "home",
+  "content": {
+    "title": "Amazing Party Experiences - Make Every Celebration Special",
+    "meta_description": "Professional party planning and event services. Birthday parties, celebrations, and special events with complete packages and expert coordination.",
+    
+    "hero_title": "Unforgettable Parties Start Here",
+    "hero_subtitle": "Create memories that last a lifetime",
+    "hero_background": "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=1920&h=1080&fit=crop",
+    
+    "slider_1_title": "Birthday Celebrations",
+    "slider_1_images": [
+      "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1464207687429-7505649dae38?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=800&h=600&fit=crop"
+    ],
+    "slider_1_button_text": "Plan Birthday Party",
+    "slider_1_button_link": "#booking",
+    
+    "slider_2_title": "Corporate Events",
+    "slider_2_images": [
+      "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&h=600&fit=crop"
+    ],
+    "slider_2_button_text": "Book Corporate Event",
+    "slider_2_button_link": "#booking",
+    
+    "slider_3_title": "Special Celebrations",
+    "slider_3_images": [
+      "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1478145046317-39f10e56b5e9?w=800&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1505236858219-8359eb29e329?w=800&h=600&fit=crop"
+    ],
+    "slider_3_button_text": "Celebrate With Us",
+    "slider_3_button_link": "#booking"
+  },
+  "tracking_pixels": {},
+  "is_published": true,
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "templates": {
+    "id": "template-parties-001",
+    "name": "Party Events Design",
+    "type": "parties",
+    "category": "events"
+  }
+}

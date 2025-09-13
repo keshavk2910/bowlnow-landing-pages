@@ -1,0 +1,1199 @@
+========================
+CODE SNIPPETS
+========================
+TITLE: GoHighLevel App Install Webhook Example (Non-Whitelabeled Location)
+DESCRIPTION: An example JSON payload for the 'App' webhook event when an application is installed for a non-whitelabeled location. This payload includes standard installation details but omits whitelabel-specific fields.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/AppInstall.md#_snippet_2
+
+LANGUAGE: json
+CODE:
+```
+{
+  "type": "INSTALL",
+  "appId": "ve9EPM428h8vShlRW1KT",
+  "locationId": "otg8dTQqGLh3Q6iQI55w",
+  "companyId": "otg8dTQqGLh3Q6iQI55w",
+  "userId": "otg8dTQqGLh3Q6iQI55w",
+  "planId": "66a0419a0dffa47fb5f8b22f",
+  "trial": {
+    "onTrial": true,
+    "trialDuration": 10,
+    "trialStartDate": "2024-07-23T23:54:51.264Z"
+  },
+  "isWhitelabelCompany": false,
+  "whitelabelDetails": {},
+  "companyName": "Example Company"
+}
+```
+
+----------------------------------------
+
+TITLE: GoHighLevel App Install Webhook Example (Agency Level)
+DESCRIPTION: An example JSON payload for the 'App' webhook event when an application is installed at the agency level. This payload contains core installation details relevant to the agency, without location-specific information.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/AppInstall.md#_snippet_3
+
+LANGUAGE: json
+CODE:
+```
+{
+  "type": "INSTALL",
+  "appId": "ve9EPM428h8vShlRW1KT",
+  "companyId": "otg8dTQqGLh3Q6iQI55w",
+  "planId": "66a0419a0dffa47fb5f8b22f",
+  "trial": {
+    "onTrial": true,
+    "trialDuration": 10,
+    "trialStartDate": "2024-07-23T23:54:51.264Z"
+  }
+}
+```
+
+----------------------------------------
+
+TITLE: GoHighLevel App Install Webhook Example (Whitelabeled Location)
+DESCRIPTION: An example JSON payload for the 'App' webhook event when an application is installed for a whitelabeled location. This payload includes all relevant details, including whitelabel-specific information.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/AppInstall.md#_snippet_1
+
+LANGUAGE: json
+CODE:
+```
+{
+  "type": "INSTALL",
+  "appId": "ve9EPM428h8vShlRW1KT",
+  "locationId": "otg8dTQqGLh3Q6iQI55w",
+  "companyId": "otg8dTQqGLh3Q6iQI55w",
+  "userId": "otg8dTQqGLh3Q6iQI55w",
+  "planId": "66a0419a0dffa47fb5f8b22f",
+  "trial": {
+    "onTrial": true,
+    "trialDuration": 10,
+    "trialStartDate": "2024-07-23T23:54:51.264Z"
+  },
+  "isWhitelabelCompany": true,
+  "whitelabelDetails": {
+    "domain": "example.com",
+    "logoUrl": "https://example.com/logo.png"
+  },
+  "companyName": "Example Company"
+}
+```
+
+----------------------------------------
+
+TITLE: GoHighLevel App Install Webhook Schema
+DESCRIPTION: Defines the structure of the JSON payload received when an application is installed via the GoHighLevel API. It includes details about the app, company, location, user, plan, trial status, and whitelabel information.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/AppInstall.md#_snippet_0
+
+LANGUAGE: json
+CODE:
+```
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string"
+    },
+    "appId": {
+      "type": "string"
+    },
+    "companyId": {
+      "type": "string"
+    },
+    "locationId": {
+      "type": "string"
+    },
+    "userId": {
+      "type": "string"
+    },
+    "planId": {
+      "type": "string"
+    },
+    "trial": {
+      "type": "object",
+      "properties": {
+        "onTrial": {
+          "type": "boolean"
+        },
+        "trialDuration": {
+          "type": "number"
+        },
+        "trialStartDate": {
+          "type": "Date"
+        }
+      }
+    },
+    "isWhitelabelCompany": {
+      "type": "boolean"
+    },
+    "whitelabelDetails": {
+      "type": "object",
+      "properties": {
+        "domain": {
+          "type": "string"
+        },
+        "logoUrl": {
+          "type": "string"
+        }
+      }
+    },
+    "companyName": {
+      "type": "string"
+    }
+  }
+}
+```
+
+----------------------------------------
+
+TITLE: Record Create Webhook Example Response
+DESCRIPTION: An example of the JSON payload received from the GoHighLevel API v2 webhook when a new record or business is created.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/RecordCreate.md#_snippet_1
+
+LANGUAGE: JSON
+CODE:
+```
+{
+  "id": "679b8f9bde6a0c356a0311b3",
+  "locationId": "eHy2cOSZxMQzQ6Yyvl8P",
+  "timestamp": "2025-02-10T08:26:05.961Z",
+  "owners": ["60d5ec49f72b2a001f5f9d91"],
+  "followers": ["60d5ec49f72b2a001f5f9d93", "60d5ec49f72b2a001f5f9d94"],
+  "properties": [
+    {
+      "key": "pet_name",
+      "valueString": "buddy"
+    }
+  ]
+}
+```
+
+----------------------------------------
+
+TITLE: Appointment Webhook Example
+DESCRIPTION: Provides an example JSON payload for an AppointmentCreate webhook event, demonstrating the structure and typical values for appointment data.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/AppointmentUpdate.md#_snippet_1
+
+LANGUAGE: json
+CODE:
+```
+{
+  "type": "AppointmentCreate",
+  "locationId": "0007BWpSzSwfiuSl0tR2",
+  "appointment": {
+    "id": "0007BWpSzSwfiuSl0tR2",
+    "address": "https://example.com/meeting",
+    "title": "Appointment with GHL Dev team",
+    "calendarId": "BqTwX8QFwXzpegMve9EQ",
+    "contactId": "9NkT25Vor1v4aQatFsv2",
+    "groupId": "9NkT25Vor1v4aQatFsv2",
+    "appointmentStatus": "confirmed",
+    "assignedUserId": "YlWd2wuCAZQzh2cH1fVZ",
+    "users": [
+      "YlWd2wuCAZQzh2cH1fVZ",
+      "9NkT25Vor1v4aQatFsv2"
+    ],
+    "notes": "Some dummy note",
+    "source": "booking_widget",
+    "startTime": "2023-09-25T16:00:00+05:30",
+    "endTime": "2023-09-25T16:00:00+05:30",
+    "dateAdded": "2023-09-25T16:00:00+05:30",
+    "dateUpdated": "2023-09-25T16:00:00+05:30"
+  }
+}
+```
+
+----------------------------------------
+
+TITLE: Product Creation Webhook Example
+DESCRIPTION: Provides a sample JSON payload representing a product created through the GoHighLevel API v2. This example illustrates the data format for the 'Product' webhook event.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/ProductCreate.md#_snippet_1
+
+LANGUAGE: json
+CODE:
+```
+{
+  "_id": "655b33a82209e60b6adb87a5",
+  "description": "This is a really awesome product",
+  "variants": [
+    {
+      "id": "38s63qmxfr4",
+      "name": "Size",
+      "options": [
+        {
+          "id": "h4z7u0im2q8",
+          "name": "XL"
+        }
+      ]
+    }
+  ],
+  "medias": [
+    {
+      "id": "fzrgusiuu0m",
+      "title": "1dd7dcd0-e71d-4cf7-a06b-6d47723d6a29.png",
+      "url": "https://storage.googleapis.com/ghl-test/3SwdhCsvxI8Au3KsPJt6/media/sample.png",
+      "type": "image",
+      "isFeatured": true
+    }
+  ],
+  "locationId": "3SwdhCsvxI8Au3KsPJt6",
+  "name": "Awesome Product",
+  "productType": "PHYSICAL",
+  "availableInStore": true,
+  "userId": "6YAtzfzpmHAdj0e8GkKp",
+  "createdAt": "2023-11-20T10:23:36.515Z",
+  "updatedAt": "2024-01-23T09:57:04.846Z",
+  "statementDescriptor": "abcde",
+  "image": "https://storage.googleapis.com/ghl-test/3SwdhCsvxI8Au3KsPJt6/media/65af8d5df88bdb4b1022ee90.png"
+}
+```
+
+----------------------------------------
+
+TITLE: Appointment Creation Webhook Example
+DESCRIPTION: Provides an example JSON payload for an 'AppointmentCreate' webhook event. This illustrates the structure and typical values for appointment data received through the GoHighLevel API v2.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/AppointmentCreate.md#_snippet_1
+
+LANGUAGE: json
+CODE:
+```
+{
+  "type": "AppointmentCreate",
+  "locationId": "0007BWpSzSwfiuSl0tR2",
+  "appointment": {
+    "id": "0007BWpSzSwfiuSl0tR2",
+    "address": "https://example.com/meeting",
+    "title": "Appointment with GHL Dev team",
+    "calendarId": "BqTwX8QFwXzpegMve9EQ",
+    "contactId": "9NkT25Vor1v4aQatFsv2",
+    "groupId": "9NkT25Vor1v4aQatFsv2",
+    "appointmentStatus": "confirmed",
+    "assignedUserId": "YlWd2wuCAZQzh2cH1fVZ",
+    "users": [
+      "YlWd2wuCAZQzh2cH1fVZ",
+      "9NkT25Vor1v4aQatFsv2"
+    ],
+    "notes": "Some dummy note",
+    "source": "booking_widget",
+    "startTime": "2023-09-25T16:00:00+05:30",
+    "endTime": "2023-09-25T16:00:00+05:30",
+    "dateAdded": "2023-09-25T16:00:00+05:30",
+    "dateUpdated": "2023-09-25T16:00:00+05:30"
+  }
+}
+```
+
+----------------------------------------
+
+TITLE: Plan Change Webhook Example
+DESCRIPTION: An example JSON payload for the Plan Change webhook event. This demonstrates the expected data format when a user changes their plan for a paid app.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/PlanChange.md#_snippet_1
+
+LANGUAGE: json
+CODE:
+```
+{
+  "type": "PLAN_CHANGE",
+  "appId": "ve9EPM428h8vShlRW1KT",
+  "locationId": "otg8dTQqGLh3Q6iQI55w",
+  "companyId": "otg8dTQqGLh3Q6iQI55w",
+  "userId": "otg8dTQqGLh3Q6iQI55w",
+  "currentPlanId": "66a0419a0dffa47fb5f8b22f",
+  "newPlanId": "66a0419a0dffa47fb5f8b22f"
+}
+```
+
+----------------------------------------
+
+TITLE: Price Webhook Event Example
+DESCRIPTION: An example JSON payload for the 'Price' webhook event, demonstrating the structure and typical values when a price is deleted.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/PriceDelete.md#_snippet_1
+
+LANGUAGE: json
+CODE:
+```
+{
+  "_id": "655b33aa2209e60b6adb87a7",
+  "membershipOffers": [
+    {
+      "label": "top_50",
+      "value": "50",
+      "_id": "655b33aa2209e60b6adb87a7"
+    }
+  ],
+  "variantOptionIds": [
+    "h4z7u0im2q8",
+    "h3nst2ltsnn"
+  ],
+  "locationId": "3SwdhCsvxI8Au3KsPJt6",
+  "product": "655b33a82209e60b6adb87a5",
+  "userId": "6YAtzfzpmHAdj0e8GkKp",
+  "name": "Red / S",
+  "type": "one_time",
+  "currency": "INR",
+  "amount": 199999,
+  "recurring": {
+    "interval": "day",
+    "intervalCount": 1
+  },
+  "createdAt": "2023-11-20T10:23:38.645Z",
+  "updatedAt": "2024-01-23T09:57:04.852Z",
+  "compareAtPrice": 2000000,
+  "trackInventory": null,
+  "availableQuantity": 5,
+  "allowOutOfStockPurchases": true
+}
+```
+
+----------------------------------------
+
+TITLE: Opportunity Webhook Example Payload
+DESCRIPTION: An example JSON payload for the Opportunity webhook event, demonstrating the data structure for a newly created opportunity. It includes sample values for all fields defined in the schema.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/OpportunityCreate.md#_snippet_1
+
+LANGUAGE: json
+CODE:
+```
+{
+  "type": "OpportunityCreate",
+  "locationId": "ve9EPM428h8vShlRW1KT",
+  "id": "wWhVuzqpRuOA1ZVWi4FC",
+  "assignedTo": "bNl8QNGXhIQJLv8eeASQ",
+  "contactId": "cJAWDskpkJHbRbhAT7bs",
+  "monetaryValue": 40,
+  "name": "Loram ipsu",
+  "pipelineId": "VDm7RPYC2GLUvdpKmBfC",
+  "pipelineStageId": "e93ba61a-53b3-45e7-985a-c7732dbcdb69",
+  "source": "Loram ipsu",
+  "status": "open",
+  "dateAdded": "2021-11-26T12:41:02.193Z"
+}
+```
+
+----------------------------------------
+
+TITLE: Opportunity Webhook Example Payload
+DESCRIPTION: Provides an example JSON payload for the Opportunity webhook event, demonstrating a typical structure when an opportunity's status is updated.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/OpportunityStatusUpdate.md#_snippet_1
+
+LANGUAGE: json
+CODE:
+```
+{
+  "type": "OpportunityStatusUpdate",
+  "locationId": "ve9EPM428h8vShlRW1KT",
+  "id": "wWhVuzqpRuOA1ZVWi4FC",
+  "assignedTo": "bNl8QNGXhIQJLv8eeASQ",
+  "contactId": "cJAWDskpkJHbRbhAT7bs",
+  "monetaryValue": 40,
+  "name": "Loram ipsu",
+  "pipelineId": "VDm7RPYC2GLUvdpKmBfC",
+  "pipelineStageId": "e93ba61a-53b3-45e7-985a-c7732dbcdb69",
+  "source": "Loram ipsu",
+  "status": "open",
+  "dateAdded": "2021-11-26T12:41:02.193Z"
+}
+```
+
+----------------------------------------
+
+TITLE: External Auth - All Locations Selected
+DESCRIPTION: This JSON example illustrates the external authentication request when a user opts to select all locations during installation. It sets approveAllLocations to true and locationId to null.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/oauth/ExternalAuthentication.md#_snippet_6
+
+LANGUAGE: json
+CODE:
+```
+{
+"companyId": "123",
+"locationId": null,
+"username" : "user1",
+"password" : "password123",
+"approveAllLocations": true,
+"excludedLocations": null
+}
+```
+
+----------------------------------------
+
+TITLE: Task Creation Webhook Example
+DESCRIPTION: Provides an example JSON payload for the 'TaskCreate' webhook event. This illustrates the expected data format for a newly created task, including all relevant fields.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/TaskCreate.md#_snippet_1
+
+LANGUAGE: json
+CODE:
+```
+{
+  "type": "TaskCreate",
+  "locationId": "ve9EPM428h8vShlRW1KT",
+  "id": "UlRWGLSXh0ji5qbiGu4i",
+  "assignedTo": "63e4qiWDsFJjOYAC8phG",
+  "body": "Loram ipsum",
+  "contactId": "CWBf1PR9LvvBkcYqiXlc",
+  "title": "Loram ipsum",
+  "dateAdded": "2021-11-26T12:41:02.193Z",
+  "dueDate": "2021-11-26T12:41:02.193Z"
+}
+```
+
+----------------------------------------
+
+TITLE: Relation Create Webhook Example Response
+DESCRIPTION: An example of the JSON payload received from the GoHighLevel API v2 webhook when a relation is successfully created. This demonstrates the expected data format.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/RelationCreate.md#_snippet_1
+
+LANGUAGE: json
+CODE:
+```
+{
+  "id": "67ae0d741119d218c9d0c477",
+  "firstObjectKey": "custom_objects.mad",
+  "firstRecordId": "67a349a79b28947ec1f65bb5",
+  "secondObjectKey": "contact",
+  "secondRecordId": "emqfhnG3g9D9chy9inTz",
+  "associationId": "669e5795add2094075906c65",
+  "locationId": "eHy2cOSZxMQzQ6Yyvl8P"
+}
+```
+
+----------------------------------------
+
+TITLE: Opportunity Webhook Example Payload
+DESCRIPTION: An example JSON payload for the Opportunity webhook event, demonstrating the data structure and typical values when an opportunity's stage is updated.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/OpportunityStageUpdate.md#_snippet_1
+
+LANGUAGE: json
+CODE:
+```
+{
+  "type": "OpportunityStageUpdate",
+  "locationId": "ve9EPM428h8vShlRW1KT",
+  "id": "wWhVuzqpRuOA1ZVWi4FC",
+  "assignedTo": "bNl8QNGXhIQJLv8eeASQ",
+  "contactId": "cJAWDskpkJHbRbhAT7bs",
+  "monetaryValue": 40,
+  "name": "Loram ipsu",
+  "pipelineId": "VDm7RPYC2GLUvdpKmBfC",
+  "pipelineStageId": "e93ba61a-53b3-45e7-985a-c7732dbcdb69",
+  "source": "Loram ipsu",
+  "status": "open",
+  "dateAdded": "2021-11-26T12:41:02.193Z"
+}
+```
+
+----------------------------------------
+
+TITLE: GoHighLevel API v2 Price Webhook Example
+DESCRIPTION: Provides an example JSON payload for the 'Price' webhook event. This demonstrates a typical data structure received when a new price is created, including all relevant fields.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/PriceCreate.md#_snippet_1
+
+LANGUAGE: json
+CODE:
+```
+{
+  "_id": "655b33aa2209e60b6adb87a7",
+  "membershipOffers": [
+    {
+      "label": "top_50",
+      "value": "50",
+      "_id": "655b33aa2209e60b6adb87a7"
+    }
+  ],
+  "variantOptionIds": [
+    "h4z7u0im2q8",
+    "h3nst2ltsnn"
+  ],
+  "locationId": "3SwdhCsvxI8Au3KsPJt6",
+  "product": "655b33a82209e60b6adb87a5",
+  "userId": "6YAtzfzpmHAdj0e8GkKp",
+  "name": "Red / S",
+  "priceType": "one_time",
+  "currency": "INR",
+  "amount": 199999,
+  "recurring": {
+    "interval": "day",
+    "intervalCount": 1
+  },
+  "createdAt": "2023-11-20T10:23:38.645Z",
+  "updatedAt": "2024-01-23T09:57:04.852Z",
+  "compareAtPrice": 2000000,
+  "trackInventory": null,
+  "availableQuantity": 5,
+  "allowOutOfStockPurchases": true
+}
+```
+
+----------------------------------------
+
+TITLE: Association Updated Webhook Example Response
+DESCRIPTION: An example of the JSON payload received from the 'Association Updated' webhook. This demonstrates a specific instance of a buyer-property association.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/AssociationUpdate.md#_snippet_1
+
+LANGUAGE: json
+CODE:
+```
+{
+  "id": "67ade73d1119d2ac7ad0c475",
+  "associationType": "USER_DEFINED",
+  "firstObjectKey": "custom_objects.real_estate_buyer",
+  "firstObjectLabel": "Interested Buyer",
+  "firstObjectToSecondObjectCardinality": "MANY_TO_MANY",
+  "secondObjectKey": "custom_objects.property",
+  "secondObjectLabel": "Property",
+  "secondObjectToFirstObjectCardinality": "MANY_TO_MANY",
+  "key": "buyer_property_interest",
+  "locationId": "eHy2cOSZxMQzQ6Yyvl8P"
+}
+```
+
+----------------------------------------
+
+TITLE: Object Schema Create Webhook Example Payload
+DESCRIPTION: Provides an example JSON payload for the Object Schema Create webhook, demonstrating the structure and typical values for a custom object creation event.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/ObjectSchemaCreate.md#_snippet_1
+
+LANGUAGE: JSON
+CODE:
+```
+{
+  "id": "6798a1a18fc746e0eba2ccfe",
+  "labels": {
+    "singular": "pet",
+    "plural": "pets"
+  },
+  "description": "Pet's Description",
+  "searchableProperties": [
+    "custom_objects.pets.pet_name"
+  ],
+  "primaryDisplayProperty": "custom_objects.pets.pet_name",
+  "key": "custom_objects.pets",
+  "locationId": "eHy2cOSZxMQzQ6Yyvl8P",
+  "updatedAt": "2025-01-28T09:21:37.311Z",
+  "createdAt": "2025-01-28T09:21:37.311Z",
+  "objectType": "USER_DEFINED",
+  "timestamp": "2025-02-10T08:26:05.961Z"
+}
+```
+
+----------------------------------------
+
+TITLE: Price Webhook Event Example
+DESCRIPTION: A sample JSON payload demonstrating the data structure for a 'Price' webhook event in the GoHighLevel API v2. This example shows typical values for each field.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/PriceUpdate.md#_snippet_1
+
+LANGUAGE: json
+CODE:
+```
+{
+  "_id": "655b33aa2209e60b6adb87a7",
+  "membershipOffers": [
+    {
+      "label": "top_50",
+      "value": "50",
+      "_id": "655b33aa2209e60b6adb87a7"
+    }
+  ],
+  "variantOptionIds": [
+    "h4z7u0im2q8",
+    "h3nst2ltsnn"
+  ],
+  "locationId": "3SwdhCsvxI8Au3KsPJt6",
+  "product": "655b33a82209e60b6adb87a5",
+  "userId": "6YAtzfzpmHAdj0e8GkKp",
+  "name": "Red / S",
+  "type": "one_time",
+  "currency": "INR",
+  "amount": 199999,
+  "recurring": {
+    "interval": "day",
+    "intervalCount": 1
+  },
+  "createdAt": "2023-11-20T10:23:38.645Z",
+  "updatedAt": "2024-01-23T09:57:04.852Z",
+  "compareAtPrice": 2000000,
+  "trackInventory": null,
+  "availableQuantity": 5,
+  "allowOutOfStockPurchases": true
+}
+```
+
+----------------------------------------
+
+TITLE: External Auth - Multiple Locations Selected
+DESCRIPTION: This JSON example shows the external authentication request format when a user selects multiple specific locations during app installation. It details the company ID, an array of selected location IDs, and authentication credentials.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/oauth/ExternalAuthentication.md#_snippet_5
+
+LANGUAGE: json
+CODE:
+```
+{
+"companyId": "123",
+"locationId": {"A","B"},
+"username" : "user1",
+"password" : "password123",
+"approveAllLocations": false,
+"excludedLocations": null
+}
+```
+
+----------------------------------------
+
+TITLE: Product Update Example Payload
+DESCRIPTION: This is an example JSON payload representing a product update event from the GoHighLevel API v2. It demonstrates the structure and typical values for product details, including variants and media.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/ProductUpdate.md#_snippet_1
+
+LANGUAGE: json
+CODE:
+```
+{
+  "_id": "655b33a82209e60b6adb87a5",
+  "description": "This is a really awesome product",
+  "variants": [
+    {
+      "id": "38s63qmxfr4",
+      "name": "Size",
+      "options": [
+        {
+          "id": "h4z7u0im2q8",
+          "name": "XL"
+        }
+      ]
+    }
+  ],
+  "medias": [
+    {
+      "id": "fzrgusiuu0m",
+      "title": "1dd7dcd0-e71d-4cf7-a06b-6d47723d6a29.png",
+      "url": "https://storage.googleapis.com/ghl-test/3SwdhCsvxI8Au3KsPJt6/media/sample.png",
+      "type": "image",
+      "isFeatured": true
+    }
+  ],
+  "locationId": "3SwdhCsvxI8Au3KsPJt6",
+  "name": "Awesome Product",
+  "productType": "PHYSICAL",
+  "availableInStore": true,
+  "userId": "6YAtzfzpmHAdj0e8GkKp",
+  "createdAt": "2023-11-20T10:23:36.515Z",
+  "updatedAt": "2024-01-23T09:57:04.846Z",
+  "statementDescriptor": "abcde",
+  "image": "https://storage.googleapis.com/ghl-test/3SwdhCsvxI8Au3KsPJt6/media/65af8d5df88bdb4b1022ee90.png"
+}
+```
+
+----------------------------------------
+
+TITLE: Product Deletion Webhook Example Payload
+DESCRIPTION: An example JSON payload representing a product deletion event from the GoHighLevel API v2. This demonstrates the data structure and typical values for product attributes.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/ProductDelete.md#_snippet_1
+
+LANGUAGE: json
+CODE:
+```
+{
+  "_id": "655b33a82209e60b6adb87a5",
+  "description": "This is a really awesome product",
+  "variants": [
+    {
+      "id": "38s63qmxfr4",
+      "name": "Size",
+      "options": [
+        {
+          "id": "h4z7u0im2q8",
+          "name": "XL"
+        }
+      ]
+    }
+  ],
+  "medias": [
+    {
+      "id": "fzrgusiuu0m",
+      "title": "1dd7dcd0-e71d-4cf7-a06b-6d47723d6a29.png",
+      "url": "https://storage.googleapis.com/ghl-test/3SwdhCsvxI8Au3KsPJt6/media/sample.png",
+      "type": "image",
+      "isFeatured": true
+    }
+  ],
+  "locationId": "3SwdhCsvxI8Au3KsPJt6",
+  "name": "Awesome Product",
+  "productType": "PHYSICAL",
+  "availableInStore": true,
+  "userId": "6YAtzfzpmHAdj0e8GkKp",
+  "createdAt": "2023-11-20T10:23:36.515Z",
+  "updatedAt": "2024-01-23T09:57:04.846Z",
+  "statementDescriptor": "abcde",
+  "image": "https://storage.googleapis.com/ghl-test/3SwdhCsvxI8Au3KsPJt6/media/65af8d5df88bdb4b1022ee90.png"
+}
+```
+
+----------------------------------------
+
+TITLE: NoteDelete Webhook Example
+DESCRIPTION: An example of the data payload for the NoteDelete webhook event. This illustrates the expected format and values for each field when a note is deleted.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/NoteDelete.md#_snippet_1
+
+LANGUAGE: json
+CODE:
+```
+{
+  "type": "NoteDelete",
+  "locationId": "ve9EPM428h8vShlRW1KT",
+  "id": "otg8dTQqGLh3Q6iQI55w",
+  "body": "Loram ipsum",
+  "contactId": "CWBf1PR9LvvBkcYqiXlc",
+  "dateAdded": "2021-11-26T12:41:02.193Z"
+}
+```
+
+----------------------------------------
+
+TITLE: Opportunity Webhook Example
+DESCRIPTION: Provides a sample JSON payload for the Opportunity webhook event, illustrating a typical structure and data for an updated opportunity.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/OpportunityUpdate.md#_snippet_1
+
+LANGUAGE: json
+CODE:
+```
+{
+  "type": "OpportunityUpdate",
+  "locationId": "ve9EPM428h8vShlRW1KT",
+  "id": "wWhVuzqpRuOA1ZVWi4FC",
+  "assignedTo": "bNl8QNGXhIQJLv8eeASQ",
+  "contactId": "cJAWDskpkJHbRbhAT7bs",
+  "monetaryValue": 40,
+  "name": "Loram ipsu",
+  "pipelineId": "VDm7RPYC2GLUvdpKmBfC",
+  "pipelineStageId": "e93ba61a-53b3-45e7-985a-c7732dbcdb69",
+  "source": "Loram ipsu",
+  "status": "open",
+  "dateAdded": "2021-11-26T12:41:02.193Z"
+}
+```
+
+----------------------------------------
+
+TITLE: LC Email Webhook Event Example Payload
+DESCRIPTION: An example JSON payload demonstrating the structure and data fields for the LC Email webhook event. This example helps developers understand the expected format of the data received when an email is sent.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/LCEmailStats.md#_snippet_1
+
+LANGUAGE: json
+CODE:
+```
+{
+  "type": "LCEmailStats",
+  "locationId": "ve9EPM428h8vShlRW1KT",
+  "companyId": "ve9EPM428h8vShlRW1KT",
+  "webhookPayload": {
+    "event": "delivered",
+    "id": "ve9EPM428h8vShlRW1KT",
+    "timestamp": 1714032441,
+    "flags": {
+      "is-authenticated": true,
+      "is-routed": false,
+      "is-big": false,
+      "is-system-test": false,
+      "is-test-mode": false
+    },
+    "message": {
+      "attachments": [],
+      "headers": {
+        "message-id": "<message-id>",
+        "from": "Aaditya Chakravarty <dummy@example.com>",
+        "to": "test@example.com"
+      },
+      "size": 1725
+    },
+    "log-level": "info",
+    "recipient": "test@example.com",
+    "recipient-domain": "example.com",
+    "tags": ["loc_ve9EPM428h8vShlRW1KT", "com_ve9EPM428h8vShlRW1KT", "et_other"],
+    "recipient-provider": "Other",
+    "campaigns": [],
+    "delivery-status": {
+      "attempt-no": 1,
+      "code": 250,
+      "message": "OK",
+      "description": "",
+      "session-seconds": 0.087,
+      "enhanced-code": "",
+      "mx-host": "mail.example.com",
+      "utf8": true,
+      "i-first-delivery-attempt-seconds": 0.047
+    },
+    "envelope": {
+      "sender": "<sender-id>",
+      "targets": "test@example.com",
+      "transport": "smtp",
+      "sending-ip": "127.0.0.1",
+      "i-ip-pool-id": "65cc66e77a4d4f63649d394c",
+      "i-ip-pool-name": "<pool-name>"
+    }
+  }
+}
+
+```
+
+----------------------------------------
+
+TITLE: TaskComplete Webhook Example
+DESCRIPTION: Provides an example of the JSON payload for the TaskComplete webhook event in the GoHighLevel API v2. This illustrates the data format for a completed task notification.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/TaskComplete.md#_snippet_1
+
+LANGUAGE: json
+CODE:
+```
+{
+  "type": "TaskComplete",
+  "locationId": "ve9EPM428h8vShlRW1KT",
+  "id": "5HrB1IbmnKMBXloldFuP",
+  "assignedTo": "bNl8QNGXhIQJLv8eeASQ",
+  "body": "testing",
+  "contactId": "WFwVrSSjZ2CNHbZThQX2",
+  "dateAdded": "2021-11-29T13:37:28.304Z",
+  "dueDate": "2021-12-22T06:55:00.000Z",
+  "title": "test"
+}
+```
+
+----------------------------------------
+
+TITLE: OpportunityDelete Webhook Example
+DESCRIPTION: Provides a sample JSON payload for an OpportunityDelete webhook event. This example demonstrates the expected data format and values for various fields when an opportunity is deleted.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/OpportunityDelete.md#_snippet_1
+
+LANGUAGE: json
+CODE:
+```
+{
+  "type": "OpportunityDelete",
+  "locationId": "ve9EPM428h8vShlRW1KT",
+  "id": "wWhVuzqpRuOA1ZVWi4FC",
+  "assignedTo": "bNl8QNGXhIQJLv8eeASQ",
+  "contactId": "cJAWDskpkJHbRbhAT7bs",
+  "monetaryValue": 40,
+  "name": "Loram ipsu",
+  "pipelineId": "VDm7RPYC2GLUvdpKmBfC",
+  "pipelineStageId": "e93ba61a-53b3-45e7-985a-c7732dbcdb69",
+  "source": "Loram ipsu",
+  "status": "open",
+  "dateAdded": "2021-11-26T12:41:02.193Z"
+}
+```
+
+----------------------------------------
+
+TITLE: LocationCreate Webhook Event Example
+DESCRIPTION: Provides a sample JSON payload for the 'LocationCreate' webhook event in the GoHighLevel API v2. This example illustrates the expected data format for a newly created location, including its unique identifiers and associated company information.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/LocationCreate.md#_snippet_1
+
+LANGUAGE: JSON
+CODE:
+```
+{
+  "type": "LocationCreate",
+  "id": "ve9EPM428h8vShlRW1KT",
+  "companyId": "otg8dTQqGLh3Q6iQI55w",
+  "name": "Loram ipsum",
+  "email": "mailer@example.com",
+  "stripeProductId": "prod_xyz123abc"
+}
+```
+
+----------------------------------------
+
+TITLE: UserCreate Webhook Example - Sub Account
+DESCRIPTION: An example JSON payload for a UserCreate webhook event when a user is created within a sub-account. It demonstrates the structure and typical values for user details and permissions.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/UserCreate.md#_snippet_1
+
+LANGUAGE: JSON
+CODE:
+```
+{
+  "type": "UserCreate",
+  "locationId": "ve9EPM428h8vShlRW1KT",
+  "id": "ve9EPM428h8vShlRW1KT",
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe+2@example.com",
+  "phone": "+13235559998",
+  "extension": "111",
+  "role": "user",
+  "permissions": {
+    "adwordsReportingEnabled": true,
+    "affiliateManagerEnabled": false,
+    "agentReportingEnabled": true,
+    "appointmentsEnabled": true,
+    "assignedDataOnly": false,
+    "attributionsReportingEnabled": true,
+    "bloggingEnabled": true,
+    "botService": false,
+    "bulkRequestsEnabled": true,
+    "campaignsEnabled": true,
+    "campaignsReadOnly": false,
+    "cancelSubscriptionEnabled": true,
+    "communitiesEnabled": true,
+    "contactsEnabled": true,
+    "contentAiEnabled": true,
+    "conversationsEnabled": true,
+    "dashboardStatsEnabled": true,
+    "facebookAdsReportingEnabled": true,
+    "funnelsEnabled": true,
+    "invoiceEnabled": true,
+    "leadValueEnabled": true,
+    "marketingEnabled": true,
+    "membershipEnabled": true,
+    "onlineListingsEnabled": true,
+    "opportunitiesEnabled": true,
+    "paymentsEnabled": true,
+    "phoneCallEnabled": true,
+    "recordPaymentEnabled": true,
+    "refundsEnabled": true,
+    "reviewsEnabled": true,
+    "settingsEnabled": true,
+    "socialPlanner": true,
+    "tagsEnabled": true,
+    "triggersEnabled": true,
+    "websitesEnabled": true,
+    "workflowsEnabled": true,
+    "workflowsReadOnly": false
+  }
+}
+```
+
+----------------------------------------
+
+TITLE: NoteCreate Webhook Example Payload
+DESCRIPTION: Provides an example JSON payload for the 'NoteCreate' webhook event. This illustrates a typical data structure received by applications when a new note is created via the GoHighLevel API.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/NoteCreate.md#_snippet_1
+
+LANGUAGE: json
+CODE:
+```
+{
+  "type": "NoteCreate",
+  "locationId": "ve9EPM428h8vShlRW1KT",
+  "id": "otg8dTQqGLh3Q6iQI55w",
+  "body": "Loram ipsum",
+  "contactId": "CWBf1PR9LvvBkcYqiXlc",
+  "dateAdded": "2021-11-26T12:41:02.193Z"
+}
+```
+
+----------------------------------------
+
+TITLE: Contact Creation Webhook Example Payload
+DESCRIPTION: An example JSON payload demonstrating the structure and data types for a contact creation event received via webhook from the Gohighlevel API v2.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/ContactCreate.md#_snippet_1
+
+LANGUAGE: JSON
+CODE:
+```
+{
+  "type": "ContactCreate",
+  "locationId": "ve9EPM428h8vShlRW1KT",
+  "id": "nmFmQEsNgz6AVpgLVUJ0",
+  "address1": "3535 1st St N",
+  "city": "ruDolomitebika",
+  "state": "AL",
+  "companyName": "Loram ipsum",
+  "country": "DE",
+  "source": "xyz form",
+  "dateAdded": "2021-11-26T12:41:02.193Z",
+  "dateOfBirth": "2000-01-05T00:00:00.000Z",
+  "dnd": true,
+  "email": "JohnDeo@gmail.comm",
+  "name": "John Deo",
+  "firstName": "John",
+  "lastName": "Deo",
+  "phone": "+919509597501",
+  "postalCode": "452001",
+  "tags": ["id magna sed Lorem", "Duis dolor commodo aliqua"],
+  "website": "https://www.google.com/",
+  "attachments": [],
+  "assignedTo": "nmFmQEsNgz6AVpgLVUJ0",
+  "customFields": [
+    {
+      "id": "BcdmQEsNgz6AVpgLVUJ0",
+      "value": "XYZ Corp"
+    }
+  ]
+}
+```
+
+----------------------------------------
+
+TITLE: Association Created Webhook Example Response
+DESCRIPTION: An example of the JSON payload received from the 'Association Created' webhook. This demonstrates a typical response structure, showing how contact or custom object associations are represented.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/AssociationCreate.md#_snippet_1
+
+LANGUAGE: json
+CODE:
+```
+{
+  "id": "67ade73d1119d2ac7ad0c475",
+  "associationType": "USER_DEFINED",
+  "firstObjectKey": "custom_objects.real_estate_buyer",
+  "firstObjectLabel": "Interested Buyer",
+  "secondObjectKey": "custom_objects.property",
+  "secondObjectLabel": "Property",
+  "key": "buyer_property_interest",
+  "locationId": "eHy2cOSZxMQzQ6Yyvl8P"
+}
+```
+
+----------------------------------------
+
+TITLE: External Auth - Single Location Selected
+DESCRIPTION: This JSON example demonstrates the structure of an external authentication request when a user selects a single location during application installation. It includes company ID, the selected location ID, user credentials, and flags for location approval.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/oauth/ExternalAuthentication.md#_snippet_4
+
+LANGUAGE: json
+CODE:
+```
+{
+"companyId": "123",
+"locationId": {"A"},
+"username" : "user1",
+"password" : "password123",
+"approveAllLocations": false,
+"excludedLocations": null
+}
+```
+
+----------------------------------------
+
+TITLE: Authorization Callback with Code Parameter
+DESCRIPTION: Illustrates the redirect URI after a user grants access, showing how the authorization code is passed as a query parameter. This code is then used to obtain an access token.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/oauth/Authorization.md#_snippet_2
+
+LANGUAGE: URL
+CODE:
+```
+https://myapp.com/oauth/callback/gohighlevel?code=7676cjcbdc6t76cdcbkjcd09821jknnkj
+```
+
+----------------------------------------
+
+TITLE: Contact Tag Update Example Payload
+DESCRIPTION: Provides an example JSON payload for the ContactTagUpdate webhook event, demonstrating the structure and typical values for contact tag updates.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/ContactTagUpdate.md#_snippet_1
+
+LANGUAGE: json
+CODE:
+```
+{
+  "type": "ContactTagUpdate",
+  "locationId": "ve9EPM428h8vShlRW1KT",
+  "id": "nmFmQEsNgz6AVpgLVUJ0",
+  "address1": "3535 1st St N",
+  "city": "ruDolomitebika",
+  "state": "AL",
+  "companyName": "Loram ipsum",
+  "country": "DE",
+  "source": "xyz form",
+  "dateAdded": "2021-11-26T12:41:02.193Z",
+  "dateOfBirth": "2000-01-05T00:00:00.000Z",
+  "dnd": true,
+  "email": "JohnDeo@gmail.comm",
+  "name": "John Deo",
+  "firstName": "John",
+  "lastName": "Deo",
+  "phone": "+919509597501",
+  "postalCode": "452001",
+  "tags": ["id magna sed Lorem", "Duis dolor commodo aliqua"],
+  "website": "https://www.google.com/",
+  "attachments": [],
+  "assignedTo": "nmFmQEsNgz6AVpgLVUJ0",
+  "customFields": [
+    {
+      "id": "BcdmQEsNgz6AVpgLVUJ0",
+      "value": "XYZ Corp"
+    }
+  ]
+}
+```
+
+----------------------------------------
+
+TITLE: Example Inbound Voicemail Payload
+DESCRIPTION: An example JSON payload for an inbound call that goes directly to voicemail.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/InboundMessage.md#_snippet_3
+
+LANGUAGE: json
+CODE:
+```
+{
+  "type": "InboundMessage",
+  "locationId": "0dalah57827q67DAuXUxbpy",
+  "attachments": ["voicemail url"],
+  "contactId": "gb7laj5aYQC4glDtP1r5",
+  "conversationId": "SGDqZrzmwTA5P7LHkt9F",
+  "dateAdded": "2024-05-08T12:00:56.193Z",
+  "direction": "inbound",
+  "messageType": "CALL",
+  "messageId": "QkNS0DNje0FjoLQdD5O3",
+  "status": "voicemail"
+}
+```
+
+----------------------------------------
+
+TITLE: Opportunity Webhook Example Payload
+DESCRIPTION: Provides an example JSON payload for the Opportunity webhook event, demonstrating the expected data format when an opportunity's monetary value is updated.
+
+SOURCE: https://github.com/gohighlevel/api-v2-docs/blob/main/docs/webhook events/OpportunityMonetaryValueUpdate.md#_snippet_1
+
+LANGUAGE: json
+CODE:
+```
+{
+  "type": "OpportunityMonetaryValueUpdate",
+  "locationId": "ve9EPM428h8vShlRW1KT",
+  "id": "wWhVuzqpRuOA1ZVWi4FC",
+  "assignedTo": "bNl8QNGXhIQJLv8eeASQ",
+  "contactId": "cJAWDskpkJHbRbhAT7bs",
+  "monetaryValue": 40,
+  "name": "Loram ipsu",
+  "pipelineId": "VDm7RPYC2GLUvdpKmBfC",
+  "pipelineStageId": "e93ba61a-53b3-45e7-985a-c7732dbcdb69",
+  "source": "Loram ipsu",
+  "status": "open",
+  "dateAdded": "2021-11-26T12:41:02.193Z"
+}
+```

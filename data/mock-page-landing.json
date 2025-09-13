@@ -1,0 +1,48 @@
+{
+  "id": "789e0123-e89b-12d3-a456-426614174003",
+  "funnel_id": "456e7890-e89b-12d3-a456-426614174001",
+  "template_id": "template-landing-001",
+  "page_order": 1,
+  "slug": "home",
+  "content": {
+    "title": "Premium Business Services - Your Success Partner",
+    "meta_description": "Professional business services that drive results. Expert consultation, proven strategies, and dedicated support for your growth.",
+    
+    "hero_title": "Welcome to Our Business",
+    "hero_subtitle": "Experience excellence with our premium services",
+    "hero_background": "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&h=1080&fit=crop",
+    "cta_text": "Get Started",
+    "cta_link": "#contact",
+    
+    "features_subtitle": "We provide exceptional service and unmatched quality",
+    "features": [
+      {
+        "title": "Premium Quality",
+        "description": "Top-tier service you can trust with proven results",
+        "icon": "⭐"
+      },
+      {
+        "title": "Expert Team", 
+        "description": "Professional staff with years of industry experience",
+        "icon": "👥"
+      },
+      {
+        "title": "Great Value",
+        "description": "Competitive prices for excellent service and support",
+        "icon": "💎"
+      }
+    ],
+    
+    "footer_description": "Thank you for choosing us for your business needs."
+  },
+  "tracking_pixels": {},
+  "is_published": true,
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "templates": {
+    "id": "template-landing-001",
+    "name": "Landing Page Design 1",
+    "type": "landing",
+    "category": "standard"
+  }
+}

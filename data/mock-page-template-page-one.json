@@ -1,0 +1,67 @@
+{
+  "id": "789e0123-e89b-12d3-a456-426614174007",
+  "funnel_id": "456e7890-e89b-12d3-a456-426614174001",
+  "template_id": "template-page-one-001",
+  "page_order": 1,
+  "slug": "home",
+  "content": {
+    "title": "Pleasant Hill Lanes - Family Bowling Since 1962",
+    "meta_description": "Family owned and operated bowling center in Pleasant Hill. Birthday parties, corporate events, leagues, and open bowling since 1962.",
+    
+    "logo_url": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=120&h=120&fit=crop&mask=circle",
+    "hero_title_line1": "Welcome To",
+    "hero_title_line2": "Pleasant Hill Lanes", 
+    "hero_subtitle": "Family Owned and Operated Bowling Center since 1962",
+    "hero_background": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1920&h=1080&fit=crop",
+    "hero_cta_text": "Book Now",
+    
+    "features_title": "Our Features",
+    "open_bowling_title": "Open Bowling",
+    "open_bowling_desc": "Bowling is fun for the whole family. Everyone can bowl, nobody has to sit on the side line.",
+    "open_bowling_image": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=400&fit=crop",
+    
+    "specials_title": "Specials", 
+    "specials_desc": "EXPERIENCE A WALLET-FRIENDLY WAY TO ROLL. LEARN MORE ABOUT OUR AMAZING SPECIALS!",
+    "specials_image": "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=600&h=400&fit=crop",
+    
+    "leagues_title": "Bowling Leagues",
+    "leagues_desc": "Join our competitive leagues for bowlers of all skill levels. Fun and prizes await!",
+    "leagues_image": "https://images.unsplash.com/photo-1574394483755-5877f42d74d9?w=600&h=400&fit=crop",
+    
+    "book_event_title": "BOOK YOUR EVENT",
+    "book_event_desc": "Pleasant Hill Lanes is your premier facility for corporate outings, team building, youth events, fundraising and much more! Our team of event planners are ready to help you organize and book your next event!",
+    
+    "parties_section_title": "PARTIES & EVENTS",
+    "carousel_items": [
+      {
+        "title": "Bowl Your Way Through the Heat: Why Bowling Should Be Your New Favorite Summer Activity",
+        "description": "Summer is the time for outdoors, barbecues, pool parties, and beaches! But if you are not into the heat and want a cool way to have fun this summer, bowling is your answer.",
+        "image": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=600&fit=crop"
+      },
+      {
+        "title": "Corporate Team Building Events",
+        "description": "Build stronger teams with our corporate bowling packages. Perfect for company outings and employee appreciation events.",
+        "image": "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=800&h=600&fit=crop"
+      },
+      {
+        "title": "Birthday Party Packages",
+        "description": "Make your next birthday celebration unforgettable with our complete party packages including food, decorations, and dedicated party host.",
+        "image": "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800&h=600&fit=crop"
+      }
+    ],
+    
+    "contact_email": "info@bowlphl.com",
+    "contact_phone": "302-998-8811",
+    "footer_text": "Pleasant Hill Lanes is a family-owned and operated bowling center. Opened in 1962 by Robert Maclary, who envisioned bringing wholesome family entertainment to Wilmington, DE."
+  },
+  "tracking_pixels": {},
+  "is_published": true,
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "templates": {
+    "id": "template-page-one-001",
+    "name": "Template Page One",
+    "type": "template-page-one",
+    "category": "bowling-entertainment"
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "id": "789e0123-e89b-12d3-a456-426614174005",
+  "funnel_id": "456e7890-e89b-12d3-a456-426614174001",
+  "template_id": "template-events-001",
+  "page_order": 1,
+  "slug": "home",
+  "content": {
+    "title": "Professional Events & Conference Planning",
+    "meta_description": "Expert event planning for corporate conferences, product launches, team building, and professional gatherings with full-service coordination.",
+    
+    "hero_title": "Exceptional Events, Flawlessly Executed",
+    "hero_subtitle": "Professional event planning that exceeds expectations",
+    "hero_background": "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=1920&h=1080&fit=crop",
+    
+    "event_types": [
+      {
+        "name": "Corporate Conferences",
+        "description": "Professional meetings and presentations with full AV support",
+        "icon": "🏢"
+      },
+      {
+        "name": "Product Launches",
+        "description": "Memorable brand experiences that create lasting impressions",
+        "icon": "🚀"
+      },
+      {
+        "name": "Team Building",
+        "description": "Strengthen workplace relationships with engaging activities",
+        "icon": "👥"
+      },
+      {
+        "name": "Networking Events",
+        "description": "Connect industry professionals in comfortable settings",
+        "icon": "🤝"
+      },
+      {
+        "name": "Training Seminars",
+        "description": "Educational workshops and professional development sessions",
+        "icon": "📚"
+      },
+      {
+        "name": "Awards Ceremonies",
+        "description": "Celebrate achievements and recognize excellence in style",
+        "icon": "🏆"
+      }
+    ]
+  },
+  "tracking_pixels": {},
+  "is_published": true,
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "templates": {
+    "id": "template-events-001",
+    "name": "Events Booking Design",
+    "type": "events",
+    "category": "booking"
+  }
+}
