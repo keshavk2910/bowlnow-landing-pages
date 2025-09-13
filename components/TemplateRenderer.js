@@ -25,8 +25,9 @@ export default function TemplateRenderer({ template, content, site, page, sessio
     setLoading(true)
     
     try {
-      // Get attribution data from localStorage
-      const attributionData = JSON.parse(localStorage.getItem('attribution_data') || '{}')
+      // Get attribution data from cookies (site-specific)
+      const { getAttributionForGHL } = await import('../lib/attribution-cookies')
+      const ghlAttribution = getAttributionForGHL(site.id)
       
       const submissionData = {
         session_id: sessionId,
@@ -34,8 +35,8 @@ export default function TemplateRenderer({ template, content, site, page, sessio
         page_id: page.id,
         form_data: formData,
         form_type: formType,
-        utm_data: attributionData.utm_params || {},
-        attribution_data: attributionData
+        utm_data: ghlAttribution?.lastAttributionSource || {},
+        attribution_data: ghlAttribution || {}
       }
 
       const response = await fetch('/api/forms/submit', {
@@ -62,7 +63,7 @@ export default function TemplateRenderer({ template, content, site, page, sessio
           session_id: sessionId,
           conversion_type: 'form_submit',
           page_id: page.id,
-          attribution_data: attributionData
+          attribution_data: ghlAttribution || {}
         })
       })
 
@@ -112,7 +113,7 @@ export default function TemplateRenderer({ template, content, site, page, sessio
           plan_id: planId,
           session_id: sessionId,
           site_id: site.id,
-          attribution_data: attributionData,
+          attribution_data: ghlAttribution || {},
           success_url: `${window.location.origin}/${site.slug}/thank-you?session_id={CHECKOUT_SESSION_ID}`,
           cancel_url: window.location.href
         })
@@ -166,8 +167,9 @@ export default function TemplateRenderer({ template, content, site, page, sessio
     setLoading(true)
     
     try {
-      // Get attribution data from localStorage
-      const attributionData = JSON.parse(localStorage.getItem('attribution_data') || '{}')
+      // Get attribution data from cookies (site-specific)
+      const { getAttributionForGHL } = await import('../lib/attribution-cookies')
+      const ghlAttribution = getAttributionForGHL(site.id)
       
       const submissionData = {
         session_id: sessionId,
@@ -175,8 +177,8 @@ export default function TemplateRenderer({ template, content, site, page, sessio
         page_id: page.id,
         form_data: formData,
         form_type: formType,
-        utm_data: attributionData.utm_params || {},
-        attribution_data: attributionData
+        utm_data: ghlAttribution?.lastAttributionSource || {},
+        attribution_data: ghlAttribution || {}
       }
 
       const response = await fetch('/api/forms/submit', {
@@ -203,7 +205,7 @@ export default function TemplateRenderer({ template, content, site, page, sessio
           session_id: sessionId,
           conversion_type: 'form_submit',
           page_id: page.id,
-          attribution_data: attributionData
+          attribution_data: ghlAttribution || {}
         })
       })
 
@@ -255,7 +257,7 @@ export default function TemplateRenderer({ template, content, site, page, sessio
           conversion_type: 'checkout_start',
           conversion_value: planData.price,
           page_id: page.id,
-          attribution_data: attributionData,
+          attribution_data: ghlAttribution || {},
           metadata: { plan_id: planId, plan_name: planData.name }
         })
       })
@@ -298,7 +300,7 @@ export default function TemplateRenderer({ template, content, site, page, sessio
           plan_id: planId,
           session_id: sessionId,
           site_id: site.id,
-          attribution_data: attributionData,
+          attribution_data: ghlAttribution || {},
           success_url: `${window.location.origin}/${site.slug}/thank-you?session_id={CHECKOUT_SESSION_ID}`,
           cancel_url: window.location.href
         })

@@ -1,26 +1,13 @@
-import jwt from 'jsonwebtoken'
+import { requirePortalAuth } from '../../../lib/portal-auth'
 import { createRouteHandlerClient } from '../../../lib/supabase'
 
-export default async function handler(req, res) {
+export default requirePortalAuth(async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
   try {
-    // Verify JWT token
-    const token = req.headers.authorization?.replace('Bearer ', '')
-    
-    if (!token) {
-      return res.status(401).json({ error: 'No authentication token provided' })
-    }
-
-    const decoded = jwt.verify(token, process.env.NEXTAUTH_SECRET)
-    
-    if (decoded.type !== 'client') {
-      return res.status(403).json({ error: 'Invalid token type' })
-    }
-
-    const siteId = decoded.siteId
+    const siteId = req.user.siteId
     const supabase = createRouteHandlerClient()
 
     // Get basic stats for the site
@@ -93,14 +80,10 @@ export default async function handler(req, res) {
     })
 
   } catch (error) {
-    if (error.name === 'JsonWebTokenError') {
-      return res.status(401).json({ error: 'Invalid authentication token' })
-    }
-    
     console.error('Error fetching portal dashboard stats:', error)
     res.status(500).json({ 
       error: 'Failed to fetch dashboard stats',
       details: error.message
     })
   }
-}
+})

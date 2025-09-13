@@ -1,63 +1,70 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { getAttributionFromURL, updateAttribution, getAttributionForGHL } from '../lib/attribution-cookies'
 
 export default function AttributionTracker({ siteId, pageId, sessionId }) {
   const router = useRouter()
 
   useEffect(() => {
-    if (!sessionId) return
+    if (!sessionId || !siteId) return
 
     const trackAttribution = async () => {
       try {
-        // Get URL parameters
-        const urlParams = new URLSearchParams(window.location.search)
-        const referrer = document.referrer
+        // Get attribution from URL if present
+        const urlAttribution = getAttributionFromURL()
+        console.log('URL Attribution found:', urlAttribution)
         
-        // Collect attribution data
-        const attributionData = {
-          session_id: sessionId,
-          page_id: pageId,
-          utm_source: urlParams.get('utm_source'),
-          utm_medium: urlParams.get('utm_medium'),
-          utm_campaign: urlParams.get('utm_campaign'),
-          utm_term: urlParams.get('utm_term'),
-          utm_content: urlParams.get('utm_content'),
-          gclid: urlParams.get('gclid'),
-          fbclid: urlParams.get('fbclid'),
-          referrer_url: referrer,
-          landing_page_url: window.location.href,
-          user_agent: navigator.userAgent,
-          timestamp: new Date().toISOString()
-        }
-
-        // Remove null/undefined values
-        Object.keys(attributionData).forEach(key => {
-          if (attributionData[key] === null || attributionData[key] === undefined) {
-            delete attributionData[key]
+        // Update cookie-based attribution (preserves first touch, updates last touch)
+        const attribution = updateAttribution(siteId, urlAttribution)
+        console.log('Attribution after update:', attribution)
+        
+        // Get the complete attribution data for tracking
+        const ghlAttribution = getAttributionForGHL(siteId)
+        console.log('GHL Attribution formatted:', ghlAttribution)
+        
+        // Only track if we have attribution data
+        if (ghlAttribution) {
+          // Store in localStorage for TemplateRenderer access
+          localStorage.setItem('attribution_data', JSON.stringify({
+            ...ghlAttribution,
+            utm_params: ghlAttribution.lastAttributionSource
+          }))
+          
+          // Send attribution data to our API for database storage
+          const attributionData = {
+            session_id: sessionId,
+            page_id: pageId,
+            utm_source: ghlAttribution.lastAttributionSource.utmSource,
+            utm_medium: ghlAttribution.lastAttributionSource.utmMedium,
+            utm_campaign: ghlAttribution.lastAttributionSource.utmCampaign,
+            utm_term: ghlAttribution.lastAttributionSource.utmTerm,
+            utm_content: ghlAttribution.lastAttributionSource.utmContent,
+            gclid: ghlAttribution.lastAttributionSource.gclid,
+            fbclid: ghlAttribution.lastAttributionSource.fbclid,
+            referrer_url: ghlAttribution.lastAttributionSource.referrer,
+            landing_page_url: ghlAttribution.lastAttributionSource.url,
+            ip_address: null, // Will be set server-side
+            user_agent: navigator.userAgent,
+            first_touch: !attribution || attribution.visitCount === 1,
+            last_touch: true
           }
-        })
 
-        // Only track if we have meaningful attribution data
-        const hasAttributionData = attributionData.utm_source || 
-                                 attributionData.utm_medium || 
-                                 attributionData.gclid || 
-                                 attributionData.fbclid || 
-                                 attributionData.referrer_url
-
-        if (hasAttributionData) {
-          // Send attribution data to our API
-          await fetch('/api/tracking/attribution', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(attributionData)
+          // Remove null/undefined values
+          Object.keys(attributionData).forEach(key => {
+            if (attributionData[key] === null || attributionData[key] === undefined || attributionData[key] === '') {
+              delete attributionData[key]
+            }
           })
 
-          // Store attribution data in localStorage for session persistence
-          const existingAttribution = localStorage.getItem('attribution_data')
-          if (!existingAttribution) {
-            localStorage.setItem('attribution_data', JSON.stringify(attributionData))
+          // Send to API only if we have meaningful data
+          if (Object.keys(attributionData).length > 3) { // More than just session_id, page_id, user_agent
+            await fetch('/api/tracking/attribution', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(attributionData)
+            })
           }
         }
 
@@ -65,15 +72,7 @@ export default function AttributionTracker({ siteId, pageId, sessionId }) {
         const sessionData = {
           session_id: sessionId,
           page_id: pageId,
-          utm_params: {
-            utm_source: attributionData.utm_source,
-            utm_medium: attributionData.utm_medium,
-            utm_campaign: attributionData.utm_campaign,
-            utm_term: attributionData.utm_term,
-            utm_content: attributionData.utm_content,
-            gclid: attributionData.gclid,
-            fbclid: attributionData.fbclid
-          }
+          utm_params: ghlAttribution?.lastAttributionSource || {}
         }
 
         await fetch('/api/tracking/page-session', {
