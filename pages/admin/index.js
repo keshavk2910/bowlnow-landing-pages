@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import AdminLayout from '../../components/admin/AdminLayout'
-import { createClientComponentClient } from '../../lib/supabase'
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -77,9 +77,9 @@ export default function AdminDashboard() {
             <div className="px-4 py-5 sm:p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg leading-6 font-medium text-gray-900">Recent Sites</h3>
-                <a href="/admin/sites" className="text-sm text-indigo-600 hover:text-indigo-900">
+                <Link href="/admin/sites" className="text-sm text-indigo-600 hover:text-indigo-900">
                   View all
-                </a>
+                </Link>
               </div>
               
               {loading ? (
@@ -132,9 +132,9 @@ export default function AdminDashboard() {
             <div className="px-4 py-5 sm:p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg leading-6 font-medium text-gray-900">Recent Orders</h3>
-                <a href="/admin/analytics" className="text-sm text-indigo-600 hover:text-indigo-900">
+                <Link href="/admin/analytics" className="text-sm text-indigo-600 hover:text-indigo-900">
                   View all
-                </a>
+                </Link>
               </div>
               
               {loading ? (

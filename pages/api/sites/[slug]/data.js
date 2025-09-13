@@ -1,4 +1,4 @@
-import { getSiteBySlug, getFunnelsBySite } from '../../../../lib/database'
+import { getSiteBySlug, getSitePages } from '../../../../lib/database'
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -18,13 +18,13 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: 'Site not found' })
     }
 
-    // Get funnels for this site
-    const funnels = await getFunnelsBySite(site.id)
+    // Get pages for this site
+    const pages = await getSitePages(site.id)
 
     res.status(200).json({
       success: true,
       site,
-      funnels: funnels || []
+      pages: pages || []
     })
 
   } catch (error) {

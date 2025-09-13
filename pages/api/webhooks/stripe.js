@@ -202,18 +202,6 @@ async function syncToGHL(order, stage) {
 }
 
 // Helper functions
-async function getOrderByStripeSession(sessionId) {
-  const supabase = createRouteHandlerClient()
-  
-  const { data, error } = await supabase
-    .from('orders')
-    .select('*')
-    .eq('metadata->>stripe_session_id', sessionId)
-    .single()
-  
-  if (error) return null
-  return data
-}
 
 async function getSite(siteId) {
   const supabase = createRouteHandlerClient()

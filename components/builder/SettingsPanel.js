@@ -55,7 +55,7 @@ export default function SettingsPanel() {
 
           {!selected.settings && (
             <div className="text-sm text-gray-500">
-              This component doesn't have configurable settings.
+              This component doesn&apos;t have configurable settings.
             </div>
           )}
         </div>

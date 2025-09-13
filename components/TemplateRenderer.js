@@ -326,7 +326,7 @@ export default function TemplateRenderer({ template, content, site, page, sessio
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Template Not Found</h1>
-          <p className="text-gray-600">Template type "{templateType}" is not supported.</p>
+          <p className="text-gray-600">Template type &quot;{templateType}&quot; is not supported.</p>
         </div>
       </div>
     )

@@ -84,7 +84,7 @@ export default function SiteManagePage() {
       <AdminLayout title="Site Not Found">
         <div className="text-center py-12">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Site Not Found</h1>
-          <p className="text-gray-600 mb-6">The site "{slug}" could not be found.</p>
+          <p className="text-gray-600 mb-6">The site &quot;{slug}&quot; could not be found.</p>
           <Link
             href="/admin/sites"
             className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"

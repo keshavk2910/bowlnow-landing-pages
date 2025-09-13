@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import PortalLayout from '../../components/portal/PortalLayout'
 
 export default function PortalDashboard() {
@@ -78,7 +79,7 @@ export default function PortalDashboard() {
                   Welcome back, {user.name}!
                 </h3>
                 <p className="mt-1 text-sm text-gray-500">
-                  Here's what's happening with your site: {user.site?.name}
+                  Here&apos;s what&apos;s happening with your site: {user.site?.name}
                 </p>
               </div>
             </div>
@@ -128,12 +129,12 @@ export default function PortalDashboard() {
             <div className="px-4 py-5 sm:p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg leading-6 font-medium text-gray-900">Recent Leads</h3>
-                <a 
+                <Link 
                   href="/portal/leads" 
                   className="text-sm text-indigo-600 hover:text-indigo-900"
                 >
                   View all
-                </a>
+                </Link>
               </div>
               
               {loading ? (
@@ -190,12 +191,12 @@ export default function PortalDashboard() {
             <div className="px-4 py-5 sm:p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg leading-6 font-medium text-gray-900">Recent Orders</h3>
-                <a 
+                <Link 
                   href="/portal/orders" 
                   className="text-sm text-indigo-600 hover:text-indigo-900"
                 >
                   View all
-                </a>
+                </Link>
               </div>
               
               {loading ? (

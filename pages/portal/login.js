@@ -159,7 +159,7 @@ export default function ClientLogin() {
 
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
-                Don't have access?{' '}
+                Don&apos;t have access?{' '}
                 <span className="font-medium text-indigo-600">
                   Contact your administrator
                 </span>

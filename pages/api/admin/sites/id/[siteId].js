@@ -1,5 +1,5 @@
-import { getSiteBySlug, updateSite } from '../../../../lib/database'
-import { createRouteHandlerClient } from '../../../../lib/supabase'
+import { getSiteBySlug, updateSite } from '../../../../../lib/database'
+import { createRouteHandlerClient } from '../../../../../lib/supabase'
 
 export default async function handler(req, res) {
   const { siteId } = req.query
