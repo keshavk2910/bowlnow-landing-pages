@@ -69,6 +69,35 @@ export default function SiteManagePage() {
     }
   }
 
+  async function deletePage(pageId, pageName, isHomepage) {
+    // Prevent deletion of homepage
+    if (isHomepage) {
+      alert('Cannot delete the homepage. Set another page as homepage first.')
+      return
+    }
+
+    if (!confirm(`Are you sure you want to delete the page "${pageName}"? This action cannot be undone.`)) {
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/admin/pages/${pageId}`, {
+        method: 'DELETE'
+      })
+
+      if (response.ok) {
+        fetchSiteData() // Refresh the data
+        alert('Page deleted successfully')
+      } else {
+        const error = await response.json()
+        alert(error.error || 'Failed to delete page')
+      }
+    } catch (error) {
+      console.error('Error deleting page:', error)
+      alert('Failed to delete page')
+    }
+  }
+
   if (loading) {
     return (
       <AdminLayout title="Loading...">
@@ -263,6 +292,12 @@ export default function SiteManagePage() {
                           >
                             Preview
                           </Link>
+                          <button
+                            onClick={() => deletePage(page.id, page.name, page.is_homepage)}
+                            className="text-red-600 hover:text-red-800 text-sm"
+                          >
+                            Delete
+                          </button>
                         </div>
                       </div>
                     </div>

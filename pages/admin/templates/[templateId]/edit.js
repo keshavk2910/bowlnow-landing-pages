@@ -311,13 +311,46 @@ export default function EditTemplatePage() {
                           <option value='text'>Text</option>
                           <option value='textarea'>Textarea</option>
                           <option value='url'>URL</option>
-                          <option value='image'>Image</option>
+                          <option value='image'>Image Upload</option>
+                          <option value='slider'>Slider (Multiple Images)</option>
                           <option value='array'>Array</option>
                           <option value='object'>Object</option>
                           <option value='boolean'>Boolean</option>
                         </select>
                       </div>
                     </div>
+
+                    {/* Slider-specific settings */}
+                    {field.type === 'slider' && (
+                      <div className="mt-3 grid grid-cols-2 gap-4">
+                        <div>
+                          <label className='block text-xs font-medium text-gray-700 mb-1'>
+                            Minimum Slides
+                          </label>
+                          <input
+                            type="number"
+                            min="1"
+                            max="10"
+                            value={field.minSlides || 1}
+                            onChange={(e) => handleFieldChange(index, 'minSlides', parseInt(e.target.value))}
+                            className='w-full px-2 py-1 border border-gray-300 rounded text-sm'
+                          />
+                        </div>
+                        <div>
+                          <label className='block text-xs font-medium text-gray-700 mb-1'>
+                            Maximum Slides
+                          </label>
+                          <input
+                            type="number"
+                            min="1"
+                            max="20"
+                            value={field.maxSlides || 10}
+                            onChange={(e) => handleFieldChange(index, 'maxSlides', parseInt(e.target.value))}
+                            className='w-full px-2 py-1 border border-gray-300 rounded text-sm'
+                          />
+                        </div>
+                      </div>
+                    )}
 
                     <div className='mt-3 flex items-center justify-between'>
                       <label className='flex items-center'>

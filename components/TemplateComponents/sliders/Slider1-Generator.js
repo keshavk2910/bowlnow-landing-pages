@@ -45,13 +45,14 @@ const DEFAULT_SLIDES = [
 ];
 
 const Slider1Generator = ({ content, themeColor }) => {
+  console.log('DEBUG: Slider1Generator content:', content);
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   const paginationRef = useRef(null);
   const [swiperReady, setSwiperReady] = useState(false);
 
-  const actualSlides = content?.slides?.length
-    ? content?.slides
+  const actualSlides = content?.slider1?.length
+    ? content?.slider1
     : DEFAULT_SLIDES;
 
   // Swiper navigation fix: wait for refs to be attached
@@ -128,7 +129,7 @@ const Slider1Generator = ({ content, themeColor }) => {
                 borderRadius: '15px',
                 overflow: 'hidden',
                 backgroundColor: themeColor,
-                backgroundImage: `url(${slide.image})`,
+                backgroundImage: `url(${slide.url})`,
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
@@ -149,7 +150,7 @@ const Slider1Generator = ({ content, themeColor }) => {
                 )}
                 {slide.buttonText && (
                   <a
-                    href={slide.link}
+                    href={slide.buttonLink}
                     className='bg-transparent border-2 border-white text-white px-5 py-2 text-sm rounded-full w-fit mt-5'
                   >
                     {slide.buttonText}

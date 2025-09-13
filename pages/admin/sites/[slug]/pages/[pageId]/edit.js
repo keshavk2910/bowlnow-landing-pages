@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import AdminLayout from '../../../../../../components/admin/AdminLayout'
+import FileUpload from '../../../../../../components/FileUpload'
+import SliderField from '../../../../../../components/TemplateComponents/SliderField'
 
 export default function EditPagePage() {
   const router = useRouter()
@@ -12,12 +14,20 @@ export default function EditPagePage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [formData, setFormData] = useState({})
+  const [validationResult, setValidationResult] = useState({ isValid: true, errors: [] })
 
   useEffect(() => {
     if (slug && pageId) {
       fetchPageData()
     }
   }, [slug, pageId])
+
+  // Re-run validation when formData or template changes
+  useEffect(() => {
+    const result = validateSliderRequirements()
+    setValidationResult(result)
+    console.log('Validation updated:', result)
+  }, [formData, template])
 
   async function fetchPageData() {
     try {
@@ -45,6 +55,21 @@ export default function EditPagePage() {
   }
 
   async function handleSave() {
+    // Validate slider field requirements
+    if (template && template.config_schema.fields) {
+      for (const field of template.config_schema.fields) {
+        if (field.type === 'slider' && field.required) {
+          const slides = formData[field.key] || []
+          const minSlides = field.minSlides || 1
+          
+          if (slides.length < minSlides) {
+            alert(`"${field.label}" requires at least ${minSlides} slides. Currently has ${slides.length}.`)
+            return
+          }
+        }
+      }
+    }
+
     setSaving(true)
 
     try {
@@ -75,6 +100,44 @@ export default function EditPagePage() {
   const handleFieldChange = (fieldKey, value) => {
     setFormData(prev => ({ ...prev, [fieldKey]: value }))
   }
+
+  // Validate all slider requirements
+  const validateSliderRequirements = () => {
+    if (!template || !template.config_schema || !template.config_schema.fields) {
+      return { isValid: true, errors: [] }
+    }
+    
+    const errors = []
+    
+    for (const field of template.config_schema.fields) {
+      if (field.type === 'slider') {
+        const slides = formData[field.key] || []
+        const minSlides = field.minSlides || 1
+        
+        // Check if field is required or has minimum slides requirement
+        if (field.required || minSlides > 0) {
+          if (slides.length < minSlides) {
+            errors.push(`"${field.label}" requires at least ${minSlides} slides (currently has ${slides.length})`)
+          }
+        }
+      }
+      
+      // Also validate other required fields
+      if (field.required && field.type !== 'slider') {
+        const value = formData[field.key]
+        if (!value || (typeof value === 'string' && value.trim() === '')) {
+          errors.push(`"${field.label}" is required`)
+        }
+      }
+    }
+    
+    return {
+      isValid: errors.length === 0,
+      errors
+    }
+  }
+
+  const canSave = validationResult.isValid && !saving
 
   const togglePublished = async () => {
     try {
@@ -161,6 +224,27 @@ export default function EditPagePage() {
           </div>
         </div>
 
+        {/* Validation Summary */}
+        {!validationResult.isValid && (
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+            <div className="flex items-start">
+              <div className="flex-shrink-0">
+                <ExclamationTriangleIcon className="h-5 w-5 text-yellow-400" />
+              </div>
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-yellow-800">Page Validation Errors</h3>
+                <div className="mt-2 text-sm text-yellow-700">
+                  <ul className="list-disc list-inside space-y-1">
+                    {validationResult.errors.map((error, index) => (
+                      <li key={index}>{error}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Form Editor */}
           <div className="bg-white rounded-lg shadow">
@@ -211,30 +295,31 @@ export default function EditPagePage() {
                   )}
                   
                   {field.type === 'image' && (
-                    <div className="space-y-2">
-                      <input
-                        type="url"
-                        value={formData[field.key] || ''}
-                        onChange={(e) => handleFieldChange(field.key, e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        placeholder="Image URL"
-                        required={field.required}
-                      />
-                      {formData[field.key] && (
-                        <div className="w-full h-32 bg-gray-100 rounded-md flex items-center justify-center">
-                          <img
-                            src={formData[field.key]}
-                            alt={field.label}
-                            className="max-h-full max-w-full object-contain rounded"
-                            onError={(e) => {
-                              e.target.style.display = 'none'
-                              e.target.nextSibling.style.display = 'block'
-                            }}
-                          />
-                          <div className="text-gray-500 text-sm hidden">Invalid image URL</div>
-                        </div>
-                      )}
-                    </div>
+                    <FileUpload
+                      value={formData[field.key]}
+                      onFileUploaded={(file) => handleFieldChange(field.key, file?.url || null)}
+                      siteId={site.id}
+                      pageId={page.id}
+                      fieldKey={field.key}
+                      allowedTypes={['image']}
+                      maxSizeMB={5}
+                      multiple={false}
+                    />
+                  )}
+                  
+                  {field.type === 'slider' && (
+                    <SliderField
+                      value={formData[field.key] || []}
+                      onChange={(slides) => handleFieldChange(field.key, slides)}
+                      siteId={site.id}
+                      pageId={page.id}
+                      fieldKey={field.key}
+                      label={field.label}
+                      description={field.description}
+                      minSlides={field.minSlides || 1}
+                      maxSlides={field.maxSlides || 10}
+                      required={field.required}
+                    />
                   )}
                   
                   <p className="text-xs text-gray-500 mt-1">
@@ -283,17 +368,32 @@ export default function EditPagePage() {
           >
             Cancel
           </Link>
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className={`py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
-              saving 
-                ? 'bg-gray-400 cursor-not-allowed' 
-                : 'bg-indigo-600 hover:bg-indigo-700'
-            }`}
-          >
-            {saving ? 'Saving...' : 'Save Changes'}
-          </button>
+          <div className="relative group">
+            <button
+              onClick={handleSave}
+              disabled={!canSave}
+              className={`py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
+                !canSave
+                  ? 'bg-gray-400 cursor-not-allowed' 
+                  : 'bg-indigo-600 hover:bg-indigo-700'
+              }`}
+              title={!validationResult.isValid ? validationResult.errors.join('\n') : ''}
+            >
+              {saving ? 'Saving...' : 'Save Changes'}
+            </button>
+            
+            {/* Error tooltip */}
+            {!validationResult.isValid && (
+              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
+                <div className="space-y-1">
+                  {validationResult.errors.map((error, index) => (
+                    <div key={index}>{error}</div>
+                  ))}
+                </div>
+                <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </AdminLayout>
@@ -304,6 +404,14 @@ function ArrowLeftIcon(props) {
   return (
     <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+    </svg>
+  )
+}
+
+function ExclamationTriangleIcon(props) {
+  return (
+    <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.996-.833-2.766 0L3.046 16.5c-.77.833.192 2.5 1.732 2.5z" />
     </svg>
   )
 }

@@ -39,7 +39,7 @@ const DEFAULT_SLIDES = [
       'Celebrate your special day with friends and family. Make your birthday unforgettable with our party packages.',
     image:
       'https://partners.bowlnow.com/wp-content/uploads/2025/04/t4200x2520-e1744691387553.webp',
-    link: '#birthday-parties',
+    buttonLink: '#birthday-parties',
     buttonText: 'Learn More',
   },
   {
@@ -48,7 +48,7 @@ const DEFAULT_SLIDES = [
       'Perfect venue for team building and corporate celebrations. Create memorable experiences for your team.',
     image:
       'https://partners.bowlnow.com/wp-content/uploads/2025/04/t4200x2520-e1744691387553.webp',
-    link: '#company-events',
+    buttonLink: '#company-events',
     buttonText: 'Learn More',
   },
   {
@@ -57,7 +57,7 @@ const DEFAULT_SLIDES = [
       'Fun and safe environment for kids and teens to celebrate and enjoy.',
     image:
       'https://partners.bowlnow.com/wp-content/uploads/2025/04/t4200x2520-e1744691387553.webp',
-    link: '#youth-parties',
+    buttonLink: '#youth-parties',
     buttonText: 'Learn More',
   },
   {
@@ -66,7 +66,7 @@ const DEFAULT_SLIDES = [
       'Host your next fundraiser with us and make a difference in your community.',
     image:
       'https://partners.bowlnow.com/wp-content/uploads/2025/04/t4200x2520-e1744691387553.webp',
-    link: '#fundraisers',
+    buttonLink: '#fundraisers',
     buttonText: 'Learn More',
   },
   {
@@ -75,7 +75,7 @@ const DEFAULT_SLIDES = [
       'Host your next fundraiser with us and make a difference in your community.',
     image:
       'https://partners.bowlnow.com/wp-content/uploads/2025/04/t4200x2520-e1744691387553.webp',
-    link: '#fundraisers',
+    buttonLink: '#fundraisers',
     buttonText: 'Learn More',
   },
   {
@@ -84,7 +84,7 @@ const DEFAULT_SLIDES = [
       'Host your next fundraiser with us and make a difference in your community.',
     image:
       'https://partners.bowlnow.com/wp-content/uploads/2025/04/t4200x2520-e1744691387553.webp',
-    link: '#fundraisers',
+    buttonLink: '#fundraisers',
     buttonText: 'Learn More',
   },
 ];
@@ -96,8 +96,8 @@ const Slider2Section = ({ content, themeColor }) => {
   const [swiperReady, setSwiperReady] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const actualSlides = content?.slider2_slides?.length
-    ? content.slider2_slides
+  const actualSlides = content?.slider2?.length
+    ? content.slider2
     : DEFAULT_SLIDES;
 
   useEffect(() => {
@@ -219,7 +219,7 @@ const Slider2Section = ({ content, themeColor }) => {
                 )}
                 {slide.buttonText && (
                   <a
-                    href={slide.link}
+                    href={slide.buttonLink}
                     className='bg-transparent border-2 border-white text-white px-5 py-2 text-sm rounded-full w-fit mt-2 mx-auto'
                   >
                     {slide.buttonText}
