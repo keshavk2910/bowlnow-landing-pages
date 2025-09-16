@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import FileUpload from './FileUpload'
 import SliderField from './TemplateComponents/SliderField'
+import PagePipelineConfig from './PagePipelineConfig'
 
 export default function PageContentForm({ 
   template, 
@@ -8,10 +9,22 @@ export default function PageContentForm({
   onChange, 
   siteId, 
   pageId,
+  siteSlug,
+  defaultPipeline,
+  defaultStageMapping,
   validationResult = { isValid: true, errors: [] }
 }) {
   const handleFieldChange = (fieldKey, value) => {
     onChange({ ...formData, [fieldKey]: value })
+  }
+
+  const handlePipelineChange = (pipelineId, stageMapping) => {
+    const newFormData = { 
+      ...formData, 
+      pipeline_id: pipelineId,
+      stage_mappings: stageMapping
+    }
+    onChange(newFormData)
   }
 
   if (!template || !template.config_schema || !template.config_schema.fields) {
@@ -97,6 +110,19 @@ export default function PageContentForm({
           </p>
         </div>
       ))}
+
+      {/* Pipeline Configuration */}
+      <div className="border-t border-gray-200 pt-6">
+        <PagePipelineConfig
+          siteSlug={siteSlug}
+          pageId={pageId}
+          currentPipeline={formData.pipeline_id}
+          currentStageMapping={formData.stage_mappings}
+          defaultPipeline={defaultPipeline}
+          defaultStageMapping={defaultStageMapping}
+          onChange={handlePipelineChange}
+        />
+      </div>
 
       {/* Validation Summary */}
       {!validationResult.isValid && (

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import {
   Navigation,
@@ -25,6 +25,24 @@ const sliderStyles = `
     background: #18181b;
     transition: box-shadow 0.4s cubic-bezier(.4,0,.2,1);
   }
+  @media (max-width: 900px) {
+    .slider2-modern-slide {
+      height: 65vh;
+      border-radius: 1.5rem;
+    }
+  }
+  @media (max-width: 640px) {
+    .slider2-modern-slide {
+      height: 60vh;
+      border-radius: 1rem;
+    }
+  }
+  @media (max-width: 480px) {
+    .slider2-modern-slide {
+      height: 65vh;
+      border-radius: 0.75rem;
+    }
+  }
   .slider2-modern-slide .slider2-modern-bg {
     position: absolute;
     inset: 0;
@@ -38,7 +56,7 @@ const sliderStyles = `
   .slider2-modern-slide .slider2-modern-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg,rgba(0,0,0,0.10) 0%,rgba(0,0,0,0.65) 100%);
+    background: linear-gradient(180deg,rgba(0,0,0,0.20) 0%,rgba(0,0,0,0.75) 100%);
     z-index: 1;
     pointer-events: none;
   }
@@ -54,6 +72,11 @@ const sliderStyles = `
     transition: opacity 0.5s cubic-bezier(.4,0,.2,1), transform 0.5s cubic-bezier(.4,0,.2,1);
     will-change: opacity, transform;
     pointer-events: none;
+  }
+  @media (max-width: 640px) {
+    .slider2-modern-content {
+      padding: 1.5rem 1rem 1.5rem 1rem;
+    }
   }
   .swiper-slide-active .slider2-modern-content {
     opacity: 1;
@@ -109,6 +132,12 @@ const sliderStyles = `
   .slider2-modern-nav:hover svg {
     stroke: #18181b;
   }
+  /* Hide navigation on mobile */
+  @media (max-width: 900px) {
+    .slider2-modern-nav {
+      display: none !important;
+    }
+  }
   .slider2-modern-pagination {
     position: absolute;
     left: 50%;
@@ -129,6 +158,27 @@ const sliderStyles = `
   .slider2-modern-pagination .swiper-pagination-bullet-active {
     opacity: 1;
     background: #fff;
+  }
+  /* Swipe icon styles */
+  .slider2-modern-swipe-icon {
+    display: none;
+    position: absolute;
+    left: 50%;
+    bottom: 1.5rem;
+    transform: translateX(-50%);
+    z-index: 20;
+    opacity: 0.85;
+    pointer-events: none;
+    animation: slider2-swipe-bounce 1.6s infinite;
+  }
+  @media (max-width: 900px) {
+    .slider2-modern-swipe-icon {
+      display: block;
+    }
+  }
+  @keyframes slider2-swipe-bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(12px); }
   }
 `;
 
@@ -184,6 +234,15 @@ const DEFAULT_SLIDES = [
 const Slider2Section = ({ content, themeColor }) => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile (width <= 900px)
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 900);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const slides = content?.slider2?.length ? content.slider2 : DEFAULT_SLIDES;
 
@@ -233,15 +292,21 @@ const Slider2Section = ({ content, themeColor }) => {
           centeredSlides={true}
           loop={true}
           initialSlide={initialSlide}
-          navigation={{
-            prevEl: prevRef.current,
-            nextEl: nextRef.current,
-          }}
+          navigation={
+            !isMobile
+              ? {
+                  prevEl: prevRef.current,
+                  nextEl: nextRef.current,
+                }
+              : false
+          }
           onInit={(swiper) => {
-            swiper.params.navigation.prevEl = prevRef.current;
-            swiper.params.navigation.nextEl = nextRef.current;
-            swiper.navigation.init();
-            swiper.navigation.update();
+            if (!isMobile) {
+              swiper.params.navigation.prevEl = prevRef.current;
+              swiper.params.navigation.nextEl = nextRef.current;
+              swiper.navigation.init();
+              swiper.navigation.update();
+            }
           }}
           pagination={{
             el: '.slider2-modern-pagination',
@@ -309,13 +374,14 @@ const Slider2Section = ({ content, themeColor }) => {
               </div>
             </SwiperSlide>
           ))}
-          {/* Navigation */}
+          {/* Navigation (desktop only, hidden on mobile via CSS) */}
           <button
             ref={prevRef}
             type='button'
             className='slider2-modern-nav left-2 md:left-8'
             style={{ left: 0 }}
             aria-label='Previous Slide'
+            tabIndex={isMobile ? -1 : 0}
           >
             <svg
               width='36'
@@ -333,6 +399,7 @@ const Slider2Section = ({ content, themeColor }) => {
             className='slider2-modern-nav right-2 md:right-8'
             style={{ right: 0 }}
             aria-label='Next Slide'
+            tabIndex={isMobile ? -1 : 0}
           >
             <svg
               width='36'
@@ -344,6 +411,69 @@ const Slider2Section = ({ content, themeColor }) => {
               <path d='M9 5l7 7-7 7' stroke='currentColor' />
             </svg>
           </button>
+          {/* Swipe Icon (mobile only, finger swiping) */}
+          <div className='slider2-modern-swipe-icon'>
+            {/* Finger swipe icon SVG */}
+            <svg width='54' height='54' viewBox='0 0 54 54' fill='none'>
+              <g>
+                {/* Hand palm */}
+                <path
+                  d='M27 38V18.5C27 16.0147 29.0147 14 31.5 14C33.9853 14 36 16.0147 36 18.5V32'
+                  stroke='#fff'
+                  strokeWidth='3'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  opacity='0.9'
+                  fill='none'
+                />
+                {/* Index finger */}
+                <path
+                  d='M27 38V13.5C27 11.0147 24.9853 9 22.5 9C20.0147 9 18 11.0147 18 13.5V32'
+                  stroke='#fff'
+                  strokeWidth='3'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  opacity='0.9'
+                  fill='none'
+                />
+                {/* Thumb */}
+                <path
+                  d='M27 38V22C27 20.3431 25.6569 19 24 19C22.3431 19 21 20.3431 21 22V32'
+                  stroke='#fff'
+                  strokeWidth='3'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  opacity='0.9'
+                  fill='none'
+                />
+                {/* Palm base */}
+                <ellipse
+                  cx='27'
+                  cy='42'
+                  rx='10'
+                  ry='6'
+                  fill='#fff'
+                  opacity='0.15'
+                />
+                {/* Swipe arrow */}
+                <path
+                  d='M27 46c0 0 0-2 0-4'
+                  stroke='#fff'
+                  strokeWidth='2'
+                  strokeLinecap='round'
+                  opacity='0.7'
+                />
+                <path
+                  d='M23 44l4 4 4-4'
+                  stroke='#fff'
+                  strokeWidth='2'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  opacity='0.7'
+                />
+              </g>
+            </svg>
+          </div>
           {/* Pagination */}
           <div className='slider2-modern-pagination' />
         </Swiper>

@@ -45,7 +45,6 @@ const DEFAULT_SLIDES = [
 ];
 
 const Slider1Generator = ({ content, themeColor }) => {
-  console.log('DEBUG: Slider1Generator content:', content);
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   const paginationRef = useRef(null);
@@ -64,7 +63,7 @@ const Slider1Generator = ({ content, themeColor }) => {
     <div className='w-full relative pb-20'>
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
-        spaceBetween={24}
+        spaceBetween={16}
         autoplay={{
           delay: 4000,
           disableOnInteraction: false,
@@ -72,7 +71,7 @@ const Slider1Generator = ({ content, themeColor }) => {
         }}
         loop={true}
         loopFillGroupWithBlank={true}
-        slidesPerView={2.2}
+        slidesPerView={1.1}
         slidesPerGroup={1}
         navigation={
           swiperReady
@@ -91,9 +90,11 @@ const Slider1Generator = ({ content, themeColor }) => {
             : false
         }
         breakpoints={{
-          640: { slidesPerView: 1, slidesPerGroup: 1 },
-          768: { slidesPerView: 2.2, slidesPerGroup: 1 },
-          1024: { slidesPerView: 2.4, slidesPerGroup: 1 },
+          0: { slidesPerView: 1.1, slidesPerGroup: 1, spaceBetween: 12 },
+          480: { slidesPerView: 1.2, slidesPerGroup: 1, spaceBetween: 16 },
+          640: { slidesPerView: 1, slidesPerGroup: 1, spaceBetween: 16 },
+          768: { slidesPerView: 1, slidesPerGroup: 1, spaceBetween: 20 },
+          1024: { slidesPerView: 2.4, slidesPerGroup: 1, spaceBetween: 24 },
         }}
         className='slider1-swiper relative'
         onSwiper={(swiper) => {
@@ -123,13 +124,18 @@ const Slider1Generator = ({ content, themeColor }) => {
         {actualSlides.map((slide, idx) => (
           <SwiperSlide key={idx} className='rounded-2xl overflow-hidden'>
             <div
-              className='min-w-[300px] bg-white shadow-md p-6 flex mx-auto relative'
+              className={`
+                min-w-[220px] 
+                bg-white shadow-md 
+                p-4 sm:p-6 
+                flex mx-auto relative
+                h-[350px] xs:h-[400px] sm:h-[500px] md:h-[550px] lg:h-[600px]
+              `}
               style={{
-                height: '600px',
                 borderRadius: '15px',
                 overflow: 'hidden',
                 backgroundColor: themeColor,
-                backgroundImage: `url(${slide.url})`,
+                backgroundImage: `url(${slide.url || slide.image})`,
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
@@ -137,21 +143,21 @@ const Slider1Generator = ({ content, themeColor }) => {
             >
               {/* add overlay gradient dark bottom light top */}
               <div className='overlay absolute inset-0 bg-gradient-to-t from-[rgba(0,0,0,0.9)] to-[rgba(0,0,0,0)]'></div>
-              <div className='flex flex-col justify-end z-10 px-5 py-8'>
+              <div className='flex flex-col justify-end z-10 px-3 sm:px-5 py-6 sm:py-8'>
                 {slide.title && (
-                  <h4 className='text-4xl text-white font-semibold mb-5'>
+                  <h4 className='text-2xl sm:text-3xl md:text-4xl text-white font-semibold mb-3 sm:mb-5'>
                     {slide.title}
                   </h4>
                 )}
                 {slide.description && (
-                  <p className='text-white text-sm font-semibold w-2/3'>
+                  <p className='text-white text-xs sm:text-sm font-semibold w-full sm:w-2/3'>
                     {slide.description}
                   </p>
                 )}
                 {slide.buttonText && (
                   <a
-                    href={slide.buttonLink}
-                    className='bg-transparent border-2 border-white text-white px-5 py-2 text-sm rounded-full w-fit mt-5'
+                    href={slide.buttonLink || slide.link}
+                    className='bg-transparent border-2 border-white text-white px-4 sm:px-5 py-2 text-xs sm:text-sm rounded-full w-fit mt-4 sm:mt-5'
                   >
                     {slide.buttonText}
                   </a>
@@ -165,8 +171,8 @@ const Slider1Generator = ({ content, themeColor }) => {
       <button
         ref={prevRef}
         type='button'
-        className='slider1-prev absolute left-auto right-24 top-auto bottom-[25px] z-10 cursor-pointer p-2 bg-transparent border-2 border-gray-300 rounded-full flex items-center justify-center transition hover:border-gray-500'
-        style={{ boxShadow: 'none' }}
+        className='slider1-prev absolute left-4 sm:left-auto right-auto sm:right-24 top-auto bottom-[10px] sm:bottom-[25px] z-10 cursor-pointer p-2 bg-white/80 border-2 border-gray-300 rounded-full flex items-center justify-center transition hover:border-gray-500'
+        style={{ boxShadow: 'none', display: 'none' }}
         aria-label='Previous Slide'
       >
         <svg
@@ -182,8 +188,8 @@ const Slider1Generator = ({ content, themeColor }) => {
       <button
         ref={nextRef}
         type='button'
-        className='slider1-next absolute right-10 top-auto bottom-[25px] z-10 cursor-pointer p-2 bg-transparent border-2 border-gray-300 rounded-full flex items-center justify-center transition hover:border-gray-500'
-        style={{ boxShadow: 'none' }}
+        className='slider1-next absolute right-4 sm:right-10 top-auto bottom-[10px] sm:bottom-[25px] z-10 cursor-pointer p-2 bg-white/80 border-2 border-gray-300 rounded-full flex items-center justify-center transition hover:border-gray-500'
+        style={{ boxShadow: 'none', display: 'none' }}
         aria-label='Next Slide'
       >
         <svg
@@ -198,12 +204,22 @@ const Slider1Generator = ({ content, themeColor }) => {
       </button>
       <div
         ref={paginationRef}
-        className='slider1-pagination flex justify-center mt-6'
+        className='slider1-pagination flex justify-center mt-4 sm:mt-6'
       />
       <style>
         {`
           .slider1-pagination .swiper-pagination-bullet-active {
             background: #000 !important;
+          }
+          @media (max-width: 640px) {
+            .slider1-prev, .slider1-next {
+              display: none !important;
+            }
+          }
+          @media (min-width: 641px) {
+            .slider1-prev, .slider1-next {
+              display: flex !important;
+            }
           }
         `}
       </style>

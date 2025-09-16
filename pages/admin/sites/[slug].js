@@ -323,6 +323,31 @@ export default function SiteManagePage() {
 
         {activeTab === 'integrations' && (
           <div className="space-y-6">
+            {/* Default Pipeline Configuration */}
+            {site.ghl_location_id && site.ghl_location_token_encrypted && (
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-purple-100 rounded flex items-center justify-center">
+                      <CogIcon className="h-5 w-5 text-purple-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">Default Pipeline</h3>
+                      <p className="text-sm text-gray-600">Set default pipeline for all pages on this site</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <DefaultPipelineForm 
+                  siteSlug={slug}
+                  locationId={site.ghl_location_id}
+                  currentDefault={site.default_pipeline_id}
+                  currentStageMappings={site.default_stage_mappings}
+                  onSuccess={fetchSiteData}
+                />
+              </div>
+            )}
+
             {/* Stripe Integration */}
             <div className="bg-white rounded-lg shadow p-6">
               <div className="flex items-center justify-between mb-4">
@@ -398,6 +423,35 @@ export default function SiteManagePage() {
                 )}
               </div>
             </div>
+
+            {/* Client Portal Menu Integration */}
+            {site.ghl_location_id && (
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-indigo-100 rounded flex items-center justify-center">
+                      <MenuIcon className="h-5 w-5 text-indigo-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">Client Portal Menu</h3>
+                      <p className="text-sm text-gray-600">Add portal access link to GoHighLevel menu</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className={`h-2 w-2 rounded-full ${site.ghl_menu_id ? 'bg-green-400' : 'bg-gray-300'}`}></div>
+                    <span className="text-sm text-gray-600">
+                      {site.ghl_menu_id ? 'Menu Added' : 'Not Added'}
+                    </span>
+                  </div>
+                </div>
+                
+                <GHLMenuManager 
+                  siteSlug={slug}
+                  site={site}
+                  onSuccess={fetchSiteData}
+                />
+              </div>
+            )}
           </div>
         )}
 
@@ -771,7 +825,7 @@ function PipelineConfigForm({ siteSlug, locationId, onSuccess }) {
   async function fetchCurrentConfig() {
     setLoading(true)
     try {
-      // Only fetch existing pipeline configuration - no GHL API call
+      // Fetch existing pipeline configuration
       const configResponse = await fetch(`/api/admin/sites/${siteSlug}/pipeline-config`)
       if (configResponse.ok) {
         const configData = await configResponse.json()
@@ -784,6 +838,9 @@ function PipelineConfigForm({ siteSlug, locationId, onSuccess }) {
           setIsEditing(true) // Show edit mode if no config
         }
       }
+
+      // Always fetch pipelines for editing capability
+      await fetchPipelinesForEditing()
     } catch (error) {
       console.error('Error fetching pipeline config:', error)
     } finally {
@@ -792,18 +849,18 @@ function PipelineConfigForm({ siteSlug, locationId, onSuccess }) {
   }
 
   async function fetchPipelinesForEditing() {
-    setLoading(true)
     try {
-      // Only call GHL API when user clicks edit
+      // Call GHL API to get pipelines
       const pipelinesResponse = await fetch(`/api/ghl/pipelines?siteSlug=${siteSlug}`)
       if (pipelinesResponse.ok) {
         const pipelinesData = await pipelinesResponse.json()
         setPipelines(pipelinesData.pipelines || [])
+        console.log('Loaded pipelines:', pipelinesData.pipelines?.length || 0)
+      } else {
+        console.error('Failed to fetch pipelines:', pipelinesResponse.statusText)
       }
     } catch (error) {
       console.error('Error fetching pipelines:', error)
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -1043,10 +1100,368 @@ function PipelineConfigForm({ siteSlug, locationId, onSuccess }) {
   )
 }
 
+// GHL Menu Manager Component
+function GHLMenuManager({ siteSlug, site, onSuccess }) {
+  const [loading, setLoading] = useState(false)
+
+  const handleCreateMenu = async () => {
+    if (!site.ghl_location_id) {
+      alert('GoHighLevel location connection is required to create menu items')
+      return
+    }
+
+    if (!confirm('This will add a "Client Portal" menu item to your GoHighLevel location. Continue?')) {
+      return
+    }
+
+    setLoading(true)
+    try {
+      const response = await fetch(`/api/admin/sites/${siteSlug}/create-ghl-menu`, {
+        method: 'POST'
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        alert('Client portal menu item created successfully!')
+        onSuccess()
+      } else {
+        const error = await response.json()
+        alert(error.error || 'Failed to create menu item')
+      }
+    } catch (error) {
+      console.error('Error creating menu:', error)
+      alert('Failed to create menu item')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleRemoveMenu = async () => {
+    if (!site.ghl_menu_id) {
+      alert('No menu item to remove')
+      return
+    }
+
+    if (!confirm('This will remove the "Client Portal" menu item from your GoHighLevel location. Continue?')) {
+      return
+    }
+
+    setLoading(true)
+    try {
+      const response = await fetch(`/api/admin/sites/${siteSlug}/remove-ghl-menu`, {
+        method: 'POST'
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        alert('Client portal menu item removed successfully!')
+        onSuccess()
+      } else {
+        const error = await response.json()
+        alert(error.error || 'Failed to remove menu item')
+      }
+    } catch (error) {
+      console.error('Error removing menu:', error)
+      alert('Failed to remove menu item')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (site.ghl_menu_id) {
+    // Menu exists - show status and remove option
+    return (
+      <div className="space-y-4">
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+          <div className="flex justify-between items-start">
+            <div>
+              <h4 className="text-sm font-semibold text-green-800 mb-2">Client Portal Menu Active</h4>
+              <div className="space-y-1 text-sm text-green-700">
+                <div><strong>Menu Name:</strong> {site.ghl_menu_data?.menuName || `${site.client_name} Portal`}</div>
+                <div><strong>Menu ID:</strong> {site.ghl_menu_id}</div>
+                <div><strong>Portal URL:</strong> 
+                  <span className="ml-1 font-mono text-xs">
+                    {process.env.NEXT_PUBLIC_NEXTAUTH_URL || 'https://partners.bowlnow.com'}/portal/ghl-iframe?siteSlug={siteSlug}&locationId={site.ghl_location_id}
+                  </span>
+                </div>
+                <div><strong>Created:</strong> {site.ghl_menu_data?.createdAt ? new Date(site.ghl_menu_data.createdAt).toLocaleDateString() : 'Unknown'}</div>
+              </div>
+            </div>
+            <button
+              onClick={handleRemoveMenu}
+              disabled={loading}
+              className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            >
+              {loading ? 'Removing...' : 'Remove Menu'}
+            </button>
+          </div>
+        </div>
+        
+        <div className="text-sm text-gray-600">
+          <p><strong>Note:</strong> Your GoHighLevel users can now access the client portal directly from their GHL interface. The menu item will show analytics and data specific to this site only.</p>
+        </div>
+      </div>
+    )
+  }
+
+  // No menu - show create option
+  return (
+    <div className="space-y-4">
+      <div className="border border-gray-200 rounded-lg p-4">
+        <div className="text-center">
+          <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-gray-100 mb-4">
+            <MenuIcon className="h-6 w-6 text-gray-600" />
+          </div>
+          <h4 className="text-lg font-medium text-gray-900 mb-2">Client Portal Menu Not Added</h4>
+          <p className="text-sm text-gray-600 mb-4">
+            Add a menu item to your GoHighLevel location that gives your team direct access to this client's portal and analytics.
+          </p>
+          
+          <div className="mb-4">
+            <div className="text-xs text-gray-500 space-y-1">
+              <p><strong>What this will create:</strong></p>
+              <p>• Menu item named "{site.client_name} Portal"</p>
+              <p>• Direct link to client-specific analytics</p>
+              <p>• Secure access using GoHighLevel authentication</p>
+            </div>
+          </div>
+          
+          <button
+            onClick={handleCreateMenu}
+            disabled={loading}
+            className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+          >
+            {loading ? 'Creating Menu...' : 'Add Client Portal Menu'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Default Pipeline Form Component
+function DefaultPipelineForm({ siteSlug, locationId, currentDefault, currentStageMappings, onSuccess }) {
+  const [pipelines, setPipelines] = useState([])
+  const [selectedPipelineId, setSelectedPipelineId] = useState(currentDefault || '')
+  const [stages, setStages] = useState([])
+  const [stageMappings, setStageMappings] = useState(currentStageMappings || {
+    form_submitted: '',
+    checkout_started: '',
+    payment_completed: ''
+  })
+  const [loading, setLoading] = useState(false)
+  const [saving, setSaving] = useState(false)
+
+  useEffect(() => {
+    fetchPipelines()
+  }, [])
+
+  useEffect(() => {
+    // Update state when props change
+    setSelectedPipelineId(currentDefault || '')
+    setStageMappings(currentStageMappings || {
+      form_submitted: '',
+      checkout_started: '',
+      payment_completed: ''
+    })
+  }, [currentDefault, currentStageMappings])
+
+  useEffect(() => {
+    if (selectedPipelineId && pipelines.length > 0) {
+      const selectedPipeline = pipelines.find(p => p.id === selectedPipelineId)
+      setStages(selectedPipeline?.stages || [])
+    }
+  }, [selectedPipelineId, pipelines])
+
+  async function fetchPipelines() {
+    setLoading(true)
+    try {
+      const response = await fetch(`/api/ghl/pipelines?siteSlug=${siteSlug}`)
+      if (response.ok) {
+        const data = await response.json()
+        setPipelines(data.pipelines || [])
+      }
+    } catch (error) {
+      console.error('Error fetching pipelines:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function handleSaveDefault() {
+    if (!selectedPipelineId) {
+      alert('Please select a pipeline')
+      return
+    }
+
+    setSaving(true)
+    try {
+      const selectedPipeline = pipelines.find(p => p.id === selectedPipelineId)
+      
+      const response = await fetch(`/api/admin/sites/by-slug/${siteSlug}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          default_pipeline_id: selectedPipelineId,
+          default_pipeline_name: selectedPipeline?.name || 'Selected Pipeline',
+          default_stage_mappings: stageMappings
+        })
+      })
+
+      if (response.ok) {
+        alert('Default pipeline saved!')
+        onSuccess()
+      } else {
+        const error = await response.json()
+        alert(error.error || 'Failed to save default pipeline')
+      }
+    } catch (error) {
+      console.error('Error saving default pipeline:', error)
+      alert('Failed to save default pipeline')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleStageMapping = (action, stageId) => {
+    setStageMappings(prev => ({ ...prev, [action]: stageId }))
+  }
+
+  return (
+    <div className="space-y-4">
+      {loading ? (
+        <div className="text-center py-4">
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-indigo-600 mx-auto"></div>
+          <p className="text-sm text-gray-500 mt-2">Loading pipelines...</p>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {/* Pipeline Selection */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Default Pipeline for All Pages
+            </label>
+            <select
+              value={selectedPipelineId}
+              onChange={(e) => setSelectedPipelineId(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+              <option value="">Choose a default pipeline...</option>
+              {pipelines.map((pipeline) => (
+                <option key={pipeline.id} value={pipeline.id}>
+                  {pipeline.name}
+                </option>
+              ))}
+            </select>
+            <p className="text-xs text-gray-500 mt-1">
+              This will be the default pipeline for new pages. Each page can override this.
+            </p>
+          </div>
+
+          {/* Stage Mappings */}
+          {stages.length > 0 && (
+            <div className="space-y-3">
+              <h5 className="text-sm font-medium text-gray-700">Default Stage Mappings:</h5>
+              
+              <div className="grid grid-cols-1 gap-3">
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Form Submitted → Stage
+                  </label>
+                  <select
+                    value={stageMappings.form_submitted}
+                    onChange={(e) => handleStageMapping('form_submitted', e.target.value)}
+                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                  >
+                    <option value="">Select stage...</option>
+                    {stages.map((stage) => (
+                      <option key={stage.id} value={stage.id}>
+                        {stage.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Checkout Started → Stage
+                  </label>
+                  <select
+                    value={stageMappings.checkout_started}
+                    onChange={(e) => handleStageMapping('checkout_started', e.target.value)}
+                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                  >
+                    <option value="">Select stage...</option>
+                    {stages.map((stage) => (
+                      <option key={stage.id} value={stage.id}>
+                        {stage.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Payment Completed → Stage
+                  </label>
+                  <select
+                    value={stageMappings.payment_completed}
+                    onChange={(e) => handleStageMapping('payment_completed', e.target.value)}
+                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                  >
+                    <option value="">Select stage...</option>
+                    {stages.map((stage) => (
+                      <option key={stage.id} value={stage.id}>
+                        {stage.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <button
+                onClick={handleSaveDefault}
+                disabled={saving || !selectedPipelineId}
+                className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-sm"
+              >
+                {saving ? 'Saving Default...' : 'Save Default Pipeline'}
+              </button>
+            </div>
+          )}
+
+          {pipelines.length === 0 && !loading && (
+            <div className="text-center py-4 text-gray-500 text-sm">
+              No pipelines found. Check your GoHighLevel location configuration.
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Add CogIcon
+function CogIcon(props) {
+  return (
+    <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+  )
+}
+
 function ArrowLeftIcon(props) {
   return (
     <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+    </svg>
+  )
+}
+
+function MenuIcon(props) {
+  return (
+    <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
     </svg>
   )
 }

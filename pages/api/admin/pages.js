@@ -21,7 +21,9 @@ async function handleCreatePage(req, res) {
       template_id,
       is_homepage = false,
       is_published = false,
-      content = {}
+      content = {},
+      pipeline_id = null,
+      stage_mappings = {}
     } = req.body
 
     // Validate required fields
@@ -82,7 +84,9 @@ async function handleCreatePage(req, res) {
       page_type,
       content: defaultContent,
       is_homepage,
-      is_published
+      is_published,
+      pipeline_id,
+      stage_mappings
     }
 
     const page = await createSitePage(pageData)

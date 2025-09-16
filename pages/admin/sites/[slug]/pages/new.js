@@ -404,6 +404,9 @@ export default function NewPageMultiStep() {
                 onChange={setPageContent}
                 siteId={site.id}
                 pageId={null} // No page ID yet since we're creating
+                siteSlug={slug}
+                defaultPipeline={site.default_pipeline_id}
+                defaultStageMapping={site.default_stage_mappings}
                 validationResult={validationResult}
               />
 

@@ -136,24 +136,50 @@ export default async function handler(req, res) {
           ghl_contact_id: ghlContactId,
         });
 
-        // Create opportunity in GHL pipeline
-        const pipelineConfig = await getSitePipelineConfigBySite(site_id);
-
-        if (pipelineConfig && pipelineConfig.stage_mappings.form_submitted) {
+        // Get pipeline configuration (page-specific or site default)
+        let pipelineId = null
+        let stageMappings = {}
+        
+        // First check if page has specific pipeline configuration
+        if (page_id) {
+          const supabase = createRouteHandlerClient()
+          const { data: pageData } = await supabase
+            .from('site_pages')
+            .select('pipeline_id, stage_mappings')
+            .eq('id', page_id)
+            .single()
+          
+          if (pageData?.pipeline_id) {
+            pipelineId = pageData.pipeline_id
+            stageMappings = pageData.stage_mappings || {}
+            console.log('Using page-specific pipeline:', pipelineId)
+          }
+        }
+        
+        // Fallback to site default pipeline if no page-specific config
+        if (!pipelineId && site.default_pipeline_id) {
+          pipelineId = site.default_pipeline_id
+          stageMappings = site.default_stage_mappings || {}
+          console.log('Using site default pipeline:', pipelineId)
+        }
+        
+        // Create opportunity in GHL pipeline if configured
+        if (pipelineId && stageMappings.form_submitted) {
+          console.log('Creating opportunity with pipeline:', pipelineId, 'stage:', stageMappings.form_submitted)
+          
           const ghlOpportunity = await createGHLOpportunity(
             site.ghl_location_id,
             {
-              pipelineId: pipelineConfig.pipeline_id,
-              stageId: pipelineConfig.stage_mappings.form_submitted,
+              pipelineId: pipelineId,
+              stageId: stageMappings.form_submitted,
               title: `${customer.name} - ${form_type} Form`,
               contactId: ghlContactId,
               monetaryValue: form_data.estimated_value || 0,
               customFields: {
                 form_type: form_type,
                 submission_date: new Date().toISOString(),
-                page_name: form_data.page_name,
-                attribution_source: attribution_data.utm_source,
-                attribution_campaign: attribution_data.utm_campaign,
+                page_name: pageName,
+                pipeline_source: pipelineId === site.default_pipeline_id ? 'site_default' : 'page_specific',
                 session_id: session_id,
               },
             },

@@ -23,11 +23,8 @@ async function handleGetSite(req, res, siteId) {
       .from('sites')
       .select(`
         *,
-        funnels:funnels(
-          *,
-          funnel_pages(*)
-        ),
-        ghl_pipeline_config:ghl_pipeline_config(*),
+        site_pages:site_pages(*),
+        site_pipeline_config:site_pipeline_config(*),
         payment_plans:payment_plans(*)
       `)
       .eq('id', siteId)
