@@ -98,7 +98,7 @@ export default function LandingPageTemplate({
             </div>
             <div className=''>
               <a
-                href={content.header_cta_link || '#booking'}
+                href={content.header_cta_link || '#form'}
                 className='text-white px-6 py-2 rounded-full font-semibold'
                 target='_blank'
                 style={{
@@ -185,7 +185,7 @@ export default function LandingPageTemplate({
             </p>
           </div>
 
-          <div className='bg-gray-50 rounded-lg p-8'>
+          <div className='bg-gray-50 rounded-lg p-8' id='form'>
             {formSubmitted ? (
               <div className='text-center py-8'>
                 <div className='text-6xl mb-4'>✅</div>
