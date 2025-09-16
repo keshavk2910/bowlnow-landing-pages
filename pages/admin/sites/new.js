@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import AdminLayout from '../../../components/admin/AdminLayout'
+import FileUpload from '../../../components/FileUpload'
 
 export default function NewSitePage() {
   const router = useRouter()
@@ -9,6 +10,7 @@ export default function NewSitePage() {
   const [formData, setFormData] = useState({
     client_name: '',
     slug: '',
+    logo_url: '',
     template_type: 'landing',
     tracking_pixels: {
       facebook: '',
@@ -17,7 +19,10 @@ export default function NewSitePage() {
     settings: {
       domain: '',
       theme_color: '#4F46E5'
-    }
+    },
+    contact_info: '',
+    contact_phone: '',
+    footer_description: ''
   })
 
   useEffect(() => {
@@ -90,6 +95,14 @@ export default function NewSitePage() {
     }))
   }
 
+  const handleLogoUploaded = (file) => {
+    if (file) {
+      setFormData(prev => ({ ...prev, logo_url: file.url }))
+    } else {
+      setFormData(prev => ({ ...prev, logo_url: '' }))
+    }
+  }
+
   return (
     <AdminLayout title="Create New Site">
       <div className="max-w-2xl mx-auto">
@@ -103,6 +116,45 @@ export default function NewSitePage() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Site Logo */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Site Logo
+                </label>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <div>
+                    <FileUpload
+                      value={formData.logo_url}
+                      onFileUploaded={handleLogoUploaded}
+                      siteId="temp" // Temporary ID for new sites
+                      pageId={null}
+                      fieldKey="site_logo"
+                      allowedTypes={['image']}
+                      maxSizeMB={2}
+                      multiple={false}
+                    />
+                    <p className="text-xs text-gray-500 mt-2">
+                      Recommended: Square image, at least 200x200px, under 2MB
+                    </p>
+                  </div>
+                  
+                  {formData.logo_url && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Logo Preview
+                      </label>
+                      <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                        <img
+                          src={formData.logo_url}
+                          alt="Site logo preview"
+                          className="w-24 h-24 object-contain mx-auto"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               {/* Client Name */}
               <div>
                 <label htmlFor="client_name" className="block text-sm font-medium text-gray-700">
@@ -194,6 +246,57 @@ export default function NewSitePage() {
                       onChange={(e) => handleNestedChange('tracking_pixels', 'google', e.target.value)}
                       className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                       placeholder="GA_MEASUREMENT_ID"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Contact Information */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  Contact Information
+                </label>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label htmlFor="contact_info" className="block text-xs font-medium text-gray-600">
+                      Contact Info/Address
+                    </label>
+                    <textarea
+                      id="contact_info"
+                      rows={3}
+                      value={formData.contact_info}
+                      onChange={(e) => handleInputChange('contact_info', e.target.value)}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      placeholder="123 Main Street, City, State 12345"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="contact_phone" className="block text-xs font-medium text-gray-600">
+                      Contact Phone
+                    </label>
+                    <input
+                      type="tel"
+                      id="contact_phone"
+                      value={formData.contact_phone}
+                      onChange={(e) => handleInputChange('contact_phone', e.target.value)}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      placeholder="(555) 123-4567"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="footer_description" className="block text-xs font-medium text-gray-600">
+                      Footer Description
+                    </label>
+                    <textarea
+                      id="footer_description"
+                      rows={2}
+                      value={formData.footer_description}
+                      onChange={(e) => handleInputChange('footer_description', e.target.value)}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      placeholder="Brief description for site footer"
                     />
                   </div>
                 </div>

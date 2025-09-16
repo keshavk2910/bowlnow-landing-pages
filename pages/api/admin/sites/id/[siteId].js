@@ -84,10 +84,10 @@ async function handleDeleteSite(req, res, siteId) {
   try {
     const supabase = createRouteHandlerClient()
     
-    // First check if site exists
+    // First check if site exists and get site info
     const { data: site, error: fetchError } = await supabase
       .from('sites')
-      .select('id, client_name')
+      .select('id, client_name, slug')
       .eq('id', siteId)
       .single()
 
@@ -98,7 +98,34 @@ async function handleDeleteSite(req, res, siteId) {
       throw fetchError
     }
 
-    // Delete the site (this will cascade delete related records)
+    // Get all files associated with this site for cleanup
+    const { data: siteFiles } = await supabase
+      .from('site_files')
+      .select('file_path')
+      .eq('site_id', siteId)
+
+    // Delete files from Supabase Storage
+    if (siteFiles && siteFiles.length > 0) {
+      const filePaths = siteFiles.map(file => file.file_path)
+      
+      // Create storage client for file deletion
+      const { createClient } = await import('@supabase/supabase-js')
+      const storageClient = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL,
+        process.env.SUPABASE_SERVICE_ROLE_KEY
+      )
+      
+      const { error: storageError } = await storageClient.storage
+        .from('site-files')
+        .remove(filePaths)
+
+      if (storageError) {
+        console.error('Error deleting files from storage:', storageError)
+        // Continue with deletion even if file cleanup fails
+      }
+    }
+
+    // Delete the site (this will cascade delete related records due to foreign key constraints)
     const { error: deleteError } = await supabase
       .from('sites')
       .delete()
@@ -108,7 +135,8 @@ async function handleDeleteSite(req, res, siteId) {
 
     res.status(200).json({
       success: true,
-      message: `Site "${site.client_name}" deleted successfully`
+      message: `Site "${site.client_name}" and all related data deleted successfully`,
+      deletedFiles: siteFiles?.length || 0
     })
 
   } catch (error) {

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { getSiteBySlug, getSitePageBySlug, getSiteHomePage } from '../lib/database'
 import TemplateRenderer from '../components/TemplateRenderer'
 import AttributionTracker from '../components/AttributionTracker'
+import { initUTMPreservation } from '../lib/utm-preservation'
 
 export default function DynamicPage({ site, page, error }) {
   const router = useRouter()
@@ -19,6 +20,9 @@ export default function DynamicPage({ site, page, error }) {
       localStorage.setItem('funnel_session_id', currentSessionId)
     }
     setSessionId(currentSessionId)
+    
+    // Initialize UTM parameter preservation for all links
+    initUTMPreservation()
   }, [])
 
   if (error) {
@@ -134,9 +138,14 @@ export async function getServerSideProps({ params, req, query }) {
     const site = await getSiteBySlug(clientSlug)
     if (!site) {
       return {
-        props: {
-          error: `Site "${clientSlug}" not found`
-        }
+        notFound: true
+      }
+    }
+
+    // Check if site is active - return 404 for inactive sites
+    if (site.status !== 'active') {
+      return {
+        notFound: true
       }
     }
 

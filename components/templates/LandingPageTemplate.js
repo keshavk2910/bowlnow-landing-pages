@@ -89,22 +89,24 @@ export default function LandingPageTemplate({
             <div className='flex-shrink-0'>
               <img
                 src={
-                  site.logo ||
+                  site.logo_url ||
                   'https://partners.bowlnow.com/wp-content/uploads/2025/04/logo.png'
                 }
                 alt='BowlNow Logo'
                 className='w-[99px] h-[80px]'
               />
             </div>
-            <div className='hidden md:block'>
-              <button
-                className={`text-white px-6 py-2 rounded-full font-semibold`}
+            <div className=''>
+              <a
+                href={content.header_cta_link || '#booking'}
+                className='text-white px-6 py-2 rounded-full font-semibold'
+                target='_blank'
                 style={{
                   backgroundColor: themeColor,
                 }}
               >
-                Book an Event
-              </button>
+                {content.header_cta_text || 'Book an Event'}
+              </a>
             </div>
           </div>
         </div>

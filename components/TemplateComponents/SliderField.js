@@ -13,14 +13,26 @@ export default function SliderField({
   maxSlides = 10,
   required = false,
 }) {
-  const [slides, setSlides] = useState(value);
+  const [slides, setSlides] = useState(Array.isArray(value) ? value : []);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setSlides(value);
+    setSlides(Array.isArray(value) ? value : []);
   }, [value]);
 
   const handleFileUploaded = (uploadedFile) => {
+    // Check if file upload was successful
+    if (!uploadedFile) {
+      console.log('File upload was cancelled or failed')
+      return
+    }
+
+    // Check if we can add more slides
+    if (slides.length >= maxSlides) {
+      alert(`Maximum ${maxSlides} slides allowed`)
+      return
+    }
+
     const newSlide = {
       id: uploadedFile.id,
       url: uploadedFile.url,
@@ -239,10 +251,11 @@ export default function SliderField({
       {slides.length < maxSlides && (
         <div>
           <FileUpload
+            key={`upload-${slides.length}`} // Force re-render to reset state
             onFileUploaded={handleFileUploaded}
             siteId={siteId}
             pageId={pageId}
-            fieldKey={fieldKey}
+            fieldKey={`${fieldKey}_${slides.length}`} // Unique field key for each upload
             allowedTypes={['image']}
             maxSizeMB={5}
             multiple={false}

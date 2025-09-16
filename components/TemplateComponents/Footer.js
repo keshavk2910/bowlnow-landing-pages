@@ -5,28 +5,18 @@ const Footer = ({ content, site, themeColor }) => {
         <div className='grid grid-cols-2 gap-4'>
           <div className=''>
             <img
-              src={
-                site.logo ||
-                'https://partners.bowlnow.com/wp-content/uploads/2025/04/logo.png'
-              }
+              src={site.logo_url}
               alt={site.client_name}
               className='w-[99px] h-[80px]'
             />
-            <p className='text-white mb-4 mt-4'>
-              {content.footer_description ||
-                'Pleasant Hill Lanes is a family-owned and operated bowling center. Opened in 1962 by Robert Maclary, who envisioned bringing wholesome family entertainment to Wilmington, DE.'}
-            </p>
+            <p className='text-white mb-4 mt-4'>{site.footer_description} </p>
           </div>
 
           <div className='text-right'>
             <div className='p-4 rounded-lg'>
               <h3 className='text-2xl font-bold text-white mb-4'>Contact</h3>
-              <p className='text-white mb-4'>
-                {content.contact_info || 'info@bowlphl.com'}
-              </p>
-              <p className='text-white mb-4'>
-                {content.contact_phone || '302-998-8811'}
-              </p>
+              <p className='text-white mb-4'>{site.contact_info} </p>
+              <p className='text-white mb-4'>{site.contact_phone} </p>
             </div>
           </div>
         </div>

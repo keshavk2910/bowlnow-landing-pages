@@ -53,8 +53,15 @@ export default function FileUpload({
         })
 
         if (!response.ok) {
-          const error = await response.json()
-          throw new Error(error.error || 'Upload failed')
+          const errorText = await response.text()
+          console.error('Upload error response:', errorText)
+          
+          try {
+            const error = JSON.parse(errorText)
+            throw new Error(error.error || `Upload failed (${response.status})`)
+          } catch (parseError) {
+            throw new Error(`Upload failed (${response.status}): ${errorText}`)
+          }
         }
 
         const result = await response.json()
@@ -113,7 +120,10 @@ export default function FileUpload({
 
   const removeFile = () => {
     setCurrentFile(null)
-    onFileUploaded(null)
+    // Only call onFileUploaded with null for single file uploads, not for sliders
+    if (!multiple) {
+      onFileUploaded(null)
+    }
   }
 
   // Show current file if exists

@@ -42,7 +42,7 @@ export default function SitesPage() {
     try {
       const newStatus = currentStatus === 'active' ? 'inactive' : 'active'
       
-      const response = await fetch(`/api/admin/sites/${siteId}`, {
+      const response = await fetch(`/api/admin/sites/id/${siteId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus })
@@ -53,6 +53,36 @@ export default function SitesPage() {
       }
     } catch (error) {
       console.error('Error updating site status:', error)
+    }
+  }
+
+  async function deleteSite(siteId, siteName) {
+    if (!confirm(`Are you sure you want to delete "${siteName}"?\n\nThis will permanently delete:\n- The site and all its pages\n- All uploaded files and images\n- All customer data and orders\n- All client accounts\n\nThis action cannot be undone.`)) {
+      return
+    }
+
+    // Additional confirmation with site name
+    const confirmName = prompt(`Type "${siteName}" to confirm deletion:`)
+    if (confirmName !== siteName) {
+      alert('Site name does not match. Deletion cancelled.')
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/admin/sites/id/${siteId}`, {
+        method: 'DELETE'
+      })
+
+      if (response.ok) {
+        fetchSites() // Refresh the list
+        alert('Site deleted successfully')
+      } else {
+        const error = await response.json()
+        alert(error.error || 'Failed to delete site')
+      }
+    } catch (error) {
+      console.error('Error deleting site:', error)
+      alert('Failed to delete site')
     }
   }
 
@@ -125,6 +155,7 @@ export default function SitesPage() {
                 key={site.id}
                 site={site}
                 onToggleStatus={toggleSiteStatus}
+                onDelete={deleteSite}
               />
             ))}
           </div>
@@ -149,7 +180,7 @@ export default function SitesPage() {
   )
 }
 
-function SiteCard({ site, onToggleStatus }) {
+function SiteCard({ site, onToggleStatus, onDelete }) {
   const [isUpdating, setIsUpdating] = useState(false)
 
   const handleToggleStatus = async () => {
@@ -159,6 +190,10 @@ function SiteCard({ site, onToggleStatus }) {
     } finally {
       setIsUpdating(false)
     }
+  }
+
+  const handleDelete = () => {
+    onDelete(site.id, site.client_name)
   }
 
   return (
@@ -228,10 +263,10 @@ function SiteCard({ site, onToggleStatus }) {
         </div>
 
         {/* Actions */}
-        <div className="flex space-x-2">
+        <div className="grid grid-cols-2 gap-2">
           <Link
             href={`/admin/sites/${site.slug}`}
-            className="flex-1 text-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+            className="text-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
           >
             Manage
           </Link>
@@ -239,7 +274,7 @@ function SiteCard({ site, onToggleStatus }) {
           <button
             onClick={handleToggleStatus}
             disabled={isUpdating}
-            className={`flex-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
               site.status === 'active'
                 ? 'bg-red-100 text-red-700 hover:bg-red-200'
                 : 'bg-green-100 text-green-700 hover:bg-green-200'
@@ -252,10 +287,17 @@ function SiteCard({ site, onToggleStatus }) {
             href={`${process.env.NEXT_PUBLIC_FRONTEND_DOMAIN || 'https://partners.bowlnow.com'}/${site.slug}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-3 py-2 border border-indigo-300 rounded-md text-sm font-medium text-indigo-700 hover:bg-indigo-50 transition-colors"
+            className="text-center px-3 py-2 border border-indigo-300 rounded-md text-sm font-medium text-indigo-700 hover:bg-indigo-50 transition-colors"
           >
             <ExternalLinkIcon className="h-4 w-4" />
           </Link>
+
+          <button
+            onClick={handleDelete}
+            className="px-3 py-2 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700 transition-colors"
+          >
+            Delete
+          </button>
         </div>
       </div>
     </div>

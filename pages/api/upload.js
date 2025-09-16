@@ -37,15 +37,18 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing required fields' })
     }
 
+    // Determine if this is a logo upload
+    const isLogo = fieldKey === 'site_logo'
+
     // Get site information
     const site = await getSiteById(siteId)
     if (!site) {
       return res.status(404).json({ error: 'Site not found' })
     }
 
-    // Get page name if pageId provided
+    // Get page name if pageId provided (only for page files, not logos)
     let pageName = 'general'
-    if (pageId) {
+    if (pageId && !isLogo) {
       const supabase = createRouteHandlerClient()
       const { data: page } = await supabase
         .from('site_pages')
@@ -65,7 +68,7 @@ export default async function handler(req, res) {
     })
 
     // Upload to Supabase Storage
-    const uploadResult = await uploadFileToStorage(fileToUpload, site.client_name, pageName)
+    const uploadResult = await uploadFileToStorage(fileToUpload, site.client_name, pageName, isLogo)
 
     // Save file record to database
     const fileRecord = await saveFileRecord(
