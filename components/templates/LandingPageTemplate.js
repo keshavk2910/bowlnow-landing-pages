@@ -75,7 +75,7 @@ export default function LandingPageTemplate({
 
   // Calculate hero minHeight: 100vh - headerHeight
   const heroMinHeight =
-    headerHeight > 0 ? `calc(100vh - ${headerHeight}px)` : 'calc(100vh - 80px)'; // fallback
+    headerHeight > 0 ? `calc(90vh - ${headerHeight}px)` : 'calc(100vh - 80px)'; // fallback
 
   return (
     <div className='min-h-screen bg-white'>
