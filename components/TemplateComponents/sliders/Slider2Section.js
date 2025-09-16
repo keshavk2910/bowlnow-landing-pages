@@ -366,7 +366,11 @@ const Slider2Section = ({ content, themeColor }) => {
                     </p>
                   )}
                   {slide.buttonText && (
-                    <a href={slide.buttonLink} className='slider2-modern-btn'>
+                    <a
+                      href={slide.buttonLink}
+                      className='slider2-modern-btn'
+                      target='_blank'
+                    >
                       {slide.buttonText}
                     </a>
                   )}

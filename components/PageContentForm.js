@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import FileUpload from './FileUpload'
 import SliderField from './TemplateComponents/SliderField'
+import FAQField from './TemplateComponents/FAQField'
+import SectionBasedForm from './SectionBasedForm'
 import PagePipelineConfig from './PagePipelineConfig'
 
 export default function PageContentForm({ 
@@ -27,6 +29,39 @@ export default function PageContentForm({
     onChange(newFormData)
   }
 
+  // Check if template uses new section-based structure
+  if (template?.config_schema?.sections) {
+    return (
+      <div className="space-y-6">
+        <SectionBasedForm
+          template={template}
+          formData={formData}
+          onChange={onChange}
+          siteId={siteId}
+          pageId={pageId}
+          siteSlug={siteSlug}
+          defaultPipeline={defaultPipeline}
+          defaultStageMapping={defaultStageMapping}
+          validationResult={validationResult}
+        />
+        
+        {/* Pipeline Configuration */}
+        <div className="border-t border-gray-200 pt-6">
+          <PagePipelineConfig
+            siteSlug={siteSlug}
+            pageId={pageId}
+            currentPipeline={formData.pipeline_id}
+            currentStageMapping={formData.stage_mappings}
+            defaultPipeline={defaultPipeline}
+            defaultStageMapping={defaultStageMapping}
+            onChange={handlePipelineChange}
+          />
+        </div>
+      </div>
+    )
+  }
+
+  // Fallback to old field-based structure
   if (!template || !template.config_schema || !template.config_schema.fields) {
     return (
       <div className="text-center py-8">
@@ -101,6 +136,18 @@ export default function PageContentForm({
               description={field.description}
               minSlides={field.minSlides || 1}
               maxSlides={field.maxSlides || 10}
+              required={field.required}
+            />
+          )}
+          
+          {field.type === 'faq' && (
+            <FAQField
+              value={formData[field.key] || []}
+              onChange={(faqs) => handleFieldChange(field.key, faqs)}
+              label={field.label}
+              description={field.description}
+              minFAQs={field.minFAQs || 1}
+              maxFAQs={field.maxFAQs || 20}
               required={field.required}
             />
           )}

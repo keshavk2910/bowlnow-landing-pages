@@ -53,6 +53,9 @@ async function handleGetPage(req, res, pageId) {
 async function handleUpdatePage(req, res, pageId) {
   try {
     const updates = req.body
+    
+    console.log('Page update request for:', pageId)
+    console.log('Update data:', JSON.stringify(updates, null, 2))
 
     // Remove any fields that shouldn't be updated directly
     delete updates.id
@@ -61,6 +64,7 @@ async function handleUpdatePage(req, res, pageId) {
     delete updates.site_id
 
     const updatedPage = await updateSitePage(pageId, updates)
+    console.log('Page updated successfully:', updatedPage.id)
 
     res.status(200).json({
       success: true,

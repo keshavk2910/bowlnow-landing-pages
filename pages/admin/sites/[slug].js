@@ -1,51 +1,50 @@
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
-import Link from 'next/link'
-import AdminLayout from '../../../components/admin/AdminLayout'
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
+import AdminLayout from '../../../components/admin/AdminLayout';
 
 export default function SiteManagePage() {
-  const router = useRouter()
-  const { slug } = router.query
-  const [site, setSite] = useState(null)
-  const [pages, setPages] = useState([])
-  const [paymentPlans, setPaymentPlans] = useState([])
-  const [ghlPipelines, setGhlPipelines] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState('overview')
+  const router = useRouter();
+  const { slug } = router.query;
+  const [site, setSite] = useState(null);
+  const [pages, setPages] = useState([]);
+  const [paymentPlans, setPaymentPlans] = useState([]);
+  const [ghlPipelines, setGhlPipelines] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState(router.query.tab || 'overview');
 
   useEffect(() => {
     if (slug) {
-      fetchSiteData()
+      fetchSiteData();
     }
-  }, [slug])
+  }, [slug]);
 
   async function fetchSiteData() {
     try {
       const [siteRes, pagesRes, plansRes] = await Promise.all([
         fetch(`/api/admin/sites/by-slug/${slug}`),
         fetch(`/api/sites/${slug}/pages`),
-        fetch(`/api/sites/${slug}/payment-plans`)
-      ])
+        fetch(`/api/sites/${slug}/payment-plans`),
+      ]);
 
       if (siteRes.ok) {
-        const siteData = await siteRes.json()
-        setSite(siteData.site)
+        const siteData = await siteRes.json();
+        setSite(siteData.site);
       }
 
       if (pagesRes.ok) {
-        const pagesData = await pagesRes.json()
-        setPages(pagesData.pages)
+        const pagesData = await pagesRes.json();
+        setPages(pagesData.pages);
       }
 
       if (plansRes.ok) {
-        const plansData = await plansRes.json()
-        setPaymentPlans(plansData.plans)
+        const plansData = await plansRes.json();
+        setPaymentPlans(plansData.plans);
       }
-
     } catch (error) {
-      console.error('Error fetching site data:', error)
+      console.error('Error fetching site data:', error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -56,73 +55,81 @@ export default function SiteManagePage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           siteSlug: slug,
-          email: 'admin@example.com' // This should come from a form
-        })
-      })
+          email: 'admin@example.com', // This should come from a form
+        }),
+      });
 
       if (response.ok) {
-        const data = await response.json()
-        window.open(data.onboarding_url, '_blank')
+        const data = await response.json();
+        window.open(data.onboarding_url, '_blank');
       }
     } catch (error) {
-      console.error('Error connecting Stripe:', error)
+      console.error('Error connecting Stripe:', error);
     }
   }
 
   async function deletePage(pageId, pageName, isHomepage) {
     // Prevent deletion of homepage
     if (isHomepage) {
-      alert('Cannot delete the homepage. Set another page as homepage first.')
-      return
+      alert('Cannot delete the homepage. Set another page as homepage first.');
+      return;
     }
 
-    if (!confirm(`Are you sure you want to delete the page "${pageName}"? This action cannot be undone.`)) {
-      return
+    if (
+      !confirm(
+        `Are you sure you want to delete the page "${pageName}"? This action cannot be undone.`
+      )
+    ) {
+      return;
     }
 
     try {
       const response = await fetch(`/api/admin/pages/${pageId}`, {
-        method: 'DELETE'
-      })
+        method: 'DELETE',
+      });
 
       if (response.ok) {
-        fetchSiteData() // Refresh the data
-        alert('Page deleted successfully')
+        fetchSiteData(); // Refresh the data
+        alert('Page deleted successfully');
       } else {
-        const error = await response.json()
-        alert(error.error || 'Failed to delete page')
+        const error = await response.json();
+        alert(error.error || 'Failed to delete page');
       }
     } catch (error) {
-      console.error('Error deleting page:', error)
-      alert('Failed to delete page')
+      console.error('Error deleting page:', error);
+      alert('Failed to delete page');
     }
   }
 
   if (loading) {
     return (
-      <AdminLayout title="Loading...">
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+      <AdminLayout title='Loading...'>
+        <div className='flex items-center justify-center h-64'>
+          <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600'></div>
         </div>
       </AdminLayout>
-    )
+    );
   }
 
   if (!site) {
     return (
-      <AdminLayout title="Site Not Found">
-        <div className="text-center py-12">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Site Not Found</h1>
-          <p className="text-gray-600 mb-6">The site &quot;{slug}&quot; could not be found.</p>
+      <AdminLayout title='Site Not Found'>
+        <div className='text-center py-12'>
+          <h1 className='text-2xl font-bold text-gray-900 mb-4'>
+            Site Not Found
+          </h1>
+          <p className='text-gray-600 mb-6'>
+            The site &quot;{slug}&quot; could not be found.
+          </p>
           <Link
-            href="/admin/sites"
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+            href='/admin/sites'
+            className='inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700'
           >
             Back to Sites
           </Link>
         </div>
       </AdminLayout>
-    )
+    );
   }
 
   const tabs = [
@@ -131,37 +138,44 @@ export default function SiteManagePage() {
     { id: 'payments', name: 'Payments', icon: CreditCardIcon },
     { id: 'integrations', name: 'Integrations', icon: LinkIcon },
     { id: 'analytics', name: 'Analytics', icon: ChartBarIcon },
-  ]
+  ];
 
   return (
     <AdminLayout title={`${site.client_name} - Management`}>
-      <div className="space-y-6">
+      <div className='space-y-6'>
         {/* Header */}
-        <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-4">
-            <Link 
-              href="/admin/sites"
-              className="text-gray-500 hover:text-gray-700"
+        <div className='flex justify-between items-center'>
+          <div className='flex items-center space-x-4'>
+            <Link
+              href='/admin/sites'
+              className='text-gray-500 hover:text-gray-700'
             >
-              <ArrowLeftIcon className="h-5 w-5" />
+              <ArrowLeftIcon className='h-5 w-5' />
             </Link>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">{site.client_name}</h1>
-              <p className="text-gray-600">{site.slug} • {site.status}</p>
+              <h1 className='text-2xl font-bold text-gray-900'>
+                {site.client_name}
+              </h1>
+              <p className='text-gray-600'>
+                {site.slug} • {site.status}
+              </p>
             </div>
           </div>
-          <div className="flex space-x-3">
+          <div className='flex space-x-3'>
             <Link
-              href={`${process.env.NEXT_PUBLIC_FRONTEND_DOMAIN || 'https://partners.bowlnow.com'}/${site.slug}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-50 transition-colors"
+              href={`${
+                process.env.NEXT_PUBLIC_FRONTEND_DOMAIN ||
+                'https://partners.bowlnow.com'
+              }/${site.slug}`}
+              target='_blank'
+              rel='noopener noreferrer'
+              className='bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-50 transition-colors'
             >
               View Site
             </Link>
             <Link
               href={`/admin/sites/${slug}/edit`}
-              className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors inline-block"
+              className='bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors inline-block'
             >
               Edit Site
             </Link>
@@ -169,8 +183,8 @@ export default function SiteManagePage() {
         </div>
 
         {/* Tabs */}
-        <div className="border-b border-gray-200">
-          <nav className="-mb-px flex space-x-8">
+        <div className='border-b border-gray-200'>
+          <nav className='-mb-px flex space-x-8'>
             {tabs.map((tab) => (
               <button
                 key={tab.id}
@@ -181,7 +195,7 @@ export default function SiteManagePage() {
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
-                <tab.icon className="h-4 w-4" />
+                <tab.icon className='h-4 w-4' />
                 <span>{tab.name}</span>
               </button>
             ))}
@@ -190,57 +204,83 @@ export default function SiteManagePage() {
 
         {/* Tab Content */}
         {activeTab === 'overview' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
             {/* Site Info */}
-            <div className="lg:col-span-2 bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Site Information</h3>
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+            <div className='lg:col-span-2 bg-white rounded-lg shadow p-6'>
+              <h3 className='text-lg font-semibold text-gray-900 mb-4'>
+                Site Information
+              </h3>
+              <div className='space-y-4'>
+                <div className='grid grid-cols-2 gap-4'>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Client Name</label>
-                    <p className="text-gray-900">{site.client_name}</p>
+                    <label className='text-sm font-medium text-gray-700'>
+                      Client Name
+                    </label>
+                    <p className='text-gray-900'>{site.client_name}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Site Slug</label>
-                    <p className="text-gray-900">{site.slug}</p>
+                    <label className='text-sm font-medium text-gray-700'>
+                      Site Slug
+                    </label>
+                    <p className='text-gray-900'>{site.slug}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Status</label>
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                      site.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                    }`}>
+                    <label className='text-sm font-medium text-gray-700'>
+                      Status
+                    </label>
+                    <span
+                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                        site.status === 'active'
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-gray-100 text-gray-800'
+                      }`}
+                    >
                       {site.status}
                     </span>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Created</label>
-                    <p className="text-gray-900">{new Date(site.created_at).toLocaleDateString()}</p>
+                    <label className='text-sm font-medium text-gray-700'>
+                      Created
+                    </label>
+                    <p className='text-gray-900'>
+                      {new Date(site.created_at).toLocaleDateString()}
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Quick Stats */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Stats</h3>
-              <div className="space-y-4">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Pages</span>
-                  <span className="font-semibold">{pages.length}</span>
+            <div className='bg-white rounded-lg shadow p-6'>
+              <h3 className='text-lg font-semibold text-gray-900 mb-4'>
+                Quick Stats
+              </h3>
+              <div className='space-y-4'>
+                <div className='flex justify-between'>
+                  <span className='text-gray-600'>Pages</span>
+                  <span className='font-semibold'>{pages.length}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Payment Plans</span>
-                  <span className="font-semibold">{paymentPlans.length}</span>
+                <div className='flex justify-between'>
+                  <span className='text-gray-600'>Payment Plans</span>
+                  <span className='font-semibold'>{paymentPlans.length}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Stripe Connected</span>
-                  <span className={`font-semibold ${site.stripe_account_id ? 'text-green-600' : 'text-red-600'}`}>
+                <div className='flex justify-between'>
+                  <span className='text-gray-600'>Stripe Connected</span>
+                  <span
+                    className={`font-semibold ${
+                      site.stripe_account_id ? 'text-green-600' : 'text-red-600'
+                    }`}
+                  >
                     {site.stripe_account_id ? 'Yes' : 'No'}
                   </span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">GHL Connected</span>
-                  <span className={`font-semibold ${site.ghl_location_id ? 'text-green-600' : 'text-red-600'}`}>
+                <div className='flex justify-between'>
+                  <span className='text-gray-600'>GHL Connected</span>
+                  <span
+                    className={`font-semibold ${
+                      site.ghl_location_id ? 'text-green-600' : 'text-red-600'
+                    }`}
+                  >
                     {site.ghl_location_id ? 'Yes' : 'No'}
                   </span>
                 </div>
@@ -250,54 +290,72 @@ export default function SiteManagePage() {
         )}
 
         {activeTab === 'pages' && (
-          <div className="bg-white rounded-lg shadow">
-            <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-              <h3 className="text-lg font-semibold text-gray-900">Site Pages</h3>
+          <div className='bg-white rounded-lg shadow'>
+            <div className='px-6 py-4 border-b border-gray-200 flex justify-between items-center'>
+              <h3 className='text-lg font-semibold text-gray-900'>
+                Site Pages
+              </h3>
               <Link
                 href={`/admin/sites/${slug}/pages/new`}
-                className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm hover:bg-indigo-700 inline-block"
+                className='bg-indigo-600 text-white px-4 py-2 rounded-md text-sm hover:bg-indigo-700 inline-block'
               >
                 Create New Page
               </Link>
             </div>
-            <div className="p-6">
+            <div className='p-6'>
               {pages.length > 0 ? (
-                <div className="space-y-4">
+                <div className='space-y-4'>
                   {pages.map((page) => (
-                    <div key={page.id} className="border border-gray-200 rounded-lg p-4">
-                      <div className="flex justify-between items-center">
+                    <div
+                      key={page.id}
+                      className='border border-gray-200 rounded-lg p-4'
+                    >
+                      <div className='flex justify-between items-center'>
                         <div>
-                          <h4 className="font-semibold text-gray-900">{page.name}</h4>
-                          <p className="text-sm text-gray-600">/{page.slug} • {page.page_type}</p>
+                          <h4 className='font-semibold text-gray-900'>
+                            {page.name}
+                          </h4>
+                          <p className='text-sm text-gray-600'>
+                            /{page.slug} • {page.page_type}
+                          </p>
                           {page.is_homepage && (
-                            <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 mt-1">
+                            <span className='inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 mt-1'>
                               Homepage
                             </span>
                           )}
                         </div>
-                        <div className="flex space-x-2">
-                          <span className={`px-2 py-1 text-xs rounded-full ${
-                            page.is_published ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                          }`}>
+                        <div className='flex space-x-2'>
+                          <span
+                            className={`px-2 py-1 text-xs rounded-full ${
+                              page.is_published
+                                ? 'bg-green-100 text-green-800'
+                                : 'bg-gray-100 text-gray-800'
+                            }`}
+                          >
                             {page.is_published ? 'Published' : 'Draft'}
                           </span>
-                          <Link 
+                          <Link
                             href={`/admin/sites/${slug}/pages/${page.id}/edit`}
-                            className="text-indigo-600 hover:text-indigo-800 text-sm"
+                            className='text-indigo-600 hover:text-indigo-800 text-sm'
                           >
                             Edit
                           </Link>
-                          <Link 
-                            href={`${process.env.NEXT_PUBLIC_FRONTEND_DOMAIN || 'http://localhost:3000'}/${site.slug}/${page.slug}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:text-blue-800 text-sm"
+                          <Link
+                            href={`${
+                              process.env.NEXT_PUBLIC_FRONTEND_DOMAIN ||
+                              'http://localhost:3000'
+                            }/${site.slug}/${page.slug}`}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            className='text-blue-600 hover:text-blue-800 text-sm'
                           >
                             Preview
                           </Link>
                           <button
-                            onClick={() => deletePage(page.id, page.name, page.is_homepage)}
-                            className="text-red-600 hover:text-red-800 text-sm"
+                            onClick={() =>
+                              deletePage(page.id, page.name, page.is_homepage)
+                            }
+                            className='text-red-600 hover:text-red-800 text-sm'
                           >
                             Delete
                           </button>
@@ -307,11 +365,11 @@ export default function SiteManagePage() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-8">
-                  <p className="text-gray-500">No pages created yet</p>
+                <div className='text-center py-8'>
+                  <p className='text-gray-500'>No pages created yet</p>
                   <Link
                     href={`/admin/sites/${slug}/pages/new`}
-                    className="mt-2 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 inline-block"
+                    className='mt-2 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 inline-block'
                   >
                     Create Your First Page
                   </Link>
@@ -322,23 +380,27 @@ export default function SiteManagePage() {
         )}
 
         {activeTab === 'integrations' && (
-          <div className="space-y-6">
+          <div className='space-y-6'>
             {/* Default Pipeline Configuration */}
             {site.ghl_location_id && site.ghl_location_token_encrypted && (
-              <div className="bg-white rounded-lg shadow p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-purple-100 rounded flex items-center justify-center">
-                      <CogIcon className="h-5 w-5 text-purple-600" />
+              <div className='bg-white rounded-lg shadow p-6'>
+                <div className='flex items-center justify-between mb-4'>
+                  <div className='flex items-center space-x-3'>
+                    <div className='w-8 h-8 bg-purple-100 rounded flex items-center justify-center'>
+                      <CogIcon className='h-5 w-5 text-purple-600' />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900">Default Pipeline</h3>
-                      <p className="text-sm text-gray-600">Set default pipeline for all pages on this site</p>
+                      <h3 className='text-lg font-semibold text-gray-900'>
+                        Default Pipeline
+                      </h3>
+                      <p className='text-sm text-gray-600'>
+                        Set default pipeline for all pages on this site
+                      </p>
                     </div>
                   </div>
                 </div>
-                
-                <DefaultPipelineForm 
+
+                <DefaultPipelineForm
                   siteSlug={slug}
                   locationId={site.ghl_location_id}
                   currentDefault={site.default_pipeline_id}
@@ -349,36 +411,44 @@ export default function SiteManagePage() {
             )}
 
             {/* Stripe Integration */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-blue-100 rounded flex items-center justify-center">
-                    <CreditCardIcon className="h-5 w-5 text-blue-600" />
+            <div className='bg-white rounded-lg shadow p-6'>
+              <div className='flex items-center justify-between mb-4'>
+                <div className='flex items-center space-x-3'>
+                  <div className='w-8 h-8 bg-blue-100 rounded flex items-center justify-center'>
+                    <CreditCardIcon className='h-5 w-5 text-blue-600' />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900">Stripe Connect</h3>
-                    <p className="text-sm text-gray-600">Payment processing integration</p>
+                    <h3 className='text-lg font-semibold text-gray-900'>
+                      Stripe Connect
+                    </h3>
+                    <p className='text-sm text-gray-600'>
+                      Payment processing integration
+                    </p>
                   </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <div className={`h-2 w-2 rounded-full ${site.stripe_account_id ? 'bg-green-400' : 'bg-gray-300'}`}></div>
-                  <span className="text-sm text-gray-600">
+                <div className='flex items-center space-x-2'>
+                  <div
+                    className={`h-2 w-2 rounded-full ${
+                      site.stripe_account_id ? 'bg-green-400' : 'bg-gray-300'
+                    }`}
+                  ></div>
+                  <span className='text-sm text-gray-600'>
                     {site.stripe_account_id ? 'Connected' : 'Not Connected'}
                   </span>
                 </div>
               </div>
-              
+
               {site.stripe_account_id ? (
-                <div className="text-sm text-gray-600">
+                <div className='text-sm text-gray-600'>
                   <p>Account ID: {site.stripe_account_id}</p>
-                  <button className="mt-2 text-indigo-600 hover:text-indigo-800">
+                  <button className='mt-2 text-indigo-600 hover:text-indigo-800'>
                     View Stripe Dashboard
                   </button>
                 </div>
               ) : (
                 <button
                   onClick={connectStripe}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+                  className='bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors'
                 >
                   Connect Stripe Account
                 </button>
@@ -386,35 +456,43 @@ export default function SiteManagePage() {
             </div>
 
             {/* GHL Integration */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-green-100 rounded flex items-center justify-center">
-                    <LinkIcon className="h-5 w-5 text-green-600" />
+            <div className='bg-white rounded-lg shadow p-6'>
+              <div className='flex items-center justify-between mb-4'>
+                <div className='flex items-center space-x-3'>
+                  <div className='w-8 h-8 bg-green-100 rounded flex items-center justify-center'>
+                    <LinkIcon className='h-5 w-5 text-green-600' />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900">GoHighLevel</h3>
-                    <p className="text-sm text-gray-600">CRM and pipeline integration</p>
+                    <h3 className='text-lg font-semibold text-gray-900'>
+                      GoHighLevel
+                    </h3>
+                    <p className='text-sm text-gray-600'>
+                      CRM and pipeline integration
+                    </p>
                   </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <div className={`h-2 w-2 rounded-full ${site.ghl_location_id ? 'bg-green-400' : 'bg-gray-300'}`}></div>
-                  <span className="text-sm text-gray-600">
+                <div className='flex items-center space-x-2'>
+                  <div
+                    className={`h-2 w-2 rounded-full ${
+                      site.ghl_location_id ? 'bg-green-400' : 'bg-gray-300'
+                    }`}
+                  ></div>
+                  <span className='text-sm text-gray-600'>
                     {site.ghl_location_id ? 'Connected' : 'Not Connected'}
                   </span>
                 </div>
               </div>
-              
-              <div className="space-y-4">
-                <GHLLocationForm 
-                  siteSlug={slug} 
+
+              <div className='space-y-4'>
+                <GHLLocationForm
+                  siteSlug={slug}
                   currentLocationId={site.ghl_location_id}
                   hasLocationToken={!!site.ghl_location_token_encrypted}
-                  onSuccess={fetchSiteData} 
+                  onSuccess={fetchSiteData}
                 />
                 {site.ghl_location_id && (
-                  <div className="border-t pt-4">
-                    <PipelineConfigForm 
+                  <div className='border-t pt-4'>
+                    <PipelineConfigForm
                       siteSlug={slug}
                       locationId={site.ghl_location_id}
                       onSuccess={fetchSiteData}
@@ -426,26 +504,34 @@ export default function SiteManagePage() {
 
             {/* Client Portal Menu Integration */}
             {site.ghl_location_id && (
-              <div className="bg-white rounded-lg shadow p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-indigo-100 rounded flex items-center justify-center">
-                      <MenuIcon className="h-5 w-5 text-indigo-600" />
+              <div className='bg-white rounded-lg shadow p-6'>
+                <div className='flex items-center justify-between mb-4'>
+                  <div className='flex items-center space-x-3'>
+                    <div className='w-8 h-8 bg-indigo-100 rounded flex items-center justify-center'>
+                      <MenuIcon className='h-5 w-5 text-indigo-600' />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900">Client Portal Menu</h3>
-                      <p className="text-sm text-gray-600">Add portal access link to GoHighLevel menu</p>
+                      <h3 className='text-lg font-semibold text-gray-900'>
+                        Client Portal Menu
+                      </h3>
+                      <p className='text-sm text-gray-600'>
+                        Add portal access link to GoHighLevel menu
+                      </p>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <div className={`h-2 w-2 rounded-full ${site.ghl_menu_id ? 'bg-green-400' : 'bg-gray-300'}`}></div>
-                    <span className="text-sm text-gray-600">
+                  <div className='flex items-center space-x-2'>
+                    <div
+                      className={`h-2 w-2 rounded-full ${
+                        site.ghl_menu_id ? 'bg-green-400' : 'bg-gray-300'
+                      }`}
+                    ></div>
+                    <span className='text-sm text-gray-600'>
                       {site.ghl_menu_id ? 'Menu Added' : 'Not Added'}
                     </span>
                   </div>
                 </div>
-                
-                <GHLMenuManager 
+
+                <GHLMenuManager
                   siteSlug={slug}
                   site={site}
                   onSuccess={fetchSiteData}
@@ -456,41 +542,58 @@ export default function SiteManagePage() {
         )}
 
         {activeTab === 'payments' && (
-          <div className="bg-white rounded-lg shadow">
-            <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-              <h3 className="text-lg font-semibold text-gray-900">Payment Plans</h3>
-              <button className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm hover:bg-indigo-700">
+          <div className='bg-white rounded-lg shadow'>
+            <div className='px-6 py-4 border-b border-gray-200 flex justify-between items-center'>
+              <h3 className='text-lg font-semibold text-gray-900'>
+                Payment Plans
+              </h3>
+              <button className='bg-indigo-600 text-white px-4 py-2 rounded-md text-sm hover:bg-indigo-700'>
                 Create Payment Plan
               </button>
             </div>
-            <div className="p-6">
+            <div className='p-6'>
               {paymentPlans.length > 0 ? (
-                <div className="space-y-4">
+                <div className='space-y-4'>
                   {paymentPlans.map((plan) => (
-                    <div key={plan.id} className="border border-gray-200 rounded-lg p-4">
-                      <div className="flex justify-between items-center">
+                    <div
+                      key={plan.id}
+                      className='border border-gray-200 rounded-lg p-4'
+                    >
+                      <div className='flex justify-between items-center'>
                         <div>
-                          <h4 className="font-semibold text-gray-900">{plan.name}</h4>
-                          <p className="text-sm text-gray-600">{plan.description}</p>
-                          <p className="text-lg font-bold text-gray-900 mt-1">
-                            ${plan.price} {plan.type === 'subscription' && `/${plan.billing_interval}`}
+                          <h4 className='font-semibold text-gray-900'>
+                            {plan.name}
+                          </h4>
+                          <p className='text-sm text-gray-600'>
+                            {plan.description}
+                          </p>
+                          <p className='text-lg font-bold text-gray-900 mt-1'>
+                            ${plan.price}{' '}
+                            {plan.type === 'subscription' &&
+                              `/${plan.billing_interval}`}
                           </p>
                         </div>
-                        <div className="flex space-x-2">
-                          <span className={`px-2 py-1 text-xs rounded-full ${
-                            plan.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                          }`}>
+                        <div className='flex space-x-2'>
+                          <span
+                            className={`px-2 py-1 text-xs rounded-full ${
+                              plan.is_active
+                                ? 'bg-green-100 text-green-800'
+                                : 'bg-gray-100 text-gray-800'
+                            }`}
+                          >
                             {plan.is_active ? 'Active' : 'Inactive'}
                           </span>
-                          <button className="text-indigo-600 hover:text-indigo-800 text-sm">Edit</button>
+                          <button className='text-indigo-600 hover:text-indigo-800 text-sm'>
+                            Edit
+                          </button>
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-8">
-                  <p className="text-gray-500">No payment plans created yet</p>
+                <div className='text-center py-8'>
+                  <p className='text-gray-500'>No payment plans created yet</p>
                 </div>
               )}
             </div>
@@ -498,133 +601,172 @@ export default function SiteManagePage() {
         )}
       </div>
     </AdminLayout>
-  )
+  );
 }
 
 // Icons
 function HomeIcon(props) {
   return (
-    <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+    <svg {...props} fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+      <path
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        strokeWidth={2}
+        d='M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'
+      />
     </svg>
-  )
+  );
 }
 
 function CollectionIcon(props) {
   return (
-    <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+    <svg {...props} fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+      <path
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        strokeWidth={2}
+        d='M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10'
+      />
     </svg>
-  )
+  );
 }
 
 function CreditCardIcon(props) {
   return (
-    <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+    <svg {...props} fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+      <path
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        strokeWidth={2}
+        d='M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z'
+      />
     </svg>
-  )
+  );
 }
 
 function LinkIcon(props) {
   return (
-    <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+    <svg {...props} fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+      <path
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        strokeWidth={2}
+        d='M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1'
+      />
     </svg>
-  )
+  );
 }
 
 function ChartBarIcon(props) {
   return (
-    <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+    <svg {...props} fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+      <path
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        strokeWidth={2}
+        d='M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'
+      />
     </svg>
-  )
+  );
 }
 
 // GHL Location Form Component
-function GHLLocationForm({ siteSlug, currentLocationId, hasLocationToken, onSuccess }) {
-  const [isEditing, setIsEditing] = useState(!currentLocationId) // Show form if no location ID
-  const [locationId, setLocationId] = useState(currentLocationId || '')
-  const [locationToken, setLocationToken] = useState('')
-  const [saving, setSaving] = useState(false)
-  const [availableLocations, setAvailableLocations] = useState([])
-  const [loadingLocations, setLoadingLocations] = useState(false)
+function GHLLocationForm({
+  siteSlug,
+  currentLocationId,
+  hasLocationToken,
+  onSuccess,
+}) {
+  const [isEditing, setIsEditing] = useState(!currentLocationId); // Show form if no location ID
+  const [locationId, setLocationId] = useState(currentLocationId || '');
+  const [locationToken, setLocationToken] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [availableLocations, setAvailableLocations] = useState([]);
+  const [loadingLocations, setLoadingLocations] = useState(false);
 
   useEffect(() => {
-    setLocationId(currentLocationId || '')
-    setIsEditing(!currentLocationId) // Auto-open form if no location set
-  }, [currentLocationId])
+    setLocationId(currentLocationId || '');
+    setIsEditing(!currentLocationId); // Auto-open form if no location set
+  }, [currentLocationId]);
 
   const fetchAvailableLocations = async () => {
-    setLoadingLocations(true)
+    setLoadingLocations(true);
     try {
-      const response = await fetch('/api/ghl/get-agency-info')
+      const response = await fetch('/api/ghl/get-agency-info');
       if (response.ok) {
-        const data = await response.json()
-        setAvailableLocations(data.locations || [])
+        const data = await response.json();
+        setAvailableLocations(data.locations || []);
       }
     } catch (error) {
-      console.error('Error fetching locations:', error)
+      console.error('Error fetching locations:', error);
     } finally {
-      setLoadingLocations(false)
+      setLoadingLocations(false);
     }
-  }
+  };
 
   const handleSave = async () => {
     if (!locationId) {
-      alert('Please enter a Location ID')
-      return
+      alert('Please enter a Location ID');
+      return;
     }
 
-    setSaving(true)
+    setSaving(true);
     try {
-      const updateData = { ghl_location_id: locationId }
-      
+      const updateData = { ghl_location_id: locationId };
+
       // Add location token if provided
       if (locationToken.trim()) {
-        updateData.ghl_location_token = locationToken.trim()
+        updateData.ghl_location_token = locationToken.trim();
       }
 
       const response = await fetch(`/api/admin/sites/by-slug/${siteSlug}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updateData)
-      })
+        body: JSON.stringify(updateData),
+      });
 
       if (response.ok) {
-        setLocationToken('') // Clear the token input for security
-        setIsEditing(false) // Close edit mode
-        onSuccess()
+        setLocationToken(''); // Clear the token input for security
+        setIsEditing(false); // Close edit mode
+        onSuccess();
       } else {
-        const error = await response.json()
-        alert(error.error || 'Failed to save GHL configuration')
+        const error = await response.json();
+        alert(error.error || 'Failed to save GHL configuration');
       }
     } catch (error) {
-      console.error('Error saving GHL configuration:', error)
-      alert('Failed to save GHL configuration')
+      console.error('Error saving GHL configuration:', error);
+      alert('Failed to save GHL configuration');
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
-  }
+  };
 
   const handleCancel = () => {
-    setLocationId(currentLocationId || '')
-    setLocationToken('')
-    setIsEditing(false)
-  }
+    setLocationId(currentLocationId || '');
+    setLocationToken('');
+    setIsEditing(false);
+  };
 
   if (!isEditing && currentLocationId) {
     // View mode - show saved configuration
     return (
-      <div className="space-y-3">
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-          <div className="flex justify-between items-start">
+      <div className='space-y-3'>
+        <div className='bg-green-50 border border-green-200 rounded-lg p-4'>
+          <div className='flex justify-between items-start'>
             <div>
-              <h4 className="text-sm font-semibold text-green-800 mb-2">GoHighLevel Connected</h4>
-              <div className="space-y-1 text-sm text-green-700">
-                <div><strong>Location ID:</strong> {currentLocationId}</div>
-                <div><strong>Private Integration Token:</strong> {hasLocationToken ? '✅ Saved (Encrypted)' : '❌ Not Configured'}</div>
+              <h4 className='text-sm font-semibold text-green-800 mb-2'>
+                GoHighLevel Connected
+              </h4>
+              <div className='space-y-1 text-sm text-green-700'>
+                <div>
+                  <strong>Location ID:</strong> {currentLocationId}
+                </div>
+                <div>
+                  <strong>Private Integration Token:</strong>{' '}
+                  {hasLocationToken
+                    ? '✅ Saved (Encrypted)'
+                    : '❌ Not Configured'}
+                </div>
                 {process.env.NODE_ENV === 'development' && hasLocationToken && (
                   <ShowDecryptedToken siteSlug={siteSlug} />
                 )}
@@ -632,27 +774,29 @@ function GHLLocationForm({ siteSlug, currentLocationId, hasLocationToken, onSucc
             </div>
             <button
               onClick={() => setIsEditing(true)}
-              className="bg-white border border-green-300 text-green-700 px-3 py-1 rounded text-sm hover:bg-green-50"
+              className='bg-white border border-green-300 text-green-700 px-3 py-1 rounded text-sm hover:bg-green-50'
             >
               Edit
             </button>
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   // Edit mode - show form
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h4 className="text-sm font-semibold text-gray-900">
-          {currentLocationId ? 'Edit GoHighLevel Configuration' : 'Connect GoHighLevel'}
+    <div className='space-y-4'>
+      <div className='flex justify-between items-center'>
+        <h4 className='text-sm font-semibold text-gray-900'>
+          {currentLocationId
+            ? 'Edit GoHighLevel Configuration'
+            : 'Connect GoHighLevel'}
         </h4>
         {currentLocationId && (
           <button
             onClick={handleCancel}
-            className="text-xs text-gray-500 hover:text-gray-700"
+            className='text-xs text-gray-500 hover:text-gray-700'
           >
             Cancel
           </button>
@@ -660,130 +804,146 @@ function GHLLocationForm({ siteSlug, currentLocationId, hasLocationToken, onSucc
       </div>
 
       <div>
-        <div className="flex justify-between items-center mb-2">
-          <label className="block text-sm font-medium text-gray-700">
+        <div className='flex justify-between items-center mb-2'>
+          <label className='block text-sm font-medium text-gray-700'>
             GoHighLevel Location ID
           </label>
           <button
             onClick={fetchAvailableLocations}
             disabled={loadingLocations}
-            className="text-xs text-indigo-600 hover:text-indigo-800"
+            className='text-xs text-indigo-600 hover:text-indigo-800'
           >
             {loadingLocations ? 'Loading...' : 'View Available Locations'}
           </button>
         </div>
-        
+
         <input
-          type="text"
+          type='text'
           value={locationId}
           onChange={(e) => setLocationId(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          placeholder="Enter GHL Location ID (e.g., ve9EPM428h8vShlRW1KT)"
+          className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500'
+          placeholder='Enter GHL Location ID (e.g., ve9EPM428h8vShlRW1KT)'
         />
-        <p className="text-xs text-gray-500 mt-1">
+        <p className='text-xs text-gray-500 mt-1'>
           Get Location IDs from your GoHighLevel account or use the button above
         </p>
       </div>
 
       {/* Location Private Integration Token */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Location Private Integration Token {hasLocationToken && <span className="text-green-600">(Currently Saved)</span>}
+        <label className='block text-sm font-medium text-gray-700 mb-2'>
+          Location Private Integration Token{' '}
+          {hasLocationToken && (
+            <span className='text-green-600'>(Currently Saved)</span>
+          )}
         </label>
         <input
-          type="password"
+          type='password'
           value={locationToken}
           onChange={(e) => setLocationToken(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          placeholder={hasLocationToken ? "Enter new token to update..." : "pit-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"}
+          className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500'
+          placeholder={
+            hasLocationToken
+              ? 'Enter new token to update...'
+              : 'pit-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+          }
         />
-        <p className="text-xs text-gray-500 mt-1">
-          Location-specific Private Integration Token for this GHL location (encrypted when saved)
+        <p className='text-xs text-gray-500 mt-1'>
+          Location-specific Private Integration Token for this GHL location
+          (encrypted when saved)
         </p>
       </div>
 
       {availableLocations.length > 0 && (
-        <div className="border border-gray-200 rounded-md p-3">
-          <h4 className="text-sm font-medium text-gray-900 mb-2">Available Locations:</h4>
-          <div className="space-y-1 max-h-32 overflow-y-auto">
+        <div className='border border-gray-200 rounded-md p-3'>
+          <h4 className='text-sm font-medium text-gray-900 mb-2'>
+            Available Locations:
+          </h4>
+          <div className='space-y-1 max-h-32 overflow-y-auto'>
             {availableLocations.map((location) => (
               <button
                 key={location.id}
                 onClick={() => setLocationId(location.id)}
-                className="w-full text-left px-2 py-1 text-xs hover:bg-gray-50 rounded flex justify-between"
+                className='w-full text-left px-2 py-1 text-xs hover:bg-gray-50 rounded flex justify-between'
               >
                 <span>{location.name}</span>
-                <span className="text-gray-500 font-mono">{location.id}</span>
+                <span className='text-gray-500 font-mono'>{location.id}</span>
               </button>
             ))}
           </div>
         </div>
       )}
 
-      <div className="flex space-x-2">
+      <div className='flex space-x-2'>
         <button
           onClick={handleSave}
           disabled={saving || !locationId}
-          className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+          className='bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed'
         >
-          {saving ? 'Saving...' : currentLocationId ? 'Update Configuration' : 'Save Configuration'}
+          {saving
+            ? 'Saving...'
+            : currentLocationId
+            ? 'Update Configuration'
+            : 'Save Configuration'}
         </button>
-        
+
         {currentLocationId && (
           <button
             onClick={handleCancel}
-            className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors"
+            className='bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors'
           >
             Cancel
           </button>
         )}
       </div>
     </div>
-  )
+  );
 }
 
 // Show Decrypted Token Component (Development Only)
 function ShowDecryptedToken({ siteSlug }) {
-  const [decryptedToken, setDecryptedToken] = useState('')
-  const [showToken, setShowToken] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [decryptedToken, setDecryptedToken] = useState('');
+  const [showToken, setShowToken] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const fetchDecryptedToken = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const response = await fetch(`/api/admin/sites/by-slug/${siteSlug}/decrypt-token`)
+      const response = await fetch(
+        `/api/admin/sites/by-slug/${siteSlug}/decrypt-token`
+      );
       if (response.ok) {
-        const data = await response.json()
-        setDecryptedToken(data.decryptedToken)
-        setShowToken(true)
+        const data = await response.json();
+        setDecryptedToken(data.decryptedToken);
+        setShowToken(true);
       }
     } catch (error) {
-      console.error('Error fetching decrypted token:', error)
+      console.error('Error fetching decrypted token:', error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
-    <div className="mt-2 pt-2 border-t border-green-200">
-      <div className="text-xs text-green-600">
+    <div className='mt-2 pt-2 border-t border-green-200'>
+      <div className='text-xs text-green-600'>
         <strong>DEV MODE:</strong>{' '}
         {!showToken ? (
           <button
             onClick={fetchDecryptedToken}
             disabled={loading}
-            className="underline hover:no-underline"
+            className='underline hover:no-underline'
           >
             {loading ? 'Loading...' : 'Show Decrypted Token'}
           </button>
         ) : (
-          <div className="mt-1">
-            <div className="bg-green-100 p-2 rounded font-mono text-xs break-all">
+          <div className='mt-1'>
+            <div className='bg-green-100 p-2 rounded font-mono text-xs break-all'>
               {decryptedToken}
             </div>
             <button
               onClick={() => setShowToken(false)}
-              className="underline hover:no-underline mt-1"
+              className='underline hover:no-underline mt-1'
             >
               Hide Token
             </button>
@@ -791,104 +951,117 @@ function ShowDecryptedToken({ siteSlug }) {
         )}
       </div>
     </div>
-  )
+  );
 }
 
 // Pipeline Configuration Form Component
 function PipelineConfigForm({ siteSlug, locationId, onSuccess }) {
-  const [isEditing, setIsEditing] = useState(false)
-  const [pipelines, setPipelines] = useState([])
-  const [selectedPipelineId, setSelectedPipelineId] = useState('')
-  const [stages, setStages] = useState([])
+  const [isEditing, setIsEditing] = useState(false);
+  const [pipelines, setPipelines] = useState([]);
+  const [selectedPipelineId, setSelectedPipelineId] = useState('');
+  const [stages, setStages] = useState([]);
   const [stageMappings, setStageMappings] = useState({
     form_submitted: '',
     checkout_started: '',
-    payment_completed: ''
-  })
-  const [currentConfig, setCurrentConfig] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [saving, setSaving] = useState(false)
+    payment_completed: '',
+  });
+  const [currentConfig, setCurrentConfig] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (locationId) {
-      fetchCurrentConfig()
+      fetchCurrentConfig();
     }
-  }, [locationId])
+  }, [locationId]);
 
   useEffect(() => {
     if (selectedPipelineId && pipelines.length > 0) {
-      const selectedPipeline = pipelines.find(p => p.id === selectedPipelineId)
-      setStages(selectedPipeline?.stages || [])
+      const selectedPipeline = pipelines.find(
+        (p) => p.id === selectedPipelineId
+      );
+      setStages(selectedPipeline?.stages || []);
     }
-  }, [selectedPipelineId, pipelines])
+  }, [selectedPipelineId, pipelines]);
 
   async function fetchCurrentConfig() {
-    setLoading(true)
+    setLoading(true);
     try {
       // Fetch existing pipeline configuration
-      const configResponse = await fetch(`/api/admin/sites/${siteSlug}/pipeline-config`)
+      const configResponse = await fetch(
+        `/api/admin/sites/${siteSlug}/pipeline-config`
+      );
       if (configResponse.ok) {
-        const configData = await configResponse.json()
+        const configData = await configResponse.json();
         if (configData.config) {
-          setCurrentConfig(configData.config)
-          setSelectedPipelineId(configData.config.pipeline_id)
-          setStageMappings(configData.config.stage_mappings)
-          setIsEditing(false) // Show view mode if config exists
+          setCurrentConfig(configData.config);
+          setSelectedPipelineId(configData.config.pipeline_id);
+          setStageMappings(configData.config.stage_mappings);
+          setIsEditing(false); // Show view mode if config exists
         } else {
-          setIsEditing(true) // Show edit mode if no config
+          setIsEditing(true); // Show edit mode if no config
         }
       }
 
       // Always fetch pipelines for editing capability
-      await fetchPipelinesForEditing()
+      await fetchPipelinesForEditing();
     } catch (error) {
-      console.error('Error fetching pipeline config:', error)
+      console.error('Error fetching pipeline config:', error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   async function fetchPipelinesForEditing() {
     try {
       // Call GHL API to get pipelines
-      const pipelinesResponse = await fetch(`/api/ghl/pipelines?siteSlug=${siteSlug}`)
+      const pipelinesResponse = await fetch(
+        `/api/ghl/pipelines?siteSlug=${siteSlug}`
+      );
       if (pipelinesResponse.ok) {
-        const pipelinesData = await pipelinesResponse.json()
-        setPipelines(pipelinesData.pipelines || [])
-        console.log('Loaded pipelines:', pipelinesData.pipelines?.length || 0)
+        const pipelinesData = await pipelinesResponse.json();
+        setPipelines(pipelinesData.pipelines || []);
+        console.log('Loaded pipelines:', pipelinesData.pipelines?.length || 0);
       } else {
-        console.error('Failed to fetch pipelines:', pipelinesResponse.statusText)
+        console.error(
+          'Failed to fetch pipelines:',
+          pipelinesResponse.statusText
+        );
       }
     } catch (error) {
-      console.error('Error fetching pipelines:', error)
+      console.error('Error fetching pipelines:', error);
     }
   }
 
   const handleEdit = () => {
-    setIsEditing(true)
-    fetchPipelinesForEditing() // Only call GHL API when editing
-  }
+    setIsEditing(true);
+    fetchPipelinesForEditing(); // Only call GHL API when editing
+  };
 
   const handleCancel = () => {
-    setSelectedPipelineId(currentConfig?.pipeline_id || '')
-    setStageMappings(currentConfig?.stage_mappings || {
-      form_submitted: '',
-      checkout_started: '',
-      payment_completed: ''
-    })
-    setIsEditing(false)
-  }
+    setSelectedPipelineId(currentConfig?.pipeline_id || '');
+    setStageMappings(
+      currentConfig?.stage_mappings || {
+        form_submitted: '',
+        checkout_started: '',
+        payment_completed: '',
+      }
+    );
+    setIsEditing(false);
+  };
 
   async function handleSavePipeline() {
     if (!selectedPipelineId) {
-      alert('Please select a pipeline')
-      return
+      alert('Please select a pipeline');
+      return;
     }
 
-    setSaving(true)
+    setSaving(true);
     try {
-      const selectedPipeline = pipelines.find(p => p.id === selectedPipelineId)
-      
+      const selectedPipeline = pipelines.find(
+        (p) => p.id === selectedPipelineId
+      );
+
       const response = await fetch('/api/ghl/configure-pipeline', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -896,109 +1069,133 @@ function PipelineConfigForm({ siteSlug, locationId, onSuccess }) {
           siteSlug,
           pipelineId: selectedPipelineId,
           pipelineName: selectedPipeline?.name || 'Selected Pipeline',
-          stageMappings
-        })
-      })
+          stageMappings,
+        }),
+      });
 
       if (response.ok) {
-        setIsEditing(false) // Close edit mode
-        fetchCurrentConfig() // Refresh the config display
-        alert('Pipeline configuration saved!')
+        setIsEditing(false); // Close edit mode
+        fetchCurrentConfig(); // Refresh the config display
+        alert('Pipeline configuration saved!');
       } else {
-        const error = await response.json()
-        alert(error.error || 'Failed to save pipeline configuration')
+        const error = await response.json();
+        alert(error.error || 'Failed to save pipeline configuration');
       }
     } catch (error) {
-      console.error('Error saving pipeline config:', error)
-      alert('Failed to save pipeline configuration')
+      console.error('Error saving pipeline config:', error);
+      alert('Failed to save pipeline configuration');
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
   }
 
   const handleStageMapping = (action, stageId) => {
-    setStageMappings(prev => ({ ...prev, [action]: stageId }))
-  }
+    setStageMappings((prev) => ({ ...prev, [action]: stageId }));
+  };
 
   if (!isEditing && currentConfig) {
     // View mode - show saved configuration
     return (
-      <div className="space-y-4">
-        <div className="flex justify-between items-center">
-          <h4 className="text-md font-semibold text-gray-900">Pipeline Configuration</h4>
+      <div className='space-y-4'>
+        <div className='flex justify-between items-center'>
+          <h4 className='text-md font-semibold text-gray-900'>
+            Pipeline Configuration
+          </h4>
           <button
             onClick={handleEdit}
-            className="bg-white border border-blue-300 text-blue-700 px-3 py-1 rounded text-sm hover:bg-blue-50"
+            className='bg-white border border-blue-300 text-blue-700 px-3 py-1 rounded text-sm hover:bg-blue-50'
           >
             Edit
           </button>
         </div>
-        
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <div className="flex justify-between items-start mb-3">
+
+        <div className='bg-blue-50 border border-blue-200 rounded-lg p-4'>
+          <div className='flex justify-between items-start mb-3'>
             <div>
-              <h5 className="text-sm font-semibold text-blue-900">Active Pipeline: {currentConfig.pipeline_name}</h5>
-              <p className="text-xs text-blue-700">Pipeline ID: {currentConfig.pipeline_id}</p>
+              <h5 className='text-sm font-semibold text-blue-900'>
+                Active Pipeline: {currentConfig.pipeline_name}
+              </h5>
+              <p className='text-xs text-blue-700'>
+                Pipeline ID: {currentConfig.pipeline_id}
+              </p>
             </div>
-            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+            <span className='text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded'>
               Configured
             </span>
           </div>
-          
-          <div className="space-y-2 text-sm text-blue-800">
-            <div className="flex justify-between">
-              <span>📝 <strong>Form Submitted</strong></span>
-              <span>{currentConfig.stage_mappings.form_submitted ? 'Mapped' : 'Not mapped'}</span>
+
+          <div className='space-y-2 text-sm text-blue-800'>
+            <div className='flex justify-between'>
+              <span>
+                📝 <strong>Form Submitted</strong>
+              </span>
+              <span>
+                {currentConfig.stage_mappings.form_submitted
+                  ? 'Mapped'
+                  : 'Not mapped'}
+              </span>
             </div>
-            <div className="flex justify-between">
-              <span>🛒 <strong>Checkout Started</strong></span>
-              <span>{currentConfig.stage_mappings.checkout_started ? 'Mapped' : 'Not mapped'}</span>
+            <div className='flex justify-between'>
+              <span>
+                🛒 <strong>Checkout Started</strong>
+              </span>
+              <span>
+                {currentConfig.stage_mappings.checkout_started
+                  ? 'Mapped'
+                  : 'Not mapped'}
+              </span>
             </div>
-            <div className="flex justify-between">
-              <span>💰 <strong>Payment Completed</strong></span>
-              <span>{currentConfig.stage_mappings.payment_completed ? 'Mapped' : 'Not mapped'}</span>
+            <div className='flex justify-between'>
+              <span>
+                💰 <strong>Payment Completed</strong>
+              </span>
+              <span>
+                {currentConfig.stage_mappings.payment_completed
+                  ? 'Mapped'
+                  : 'Not mapped'}
+              </span>
             </div>
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   // Edit mode - show form
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h4 className="text-md font-semibold text-gray-900">
+    <div className='space-y-4'>
+      <div className='flex justify-between items-center'>
+        <h4 className='text-md font-semibold text-gray-900'>
           {currentConfig ? 'Edit Pipeline Configuration' : 'Configure Pipeline'}
         </h4>
         {currentConfig && (
           <button
             onClick={handleCancel}
-            className="text-xs text-gray-500 hover:text-gray-700"
+            className='text-xs text-gray-500 hover:text-gray-700'
           >
             Cancel
           </button>
         )}
       </div>
-      
+
       {loading ? (
-        <div className="text-center py-4">
-          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-indigo-600 mx-auto"></div>
-          <p className="text-sm text-gray-500 mt-2">Loading pipelines...</p>
+        <div className='text-center py-4'>
+          <div className='animate-spin rounded-full h-6 w-6 border-b-2 border-indigo-600 mx-auto'></div>
+          <p className='text-sm text-gray-500 mt-2'>Loading pipelines...</p>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className='space-y-4'>
           {/* Pipeline Selection */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className='block text-sm font-medium text-gray-700 mb-2'>
               Select Pipeline
             </label>
             <select
               value={selectedPipelineId}
               onChange={(e) => setSelectedPipelineId(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500'
             >
-              <option value="">Choose a pipeline...</option>
+              <option value=''>Choose a pipeline...</option>
               {pipelines.map((pipeline) => (
                 <option key={pipeline.id} value={pipeline.id}>
                   {pipeline.name}
@@ -1009,20 +1206,24 @@ function PipelineConfigForm({ siteSlug, locationId, onSuccess }) {
 
           {/* Stage Mappings */}
           {stages.length > 0 && (
-            <div className="space-y-3">
-              <h5 className="text-sm font-medium text-gray-700">Map Page Actions to Pipeline Stages:</h5>
-              
-              <div className="grid grid-cols-1 gap-3">
+            <div className='space-y-3'>
+              <h5 className='text-sm font-medium text-gray-700'>
+                Map Page Actions to Pipeline Stages:
+              </h5>
+
+              <div className='grid grid-cols-1 gap-3'>
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                  <label className='block text-xs font-medium text-gray-700 mb-1'>
                     Form Submitted → Stage
                   </label>
                   <select
                     value={stageMappings.form_submitted}
-                    onChange={(e) => handleStageMapping('form_submitted', e.target.value)}
-                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                    onChange={(e) =>
+                      handleStageMapping('form_submitted', e.target.value)
+                    }
+                    className='w-full px-2 py-1 border border-gray-300 rounded text-sm'
                   >
-                    <option value="">Select stage...</option>
+                    <option value=''>Select stage...</option>
                     {stages.map((stage) => (
                       <option key={stage.id} value={stage.id}>
                         {stage.name}
@@ -1032,15 +1233,17 @@ function PipelineConfigForm({ siteSlug, locationId, onSuccess }) {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                  <label className='block text-xs font-medium text-gray-700 mb-1'>
                     Checkout Started → Stage
                   </label>
                   <select
                     value={stageMappings.checkout_started}
-                    onChange={(e) => handleStageMapping('checkout_started', e.target.value)}
-                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                    onChange={(e) =>
+                      handleStageMapping('checkout_started', e.target.value)
+                    }
+                    className='w-full px-2 py-1 border border-gray-300 rounded text-sm'
                   >
-                    <option value="">Select stage...</option>
+                    <option value=''>Select stage...</option>
                     {stages.map((stage) => (
                       <option key={stage.id} value={stage.id}>
                         {stage.name}
@@ -1050,15 +1253,17 @@ function PipelineConfigForm({ siteSlug, locationId, onSuccess }) {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                  <label className='block text-xs font-medium text-gray-700 mb-1'>
                     Payment Completed → Stage
                   </label>
                   <select
                     value={stageMappings.payment_completed}
-                    onChange={(e) => handleStageMapping('payment_completed', e.target.value)}
-                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                    onChange={(e) =>
+                      handleStageMapping('payment_completed', e.target.value)
+                    }
+                    className='w-full px-2 py-1 border border-gray-300 rounded text-sm'
                   >
-                    <option value="">Select stage...</option>
+                    <option value=''>Select stage...</option>
                     {stages.map((stage) => (
                       <option key={stage.id} value={stage.id}>
                         {stage.name}
@@ -1068,19 +1273,19 @@ function PipelineConfigForm({ siteSlug, locationId, onSuccess }) {
                 </div>
               </div>
 
-              <div className="flex space-x-2">
+              <div className='flex space-x-2'>
                 <button
                   onClick={handleSavePipeline}
                   disabled={saving || !selectedPipelineId}
-                  className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-sm"
+                  className='bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-sm'
                 >
                   {saving ? 'Saving...' : 'Save Configuration'}
                 </button>
-                
+
                 {currentConfig && (
                   <button
                     onClick={handleCancel}
-                    className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors text-sm"
+                    className='bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors text-sm'
                   >
                     Cancel
                   </button>
@@ -1090,290 +1295,352 @@ function PipelineConfigForm({ siteSlug, locationId, onSuccess }) {
           )}
 
           {pipelines.length === 0 && !loading && (
-            <div className="text-center py-4 text-gray-500 text-sm">
+            <div className='text-center py-4 text-gray-500 text-sm'>
               No pipelines found for this location. Check your Location ID.
             </div>
           )}
         </div>
       )}
     </div>
-  )
+  );
 }
 
 // GHL Menu Manager Component
 function GHLMenuManager({ siteSlug, site, onSuccess }) {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const handleCreateMenu = async () => {
     if (!site.ghl_location_id) {
-      alert('GoHighLevel location connection is required to create menu items')
-      return
+      alert('GoHighLevel location connection is required to create menu items');
+      return;
     }
 
-    if (!confirm('This will add a "Client Portal" menu item to your GoHighLevel location. Continue?')) {
-      return
+    if (
+      !confirm(
+        'This will add a "Client Portal" menu item to your GoHighLevel location. Continue?'
+      )
+    ) {
+      return;
     }
 
-    setLoading(true)
+    setLoading(true);
     try {
-      const response = await fetch(`/api/admin/sites/${siteSlug}/create-ghl-menu`, {
-        method: 'POST'
-      })
+      const response = await fetch(
+        `/api/admin/sites/${siteSlug}/create-ghl-menu`,
+        {
+          method: 'POST',
+        }
+      );
 
       if (response.ok) {
-        const data = await response.json()
-        alert('Client portal menu item created successfully!')
-        onSuccess()
+        const data = await response.json();
+        alert('Client portal menu item created successfully!');
+        onSuccess();
       } else {
-        const error = await response.json()
-        alert(error.error || 'Failed to create menu item')
+        const error = await response.json();
+        alert(error.error || 'Failed to create menu item');
       }
     } catch (error) {
-      console.error('Error creating menu:', error)
-      alert('Failed to create menu item')
+      console.error('Error creating menu:', error);
+      alert('Failed to create menu item');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleRemoveMenu = async () => {
     if (!site.ghl_menu_id) {
-      alert('No menu item to remove')
-      return
+      alert('No menu item to remove');
+      return;
     }
 
-    if (!confirm('This will remove the "Client Portal" menu item from your GoHighLevel location. Continue?')) {
-      return
+    if (
+      !confirm(
+        'This will remove the "Client Portal" menu item from your GoHighLevel location. Continue?'
+      )
+    ) {
+      return;
     }
 
-    setLoading(true)
+    setLoading(true);
     try {
-      const response = await fetch(`/api/admin/sites/${siteSlug}/remove-ghl-menu`, {
-        method: 'POST'
-      })
+      const response = await fetch(
+        `/api/admin/sites/${siteSlug}/remove-ghl-menu`,
+        {
+          method: 'POST',
+        }
+      );
 
       if (response.ok) {
-        const data = await response.json()
-        alert('Client portal menu item removed successfully!')
-        onSuccess()
+        const data = await response.json();
+        alert('Client portal menu item removed successfully!');
+        onSuccess();
       } else {
-        const error = await response.json()
-        alert(error.error || 'Failed to remove menu item')
+        const error = await response.json();
+        alert(error.error || 'Failed to remove menu item');
       }
     } catch (error) {
-      console.error('Error removing menu:', error)
-      alert('Failed to remove menu item')
+      console.error('Error removing menu:', error);
+      alert('Failed to remove menu item');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   if (site.ghl_menu_id) {
     // Menu exists - show status and remove option
     return (
-      <div className="space-y-4">
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-          <div className="flex justify-between items-start">
+      <div className='space-y-4'>
+        <div className='bg-green-50 border border-green-200 rounded-lg p-4'>
+          <div className='flex justify-between items-start'>
             <div>
-              <h4 className="text-sm font-semibold text-green-800 mb-2">Client Portal Menu Active</h4>
-              <div className="space-y-1 text-sm text-green-700">
-                <div><strong>Menu Name:</strong> {site.ghl_menu_data?.menuName || `${site.client_name} Portal`}</div>
-                <div><strong>Menu ID:</strong> {site.ghl_menu_id}</div>
-                <div><strong>Portal URL:</strong> 
-                  <span className="ml-1 font-mono text-xs">
-                    {process.env.NEXT_PUBLIC_NEXTAUTH_URL || 'https://partners.bowlnow.com'}/portal/ghl-iframe?siteSlug={siteSlug}&locationId={site.ghl_location_id}
+              <h4 className='text-sm font-semibold text-green-800 mb-2'>
+                Client Portal Menu Active
+              </h4>
+              <div className='space-y-1 text-sm text-green-700'>
+                <div>
+                  <strong>Menu Name:</strong>{' '}
+                  {site.ghl_menu_data?.menuName || `${site.client_name} Portal`}
+                </div>
+                <div>
+                  <strong>Menu ID:</strong> {site.ghl_menu_id}
+                </div>
+                <div>
+                  <strong>Portal URL:</strong>
+                  <span className='ml-1 font-mono text-xs'>
+                    {process.env.NEXT_PUBLIC_NEXTAUTH_URL ||
+                      'https://partners.bowlnow.com'}
+                    /portal/ghl-iframe?siteSlug={siteSlug}&locationId=
+                    {site.ghl_location_id}
                   </span>
                 </div>
-                <div><strong>Created:</strong> {site.ghl_menu_data?.createdAt ? new Date(site.ghl_menu_data.createdAt).toLocaleDateString() : 'Unknown'}</div>
+                <div>
+                  <strong>Created:</strong>{' '}
+                  {site.ghl_menu_data?.createdAt
+                    ? new Date(
+                        site.ghl_menu_data.createdAt
+                      ).toLocaleDateString()
+                    : 'Unknown'}
+                </div>
               </div>
             </div>
             <button
               onClick={handleRemoveMenu}
               disabled={loading}
-              className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+              className='bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed'
             >
               {loading ? 'Removing...' : 'Remove Menu'}
             </button>
           </div>
         </div>
-        
-        <div className="text-sm text-gray-600">
-          <p><strong>Note:</strong> Your GoHighLevel users can now access the client portal directly from their GHL interface. The menu item will show analytics and data specific to this site only.</p>
+
+        <div className='text-sm text-gray-600'>
+          <p>
+            <strong>Note:</strong> Your GoHighLevel users can now access the
+            client portal directly from their GHL interface. The menu item will
+            show analytics and data specific to this site only.
+          </p>
         </div>
       </div>
-    )
+    );
   }
 
   // No menu - show create option
   return (
-    <div className="space-y-4">
-      <div className="border border-gray-200 rounded-lg p-4">
-        <div className="text-center">
-          <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-gray-100 mb-4">
-            <MenuIcon className="h-6 w-6 text-gray-600" />
+    <div className='space-y-4'>
+      <div className='border border-gray-200 rounded-lg p-4'>
+        <div className='text-center'>
+          <div className='mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-gray-100 mb-4'>
+            <MenuIcon className='h-6 w-6 text-gray-600' />
           </div>
-          <h4 className="text-lg font-medium text-gray-900 mb-2">Client Portal Menu Not Added</h4>
-          <p className="text-sm text-gray-600 mb-4">
-            Add a menu item to your GoHighLevel location that gives your team direct access to this client's portal and analytics.
+          <h4 className='text-lg font-medium text-gray-900 mb-2'>
+            Client Portal Menu Not Added
+          </h4>
+          <p className='text-sm text-gray-600 mb-4'>
+            Add a menu item to your GoHighLevel location that gives your team
+            direct access to this client's portal and analytics.
           </p>
-          
-          <div className="mb-4">
-            <div className="text-xs text-gray-500 space-y-1">
-              <p><strong>What this will create:</strong></p>
+
+          <div className='mb-4'>
+            <div className='text-xs text-gray-500 space-y-1'>
+              <p>
+                <strong>What this will create:</strong>
+              </p>
               <p>• Menu item named "{site.client_name} Portal"</p>
               <p>• Direct link to client-specific analytics</p>
               <p>• Secure access using GoHighLevel authentication</p>
             </div>
           </div>
-          
+
           <button
             onClick={handleCreateMenu}
             disabled={loading}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            className='bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed'
           >
             {loading ? 'Creating Menu...' : 'Add Client Portal Menu'}
           </button>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // Default Pipeline Form Component
-function DefaultPipelineForm({ siteSlug, locationId, currentDefault, currentStageMappings, onSuccess }) {
-  const [pipelines, setPipelines] = useState([])
-  const [selectedPipelineId, setSelectedPipelineId] = useState(currentDefault || '')
-  const [stages, setStages] = useState([])
-  const [stageMappings, setStageMappings] = useState(currentStageMappings || {
-    form_submitted: '',
-    checkout_started: '',
-    payment_completed: ''
-  })
-  const [loading, setLoading] = useState(false)
-  const [saving, setSaving] = useState(false)
+function DefaultPipelineForm({
+  siteSlug,
+  locationId,
+  currentDefault,
+  currentStageMappings,
+  onSuccess,
+}) {
+  const [pipelines, setPipelines] = useState([]);
+  const [selectedPipelineId, setSelectedPipelineId] = useState(
+    currentDefault || ''
+  );
+  const [stages, setStages] = useState([]);
+  const [stageMappings, setStageMappings] = useState(
+    currentStageMappings || {
+      form_submitted: '',
+      checkout_started: '',
+      payment_completed: '',
+    }
+  );
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    fetchPipelines()
-  }, [])
+    fetchPipelines();
+  }, []);
 
   useEffect(() => {
     // Update state when props change
-    setSelectedPipelineId(currentDefault || '')
-    setStageMappings(currentStageMappings || {
-      form_submitted: '',
-      checkout_started: '',
-      payment_completed: ''
-    })
-  }, [currentDefault, currentStageMappings])
+    setSelectedPipelineId(currentDefault || '');
+    setStageMappings(
+      currentStageMappings || {
+        form_submitted: '',
+        checkout_started: '',
+        payment_completed: '',
+      }
+    );
+  }, [currentDefault, currentStageMappings]);
 
   useEffect(() => {
     if (selectedPipelineId && pipelines.length > 0) {
-      const selectedPipeline = pipelines.find(p => p.id === selectedPipelineId)
-      setStages(selectedPipeline?.stages || [])
+      const selectedPipeline = pipelines.find(
+        (p) => p.id === selectedPipelineId
+      );
+      setStages(selectedPipeline?.stages || []);
     }
-  }, [selectedPipelineId, pipelines])
+  }, [selectedPipelineId, pipelines]);
 
   async function fetchPipelines() {
-    setLoading(true)
+    setLoading(true);
     try {
-      const response = await fetch(`/api/ghl/pipelines?siteSlug=${siteSlug}`)
+      const response = await fetch(`/api/ghl/pipelines?siteSlug=${siteSlug}`);
       if (response.ok) {
-        const data = await response.json()
-        setPipelines(data.pipelines || [])
+        const data = await response.json();
+        setPipelines(data.pipelines || []);
       }
     } catch (error) {
-      console.error('Error fetching pipelines:', error)
+      console.error('Error fetching pipelines:', error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   async function handleSaveDefault() {
     if (!selectedPipelineId) {
-      alert('Please select a pipeline')
-      return
+      alert('Please select a pipeline');
+      return;
     }
 
-    setSaving(true)
+    setSaving(true);
     try {
-      const selectedPipeline = pipelines.find(p => p.id === selectedPipelineId)
-      
+      const selectedPipeline = pipelines.find(
+        (p) => p.id === selectedPipelineId
+      );
+
       const response = await fetch(`/api/admin/sites/by-slug/${siteSlug}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           default_pipeline_id: selectedPipelineId,
           default_pipeline_name: selectedPipeline?.name || 'Selected Pipeline',
-          default_stage_mappings: stageMappings
-        })
-      })
+          default_stage_mappings: stageMappings,
+        }),
+      });
 
       if (response.ok) {
-        alert('Default pipeline saved!')
-        onSuccess()
+        alert('Default pipeline saved!');
+        onSuccess();
       } else {
-        const error = await response.json()
-        alert(error.error || 'Failed to save default pipeline')
+        const error = await response.json();
+        alert(error.error || 'Failed to save default pipeline');
       }
     } catch (error) {
-      console.error('Error saving default pipeline:', error)
-      alert('Failed to save default pipeline')
+      console.error('Error saving default pipeline:', error);
+      alert('Failed to save default pipeline');
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
   }
 
   const handleStageMapping = (action, stageId) => {
-    setStageMappings(prev => ({ ...prev, [action]: stageId }))
-  }
+    setStageMappings((prev) => ({ ...prev, [action]: stageId }));
+  };
 
   return (
-    <div className="space-y-4">
+    <div className='space-y-4'>
       {loading ? (
-        <div className="text-center py-4">
-          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-indigo-600 mx-auto"></div>
-          <p className="text-sm text-gray-500 mt-2">Loading pipelines...</p>
+        <div className='text-center py-4'>
+          <div className='animate-spin rounded-full h-6 w-6 border-b-2 border-indigo-600 mx-auto'></div>
+          <p className='text-sm text-gray-500 mt-2'>Loading pipelines...</p>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className='space-y-4'>
           {/* Pipeline Selection */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className='block text-sm font-medium text-gray-700 mb-2'>
               Default Pipeline for All Pages
             </label>
             <select
               value={selectedPipelineId}
               onChange={(e) => setSelectedPipelineId(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500'
             >
-              <option value="">Choose a default pipeline...</option>
+              <option value=''>Choose a default pipeline...</option>
               {pipelines.map((pipeline) => (
                 <option key={pipeline.id} value={pipeline.id}>
                   {pipeline.name}
                 </option>
               ))}
             </select>
-            <p className="text-xs text-gray-500 mt-1">
-              This will be the default pipeline for new pages. Each page can override this.
+            <p className='text-xs text-gray-500 mt-1'>
+              This will be the default pipeline for new pages. Each page can
+              override this.
             </p>
           </div>
 
           {/* Stage Mappings */}
           {stages.length > 0 && (
-            <div className="space-y-3">
-              <h5 className="text-sm font-medium text-gray-700">Default Stage Mappings:</h5>
-              
-              <div className="grid grid-cols-1 gap-3">
+            <div className='space-y-3'>
+              <h5 className='text-sm font-medium text-gray-700'>
+                Default Stage Mappings:
+              </h5>
+
+              <div className='grid grid-cols-1 gap-3'>
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                  <label className='block text-xs font-medium text-gray-700 mb-1'>
                     Form Submitted → Stage
                   </label>
                   <select
                     value={stageMappings.form_submitted}
-                    onChange={(e) => handleStageMapping('form_submitted', e.target.value)}
-                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                    onChange={(e) =>
+                      handleStageMapping('form_submitted', e.target.value)
+                    }
+                    className='w-full px-2 py-1 border border-gray-300 rounded text-sm'
                   >
-                    <option value="">Select stage...</option>
+                    <option value=''>Select stage...</option>
                     {stages.map((stage) => (
                       <option key={stage.id} value={stage.id}>
                         {stage.name}
@@ -1383,15 +1650,17 @@ function DefaultPipelineForm({ siteSlug, locationId, currentDefault, currentStag
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                  <label className='block text-xs font-medium text-gray-700 mb-1'>
                     Checkout Started → Stage
                   </label>
                   <select
                     value={stageMappings.checkout_started}
-                    onChange={(e) => handleStageMapping('checkout_started', e.target.value)}
-                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                    onChange={(e) =>
+                      handleStageMapping('checkout_started', e.target.value)
+                    }
+                    className='w-full px-2 py-1 border border-gray-300 rounded text-sm'
                   >
-                    <option value="">Select stage...</option>
+                    <option value=''>Select stage...</option>
                     {stages.map((stage) => (
                       <option key={stage.id} value={stage.id}>
                         {stage.name}
@@ -1401,15 +1670,17 @@ function DefaultPipelineForm({ siteSlug, locationId, currentDefault, currentStag
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                  <label className='block text-xs font-medium text-gray-700 mb-1'>
                     Payment Completed → Stage
                   </label>
                   <select
                     value={stageMappings.payment_completed}
-                    onChange={(e) => handleStageMapping('payment_completed', e.target.value)}
-                    className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                    onChange={(e) =>
+                      handleStageMapping('payment_completed', e.target.value)
+                    }
+                    className='w-full px-2 py-1 border border-gray-300 rounded text-sm'
                   >
-                    <option value="">Select stage...</option>
+                    <option value=''>Select stage...</option>
                     {stages.map((stage) => (
                       <option key={stage.id} value={stage.id}>
                         {stage.name}
@@ -1422,7 +1693,7 @@ function DefaultPipelineForm({ siteSlug, locationId, currentDefault, currentStag
               <button
                 onClick={handleSaveDefault}
                 disabled={saving || !selectedPipelineId}
-                className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-sm"
+                className='bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-sm'
               >
                 {saving ? 'Saving Default...' : 'Save Default Pipeline'}
               </button>
@@ -1430,38 +1701,58 @@ function DefaultPipelineForm({ siteSlug, locationId, currentDefault, currentStag
           )}
 
           {pipelines.length === 0 && !loading && (
-            <div className="text-center py-4 text-gray-500 text-sm">
+            <div className='text-center py-4 text-gray-500 text-sm'>
               No pipelines found. Check your GoHighLevel location configuration.
             </div>
           )}
         </div>
       )}
     </div>
-  )
+  );
 }
 
 // Add CogIcon
 function CogIcon(props) {
   return (
-    <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    <svg {...props} fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+      <path
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        strokeWidth={2}
+        d='M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z'
+      />
+      <path
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        strokeWidth={2}
+        d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'
+      />
     </svg>
-  )
+  );
 }
 
 function ArrowLeftIcon(props) {
   return (
-    <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+    <svg {...props} fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+      <path
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        strokeWidth={2}
+        d='M10 19l-7-7m0 0l7-7m-7 7h18'
+      />
     </svg>
-  )
+  );
 }
 
 function MenuIcon(props) {
   return (
-    <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+    <svg {...props} fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+      <path
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        strokeWidth={2}
+        d='M4 6h16M4 12h16M4 18h16'
+      />
     </svg>
-  )
+  );
 }

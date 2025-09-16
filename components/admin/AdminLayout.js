@@ -1,11 +1,18 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
+import AdminAuthGuard from '../AdminAuthGuard'
+import { getCurrentAdminUser, adminLogout } from '../../lib/admin-auth'
 
 export default function AdminLayout({ children, title = 'BowlNow Admin' }) {
   const router = useRouter()
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [adminUser, setAdminUser] = useState(null)
+
+  useEffect(() => {
+    setAdminUser(getCurrentAdminUser())
+  }, [])
 
   const navigation = [
     { name: 'Dashboard', href: '/admin', icon: DashboardIcon },
@@ -24,10 +31,11 @@ export default function AdminLayout({ children, title = 'BowlNow Admin' }) {
   }
 
   return (
-    <div className="h-screen bg-gray-50 overflow-hidden flex">
-      <Head>
-        <title>{title}</title>
-      </Head>
+    <AdminAuthGuard>
+      <div className="h-screen bg-gray-50 overflow-hidden flex">
+        <Head>
+          <title>{title}</title>
+        </Head>
 
       {/* Sidebar */}
       <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0`}>
@@ -99,13 +107,26 @@ export default function AdminLayout({ children, title = 'BowlNow Admin' }) {
                 <div className="flex items-center space-x-3">
                   <div className="flex-shrink-0">
                     <div className="h-8 w-8 rounded-full bg-indigo-500 flex items-center justify-center">
-                      <span className="text-sm font-medium text-white">A</span>
+                      <span className="text-sm font-medium text-white">
+                        {adminUser?.email?.charAt(0)?.toUpperCase() || 'A'}
+                      </span>
                     </div>
                   </div>
                   <div className="hidden md:block">
-                    <div className="text-sm font-medium text-gray-900">Admin User</div>
-                    <div className="text-xs text-gray-500">admin@bowlnow.com</div>
+                    <div className="text-sm font-medium text-gray-900">
+                      {adminUser?.name || 'Admin User'}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      {adminUser?.email || 'admin@bowlnow.com'}
+                    </div>
                   </div>
+                  <button
+                    onClick={adminLogout}
+                    className="ml-2 text-gray-400 hover:text-gray-600 p-1"
+                    title="Logout"
+                  >
+                    <LogoutIcon className="h-4 w-4" />
+                  </button>
                 </div>
               </div>
             </div>
@@ -122,6 +143,7 @@ export default function AdminLayout({ children, title = 'BowlNow Admin' }) {
         </main>
       </div>
     </div>
+    </AdminAuthGuard>
   )
 }
 
@@ -188,6 +210,14 @@ function BellIcon(props) {
   return (
     <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5-5V9.5a6.5 6.5 0 10-13 0V12l-5 5h5m13 0v1a3 3 0 11-6 0v-1m6 0H9" />
+    </svg>
+  )
+}
+
+function LogoutIcon(props) {
+  return (
+    <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
     </svg>
   )
 }

@@ -157,6 +157,7 @@ const Slider1Generator = ({ content, themeColor }) => {
                 {slide.buttonText && (
                   <a
                     href={slide.buttonLink || slide.link}
+                    target='_blank'
                     className='bg-transparent border-2 border-white text-white px-4 sm:px-5 py-2 text-xs sm:text-sm rounded-full w-fit mt-4 sm:mt-5'
                   >
                     {slide.buttonText}

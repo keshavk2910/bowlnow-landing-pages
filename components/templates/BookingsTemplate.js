@@ -56,11 +56,17 @@ export default function BookingsTemplate({ content, site, funnel, page, sessionI
     setFormData(prev => ({ ...prev, service: service.name }))
   }
 
-  // Default values
+  // Content with defaults (copied from TemplatePageOne)
+  const logoUrl = content.logo_url || site.logo_url || 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=120&h=120&fit=crop'
   const title = content.title || 'Book Your Experience'
   const heroTitle = content.hero_title || 'Reserve Your Spot Today'
-  const heroBackground = content.hero_background || '/api/placeholder/1920/1080'
+  const heroBackground = content.hero_background || 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1920&h=1080&fit=crop'
   const themeColor = site.settings?.theme_color || '#4F46E5'
+  
+  // Footer content
+  const footerText = content.footer_text || site.footer_description || `${site.client_name} provides exceptional service and memorable experiences for all our customers.`
+  const contactEmail = content.contact_email || site.contact_info || 'info@example.com'
+  const contactPhone = content.contact_phone || site.contact_phone || '(555) 123-4567'
 
   // Default services
   const services = content.services || [
@@ -98,9 +104,38 @@ export default function BookingsTemplate({ content, site, funnel, page, sessionI
 
   return (
     <div className="min-h-screen bg-white">
+      {/* Header (copied from TemplatePageOne) */}
+      <header className="absolute top-0 left-0 right-0 z-50 bg-black bg-opacity-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16 md:h-20">
+            {/* Logo */}
+            <div className="flex items-center">
+              <div className="w-12 h-12 md:w-16 md:h-16 relative">
+                <Image
+                  src={logoUrl}
+                  alt={site.client_name}
+                  fill
+                  className="object-contain rounded-full"
+                />
+              </div>
+            </div>
+            
+            {/* CTA Button */}
+            <div>
+              <a
+                href="#booking"
+                className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 md:px-8 md:py-3 rounded-full font-semibold transition-colors duration-200 text-sm md:text-base"
+              >
+                Book Now
+              </a>
+            </div>
+          </div>
+        </div>
+      </header>
+
       {/* Hero Section */}
       <div 
-        className="relative h-96 flex items-center justify-center text-center text-white"
+        className="relative h-screen flex items-center justify-center text-center text-white"
         style={{
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${heroBackground})`,
           backgroundSize: 'cover',
@@ -407,18 +442,57 @@ export default function BookingsTemplate({ content, site, funnel, page, sessionI
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
+      {/* Footer (copied from TemplatePageOne) */}
+      <footer className="bg-gray-100 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h3 className="text-2xl font-bold mb-4">{site.client_name}</h3>
-            <p className="text-gray-400 mb-4">
-              Creating unforgettable experiences since day one
-            </p>
-            <div className="flex justify-center space-x-6 text-sm text-gray-400">
-              <span>© 2024 {site.client_name}</span>
-              <span>•</span>
-              <span>All rights reserved</span>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Logo & Description */}
+            <div className="lg:col-span-2">
+              <div className="flex items-center mb-4">
+                <div className="w-16 h-16 relative mr-4">
+                  <Image
+                    src={logoUrl}
+                    alt={site.client_name}
+                    fill
+                    className="object-contain rounded-full"
+                  />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900">{site.client_name}</h3>
+              </div>
+              <p className="text-gray-600 max-w-lg leading-relaxed">
+                {footerText}
+              </p>
+              <div className="mt-6 text-sm text-gray-500">
+                © 2024 — Copyright {site.client_name}. All Rights Reserved.
+              </div>
+            </div>
+
+            {/* Contact Info */}
+            <div>
+              <h4 className="text-lg font-semibold text-gray-900 mb-4">Contact</h4>
+              <div className="space-y-2">
+                <p className="text-gray-600">
+                  {contactEmail}
+                </p>
+                <p className="text-gray-600 font-medium">
+                  {contactPhone}
+                </p>
+                {site.contact_info && (
+                  <p className="text-gray-600 text-sm">
+                    {site.contact_info}
+                  </p>
+                )}
+              </div>
+              
+              {/* Social Icons */}
+              <div className="flex space-x-4 mt-6">
+                <a href="#" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors">
+                  <span className="text-white text-sm">f</span>
+                </a>
+                <a href="#" className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors">
+                  <span className="text-white text-sm">📷</span>
+                </a>
+              </div>
             </div>
           </div>
         </div>
