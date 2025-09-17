@@ -24,6 +24,36 @@ export default function TemplatesPage() {
     }
   }
 
+  async function deleteTemplate(templateId, templateName) {
+    if (!confirm(`Are you sure you want to delete "${templateName}"?\n\nThis will permanently delete the template configuration.\nNote: The component file will remain in the templates folder.`)) {
+      return
+    }
+
+    // Additional confirmation for safety
+    const confirmName = prompt(`Type "${templateName}" to confirm deletion:`)
+    if (confirmName !== templateName) {
+      alert('Template name does not match. Deletion cancelled.')
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/admin/templates/${templateId}`, {
+        method: 'DELETE'
+      })
+
+      if (response.ok) {
+        fetchTemplates() // Refresh the list
+        alert('Template deleted successfully')
+      } else {
+        const error = await response.json()
+        alert(error.error || 'Failed to delete template')
+      }
+    } catch (error) {
+      console.error('Error deleting template:', error)
+      alert('Failed to delete template')
+    }
+  }
+
   const filteredTemplates = templates.filter((template) => {
     if (filter === 'all') return true;
     return template.type === filter;
@@ -96,7 +126,7 @@ export default function TemplatesPage() {
         ) : (
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
             {filteredTemplates.map((template) => (
-              <TemplateCard key={template.id} template={template} />
+              <TemplateCard key={template.id} template={template} onDelete={deleteTemplate} />
             ))}
           </div>
         )}
@@ -116,7 +146,7 @@ export default function TemplatesPage() {
   );
 }
 
-function TemplateCard({ template }) {
+function TemplateCard({ template, onDelete }) {
   const typeColors = {
     landing: 'bg-blue-100 text-blue-800',
     parties: 'bg-purple-100 text-purple-800',
@@ -134,6 +164,10 @@ function TemplateCard({ template }) {
     bowling: '🎳',
     'template-page-one': '🎯',
   };
+
+  const handleDelete = () => {
+    onDelete(template.id, template.name)
+  }
 
   return (
     <div className='bg-white rounded-lg shadow hover:shadow-md transition-shadow'>
@@ -160,21 +194,25 @@ function TemplateCard({ template }) {
           {template.config_schema.fields?.length || 0} fields
         </p>
 
-        <div className='flex space-x-2'>
+        <div className='grid grid-cols-3 gap-2'>
           <Link
             href={`/admin/templates/${template.id}/edit`}
-            className='flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors text-center'
+            className='px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors text-center'
           >
             Edit
           </Link>
           <Link
-            href={`/preview/${template.type}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className='flex-1 px-3 py-2 bg-indigo-600 text-white rounded-md text-sm font-medium hover:bg-indigo-700 transition-colors text-center'
+            href={`/admin/templates/${template.id}/preview`}
+            className='px-3 py-2 bg-indigo-600 text-white rounded-md text-sm font-medium hover:bg-indigo-700 transition-colors text-center'
           >
             Preview
           </Link>
+          <button
+            onClick={handleDelete}
+            className='px-3 py-2 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700 transition-colors'
+          >
+            Delete
+          </button>
         </div>
       </div>
     </div>

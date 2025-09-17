@@ -4,6 +4,7 @@ import Slider1Generator from '../TemplateComponents/sliders/Slider1-Generator';
 import BookYourEventHalf from '../TemplateComponents/BookYourEventHalf';
 import Slider2Section from '../TemplateComponents/sliders/Slider2Section';
 import Footer from '../TemplateComponents/Footer';
+import ContactForm from '../ContactForm';
 export default function LandingPageTemplate({
   content,
   site,
@@ -38,30 +39,6 @@ export default function LandingPageTemplate({
     return () => window.removeEventListener('resize', updateHeaderHeight);
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setFormSubmitting(true);
-
-    try {
-      await onFormSubmit({
-        ...formData,
-        form_type: 'contact_form',
-        funnel_name: funnel?.name,
-      });
-      setFormSubmitted(true);
-      setFormData({ name: '', email: '', phone: '', message: '' });
-    } catch (error) {
-      console.error('Form submission error:', error);
-      alert('Failed to submit form. Please try again.');
-    } finally {
-      setFormSubmitting(false);
-    }
-  };
-
-  const handleInputChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
   var {
     header,
     features_slider,
@@ -74,10 +51,11 @@ export default function LandingPageTemplate({
   const heroTitle = header.hero_title || 'Welcome to Our Business';
 
   const heroSubtitle =
-    header.hero_subtitle || 'Experience excellence with our premium services';
-  const ctaText = main_cta.cta_text || 'Get Started';
-  const ctaLink = main_cta.cta_link || '#contact';
-  const heroBackground = header.hero_background || '/api/placeholder/1920/1080';
+    header?.hero_subtitle || 'Experience excellence with our premium services';
+  const ctaText = main_cta?.cta_text || 'Get Started';
+  const ctaLink = main_cta?.cta_link || '#contact';
+  const heroBackground =
+    header?.hero_background || '/api/placeholder/1920/1080';
 
   const themeColor = site.settings?.theme_color || '#4F46E5';
 
@@ -197,139 +175,13 @@ export default function LandingPageTemplate({
 
       {/* Contact Form Section */}
       {contact_form?.enabled && (
-        <div id='contact' className='py-16 bg-white'>
-          <div className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8'>
-            <div className='text-center mb-12'>
-              <h2 className='text-3xl md:text-4xl font-bold text-gray-900 mb-4'>
-                {contact_form?.title || 'Get In Touch'}
-              </h2>
-              <p className='text-lg text-gray-600'>
-                {contact_form?.subtitle ||
-                  'Ready to get started? Contact us today for a free consultation.'}
-              </p>
-            </div>
-
-            <div className='bg-gray-50 rounded-lg p-8' id='form'>
-              {formSubmitted ? (
-                <div className='text-center py-8'>
-                  <div className='text-6xl mb-4'>✅</div>
-                  <h3 className='text-2xl font-bold text-gray-900 mb-2'>
-                    Thank You!
-                  </h3>
-                  <p className='text-gray-600'>
-                    We've received your message and will get back to you
-                    shortly.
-                  </p>
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} className='space-y-6'>
-                  <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                    <div>
-                      <label
-                        htmlFor='name'
-                        className='block text-sm font-medium text-gray-700 mb-2'
-                      >
-                        Name *
-                      </label>
-                      <input
-                        type='text'
-                        id='name'
-                        required
-                        value={formData.name}
-                        onChange={(e) =>
-                          handleInputChange('name', e.target.value)
-                        }
-                        className='w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-opacity-50'
-                        style={{ focusRingColor: themeColor }}
-                        placeholder='Your full name'
-                      />
-                    </div>
-
-                    <div>
-                      <label
-                        htmlFor='email'
-                        className='block text-sm font-medium text-gray-700 mb-2'
-                      >
-                        Email *
-                      </label>
-                      <input
-                        type='email'
-                        id='email'
-                        required
-                        value={formData.email}
-                        onChange={(e) =>
-                          handleInputChange('email', e.target.value)
-                        }
-                        className='w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-opacity-50'
-                        style={{ focusRingColor: themeColor }}
-                        placeholder='your@email.com'
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor='phone'
-                      className='block text-sm font-medium text-gray-700 mb-2'
-                    >
-                      Phone
-                    </label>
-                    <input
-                      type='tel'
-                      id='phone'
-                      value={formData.phone}
-                      onChange={(e) =>
-                        handleInputChange('phone', e.target.value)
-                      }
-                      className='w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-opacity-50'
-                      style={{ focusRingColor: themeColor }}
-                      placeholder='(555) 123-4567'
-                    />
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor='message'
-                      className='block text-sm font-medium text-gray-700 mb-2'
-                    >
-                      Message
-                    </label>
-                    <textarea
-                      id='message'
-                      rows={4}
-                      value={formData.message}
-                      onChange={(e) =>
-                        handleInputChange('message', e.target.value)
-                      }
-                      className='w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-opacity-50'
-                      style={{ focusRingColor: themeColor }}
-                      placeholder='Tell us about your needs...'
-                    />
-                  </div>
-
-                  <div className='text-center'>
-                    <button
-                      type='submit'
-                      disabled={formSubmitting}
-                      className='px-8 py-3 text-lg font-semibold text-white rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed'
-                      style={{ backgroundColor: themeColor }}
-                      onMouseEnter={(e) =>
-                        !formSubmitting &&
-                        (e.target.style.backgroundColor = '#3730A3')
-                      }
-                      onMouseLeave={(e) =>
-                        !formSubmitting &&
-                        (e.target.style.backgroundColor = themeColor)
-                      }
-                    >
-                      {formSubmitting ? 'Sending...' : 'Send Message'}
-                    </button>
-                  </div>
-                </form>
-              )}
-            </div>
-          </div>
-        </div>
+        <ContactForm
+          content={contact_form}
+          themeColor={themeColor}
+          siteId={site.id}
+          pageId={page.id}
+          sessionId={sessionId}
+        />
       )}
 
       {/* Footer */}

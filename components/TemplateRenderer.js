@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import LandingPageTemplate from './templates/LandingPageTemplate';
 import PartiesTemplate from './templates/PartiesTemplate';
 import EventsTemplate from './templates/EventsTemplate';
@@ -36,6 +36,52 @@ export default function TemplateRenderer({
   sessionId,
 }) {
   const [loading, setLoading] = useState(false);
+  const [TemplateComponent, setTemplateComponent] = useState(null);
+  const [componentLoading, setComponentLoading] = useState(true);
+
+  // Dynamic template component loading
+  useEffect(() => {
+    async function loadTemplateComponent() {
+      try {
+        let ComponentToUse = null;
+
+        // First try to use component_file from database for dynamic loading
+        if (template?.component_file) {
+          try {
+            const dynamicImport = await import(`./templates/${template.component_file}`);
+            ComponentToUse = dynamicImport.default || dynamicImport[template.component_file];
+            console.log(`Dynamically loaded component: ${template.component_file}`);
+          } catch (importError) {
+            console.warn(`Failed to dynamically import ${template.component_file}:`, importError);
+            // Fall back to static mapping
+          }
+        }
+
+        // Fallback to static mapping if dynamic import failed
+        if (!ComponentToUse) {
+          // Try static mapping by component_file first, then by type
+          if (template?.component_file && TEMPLATE_COMPONENTS[template.component_file]) {
+            ComponentToUse = TEMPLATE_COMPONENTS[template.component_file];
+            console.log(`Using static mapping for component: ${template.component_file}`);
+          } else {
+            const templateType = template?.type || page?.page_type || 'landing';
+            ComponentToUse = TEMPLATE_COMPONENTS[templateType] || LandingPageTemplate;
+            console.log(`Using type-based fallback for type: ${templateType}`);
+          }
+        }
+
+        setTemplateComponent(() => ComponentToUse);
+      } catch (error) {
+        console.error('Error loading template component:', error);
+        // Ultimate fallback
+        setTemplateComponent(() => LandingPageTemplate);
+      } finally {
+        setComponentLoading(false);
+      }
+    }
+
+    loadTemplateComponent();
+  }, [template, page]);
 
   async function handleFormSubmit(formData, formType = 'lead') {
     setLoading(true);
@@ -71,8 +117,8 @@ export default function TemplateRenderer({
 
       const result = await response.json();
 
-      // Track conversion event
-      await fetch('/api/tracking/conversion', {
+      // Track conversion event (non-blocking)
+      fetch('/api/tracking/conversion', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -83,7 +129,7 @@ export default function TemplateRenderer({
           page_id: page.id,
           attribution_data: ghlAttribution || {},
         }),
-      });
+      }).catch(error => console.error('Conversion tracking error:', error));
 
       // Fire tracking pixels for form submission
       if (typeof window !== 'undefined') {
@@ -166,17 +212,6 @@ export default function TemplateRenderer({
     );
   }
 
-  // Determine which template component to use
-  // First try to use component_file from database mapping
-  let TemplateComponent = null
-  
-  if (template?.component_file && TEMPLATE_COMPONENTS[template.component_file]) {
-    TemplateComponent = TEMPLATE_COMPONENTS[template.component_file]
-  } else {
-    // Fallback to type-based mapping
-    const templateType = template?.type || page?.page_type || 'landing'
-    TemplateComponent = TEMPLATE_COMPONENTS[templateType] || LandingPageTemplate
-  }
   // Common props passed to all templates
   const templateProps = {
     content,
@@ -187,6 +222,18 @@ export default function TemplateRenderer({
     onCheckoutClick: handleCheckoutClick,
     loading,
   };
+
+  // Show loading state while component is being loaded
+  if (componentLoading) {
+    return (
+      <div className='min-h-screen flex items-center justify-center bg-gray-50'>
+        <div className='text-center'>
+          <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4'></div>
+          <p className='text-gray-600'>Loading template...</p>
+        </div>
+      </div>
+    );
+  }
 
   async function handleFormSubmit(formData, formType = 'lead') {
     setLoading(true);
@@ -222,8 +269,8 @@ export default function TemplateRenderer({
 
       const result = await response.json();
 
-      // Track conversion event
-      await fetch('/api/tracking/conversion', {
+      // Track conversion event (non-blocking)
+      fetch('/api/tracking/conversion', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -234,7 +281,7 @@ export default function TemplateRenderer({
           page_id: page.id,
           attribution_data: ghlAttribution || {},
         }),
-      });
+      }).catch(error => console.error('Conversion tracking error:', error));
 
       // Fire tracking pixels for form submission
       if (typeof window !== 'undefined') {

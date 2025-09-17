@@ -59,6 +59,38 @@ const Slider1Generator = ({ content, themeColor }) => {
     setSwiperReady(true);
   }, []);
 
+  // Fix: Only try to access swiper.params.navigation if it exists
+  const handleSwiper = (swiper) => {
+    setTimeout(() => {
+      // Defensive: check for params and navigation/pagination existence
+      if (
+        swiper &&
+        swiper.params &&
+        swiper.navigation &&
+        swiper.params.navigation &&
+        typeof swiper.params.navigation !== 'boolean'
+      ) {
+        swiper.params.navigation.prevEl = prevRef.current;
+        swiper.params.navigation.nextEl = nextRef.current;
+        swiper.navigation.destroy();
+        swiper.navigation.init();
+        swiper.navigation.update();
+      }
+      if (
+        swiper &&
+        swiper.params &&
+        swiper.pagination &&
+        swiper.params.pagination &&
+        typeof swiper.params.pagination !== 'boolean'
+      ) {
+        swiper.params.pagination.el = paginationRef.current;
+        swiper.pagination.destroy();
+        swiper.pagination.init();
+        swiper.pagination.update();
+      }
+    });
+  };
+
   return (
     <div className='w-full relative pb-20'>
       <Swiper
@@ -97,29 +129,7 @@ const Slider1Generator = ({ content, themeColor }) => {
           1024: { slidesPerView: 2.4, slidesPerGroup: 1, spaceBetween: 24 },
         }}
         className='slider1-swiper relative'
-        onSwiper={(swiper) => {
-          setTimeout(() => {
-            if (
-              swiper.params.navigation &&
-              typeof swiper.params.navigation !== 'boolean'
-            ) {
-              swiper.params.navigation.prevEl = prevRef.current;
-              swiper.params.navigation.nextEl = nextRef.current;
-              swiper.navigation.destroy();
-              swiper.navigation.init();
-              swiper.navigation.update();
-            }
-            if (
-              swiper.params.pagination &&
-              typeof swiper.params.pagination !== 'boolean'
-            ) {
-              swiper.params.pagination.el = paginationRef.current;
-              swiper.pagination.destroy();
-              swiper.pagination.init();
-              swiper.pagination.update();
-            }
-          });
-        }}
+        onSwiper={handleSwiper}
       >
         {actualSlides.map((slide, idx) => (
           <SwiperSlide key={idx} className='rounded-2xl overflow-hidden'>

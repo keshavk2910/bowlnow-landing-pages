@@ -9,10 +9,13 @@ export default function EditTemplateSections() {
   const [template, setTemplate] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [availableComponents, setAvailableComponents] = useState([]);
   const [formData, setFormData] = useState({
     name: '',
     type: 'landing',
     category: '',
+    component_file: '',
+    component_path: '',
     config_schema: {
       sections: [],
     },
@@ -21,28 +24,39 @@ export default function EditTemplateSections() {
 
   useEffect(() => {
     if (templateId) {
-      fetchTemplate();
+      fetchTemplateAndComponents();
     }
   }, [templateId]);
 
-  async function fetchTemplate() {
+  async function fetchTemplateAndComponents() {
     try {
-      const response = await fetch(`/api/admin/templates/${templateId}`);
-      if (response.ok) {
-        const data = await response.json();
+      const [templateRes, componentsRes] = await Promise.all([
+        fetch(`/api/admin/templates/${templateId}`),
+        fetch('/api/admin/templates/components')
+      ]);
+
+      if (templateRes.ok) {
+        const data = await templateRes.json();
         setTemplate(data.template);
 
-        // Initialize formData with sections structure
+        // Initialize formData with sections structure and component info
         const templateData = data.template;
         setFormData({
           ...templateData,
+          component_file: templateData.component_file || '',
+          component_path: templateData.component_path || '',
           config_schema: {
             sections: templateData.config_schema?.sections || [],
           },
         });
       }
+
+      if (componentsRes.ok) {
+        const componentsData = await componentsRes.json();
+        setAvailableComponents(componentsData.components);
+      }
     } catch (error) {
-      console.error('Error fetching template:', error);
+      console.error('Error fetching template data:', error);
     } finally {
       setLoading(false);
     }
@@ -75,6 +89,17 @@ export default function EditTemplateSections() {
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleComponentSelect = (componentFile) => {
+    const component = availableComponents.find(c => c.file === componentFile);
+    if (component) {
+      setFormData(prev => ({
+        ...prev,
+        component_file: component.file,
+        component_path: component.path
+      }));
+    }
   };
 
   // Section Management
@@ -280,7 +305,7 @@ export default function EditTemplateSections() {
             Template Settings
           </h3>
 
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
             <div>
               <label className='block text-sm font-medium text-gray-700 mb-2'>
                 Template Name
@@ -295,6 +320,21 @@ export default function EditTemplateSections() {
 
             <div>
               <label className='block text-sm font-medium text-gray-700 mb-2'>
+                Category
+              </label>
+              <input
+                type='text'
+                value={formData.category}
+                onChange={(e) => handleInputChange('category', e.target.value)}
+                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500'
+                placeholder='interactive, professional, modern'
+              />
+            </div>
+          </div>
+
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mt-6'>
+            <div>
+              <label className='block text-sm font-medium text-gray-700 mb-2'>
                 Type
               </label>
               <select
@@ -307,21 +347,43 @@ export default function EditTemplateSections() {
                 <option value='events'>Events</option>
                 <option value='bookings'>Bookings</option>
                 <option value='checkout'>Checkout</option>
+                <option value='bowling'>Bowling</option>
               </select>
             </div>
 
             <div>
               <label className='block text-sm font-medium text-gray-700 mb-2'>
-                Category
+                Component File
               </label>
-              <input
-                type='text'
-                value={formData.category}
-                onChange={(e) => handleInputChange('category', e.target.value)}
+              <select
+                value={formData.component_file}
+                onChange={(e) => handleComponentSelect(e.target.value)}
                 className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500'
-              />
+              >
+                <option value=''>Select component file...</option>
+                {availableComponents.map((component) => (
+                  <option key={component.file} value={component.file}>
+                    {component.displayName} ({component.type})
+                  </option>
+                ))}
+              </select>
+              <p className='text-xs text-gray-500 mt-1'>
+                Link template to specific React component file
+              </p>
             </div>
           </div>
+
+          {/* Component Path Display */}
+          {formData.component_file && (
+            <div className='mt-4 p-3 bg-blue-50 rounded-lg'>
+              <div className='text-sm text-blue-800'>
+                <strong>Component:</strong> {formData.component_file}
+              </div>
+              <div className='text-xs text-blue-600 mt-1'>
+                <strong>Path:</strong> {formData.component_path}
+              </div>
+            </div>
+          )}
 
           <div className='mt-4 flex items-center'>
             <input

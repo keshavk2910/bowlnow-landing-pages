@@ -36,15 +36,35 @@ export default async function handler(req, res) {
           type = 'checkout'
         } else if (componentName.toLowerCase().includes('thank')) {
           type = 'thank-you'
+        } else if (componentName.toLowerCase().includes('bowling')) {
+          type = 'bowling'
+        }
+
+        // Try to read component file to get more info
+        let displayName = componentName
+        try {
+          const filePath = path.join(templatesDir, file)
+          const fileContent = fs.readFileSync(filePath, 'utf8')
+          
+          // Look for export default or function name
+          const exportMatch = fileContent.match(/export default function (\w+)/)
+          if (exportMatch) {
+            displayName = exportMatch[1]
+          }
+        } catch (readError) {
+          console.warn(`Could not read ${file}:`, readError.message)
         }
 
         return {
           file: componentName,
           path: componentPath,
           type: type,
-          exists: true
+          displayName: displayName,
+          exists: true,
+          lastModified: fs.statSync(path.join(templatesDir, file)).mtime
         }
       })
+      .sort((a, b) => a.displayName.localeCompare(b.displayName))
 
     res.status(200).json({
       success: true,
