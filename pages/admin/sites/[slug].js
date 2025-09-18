@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import AdminLayout from '../../../components/admin/AdminLayout';
+import CopyPageModal from '../../../components/admin/CopyPageModal';
 
 export default function SiteManagePage() {
   const router = useRouter();
@@ -12,6 +13,7 @@ export default function SiteManagePage() {
   const [ghlPipelines, setGhlPipelines] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState(router.query.tab || 'overview');
+  const [showCopyModal, setShowCopyModal] = useState(false);
 
   useEffect(() => {
     if (slug) {
@@ -295,12 +297,23 @@ export default function SiteManagePage() {
               <h3 className='text-lg font-semibold text-gray-900'>
                 Site Pages
               </h3>
-              <Link
-                href={`/admin/sites/${slug}/pages/new`}
-                className='bg-indigo-600 text-white px-4 py-2 rounded-md text-sm hover:bg-indigo-700 inline-block'
-              >
-                Create New Page
-              </Link>
+              <div className='flex space-x-2'>
+                <button
+                  onClick={() => setShowCopyModal(true)}
+                  className='bg-green-600 text-white px-4 py-2 rounded-md text-sm hover:bg-green-700 inline-flex items-center'
+                >
+                  <svg className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                  Copy from Other Site
+                </button>
+                <Link
+                  href={`/admin/sites/${slug}/pages/new`}
+                  className='bg-indigo-600 text-white px-4 py-2 rounded-md text-sm hover:bg-indigo-700 inline-block'
+                >
+                  Create New Page
+                </Link>
+              </div>
             </div>
             <div className='p-6'>
               {pages.length > 0 ? (
@@ -600,6 +613,17 @@ export default function SiteManagePage() {
           </div>
         )}
       </div>
+
+      {/* Copy Page Modal */}
+      <CopyPageModal
+        isOpen={showCopyModal}
+        onClose={() => setShowCopyModal(false)}
+        targetSiteSlug={slug}
+        onSuccess={() => {
+          fetchSiteData()
+          setShowCopyModal(false)
+        }}
+      />
     </AdminLayout>
   );
 }

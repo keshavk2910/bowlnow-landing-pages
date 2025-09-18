@@ -141,6 +141,29 @@ export default function ContactForm({
 
       const result = await response.json();
 
+      // Fire Facebook pixel Lead event
+      if (typeof window !== 'undefined' && window.fbq) {
+        window.fbq('track', 'Lead', {
+          content_name: showEventFields ? 'Event Inquiry' : 'Contact Form',
+          content_category: showEventFields ? 'event_booking' : 'general_contact',
+          value: formData.estimated_value || 0,
+          currency: 'USD',
+          predicted_ltv: formData.estimated_value || 0
+        })
+        console.log('Facebook Lead event fired')
+      }
+
+      // Fire Google Analytics Lead event
+      if (typeof window !== 'undefined' && window.gtag) {
+        window.gtag('event', 'generate_lead', {
+          currency: 'USD',
+          value: formData.estimated_value || 0,
+          event_category: showEventFields ? 'Event Inquiry' : 'Contact',
+          event_label: formData.type_of_event || 'General Contact'
+        })
+        console.log('Google Analytics Lead event fired')
+      }
+
       // Show success state instead of alert
       setSubmitted(true);
 

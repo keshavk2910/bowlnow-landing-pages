@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import AdminLayout from '../../../components/admin/AdminLayout';
 import { createClientComponentClient } from '../../../lib/supabase';
+import CopySiteModal from '../../../components/admin/CopySiteModal';
 
 export default function SitesPage() {
   const [sites, setSites] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('all'); // all, active, inactive
+  const [showCopyModal, setShowCopyModal] = useState(false);
 
   useEffect(() => {
     fetchSites();
@@ -98,14 +100,25 @@ export default function SitesPage() {
         <div className='flex justify-between items-center'>
           <div>
             <h1 className='text-2xl font-bold text-gray-900'>Sites</h1>
-            <p className='text-gray-600'>Manage client sites and funnels</p>
+            <p className='text-gray-600'>Manage client sites and pages</p>
           </div>
-          <Link
-            href='/admin/sites/new'
-            className='bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors'
-          >
-            Create New Site
-          </Link>
+          <div className="flex space-x-3">
+            <button
+              onClick={() => setShowCopyModal(true)}
+              className='bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors inline-flex items-center'
+            >
+              <svg className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              Duplicate Site
+            </button>
+            <Link
+              href='/admin/sites/new'
+              className='bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors'
+            >
+              Create New Site
+            </Link>
+          </div>
         </div>
 
         {/* Filters */}
@@ -183,6 +196,16 @@ export default function SitesPage() {
           </div>
         )}
       </div>
+
+      {/* Copy Site Modal */}
+      <CopySiteModal
+        isOpen={showCopyModal}
+        onClose={() => setShowCopyModal(false)}
+        onSuccess={(newSite) => {
+          fetchSites()
+          setShowCopyModal(false)
+        }}
+      />
     </AdminLayout>
   );
 }
