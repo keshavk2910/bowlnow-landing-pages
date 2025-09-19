@@ -144,10 +144,10 @@ export default function CopySiteModal({ isOpen, onClose, onSuccess }) {
                 <p>• {selectedSite.pageCount || 0} pages will be copied</p>
                 <p>• Logo and site settings will be duplicated</p>
                 <p>• Contact information will be copied</p>
-                <p>• Pipeline configuration will be duplicated</p>
+                <p>• Theme colors and tracking pixels included</p>
               </div>
               <div className="text-xs text-blue-600 mt-2">
-                Note: Integrations (Stripe, GHL tokens) will need to be reconfigured
+                Note: All integrations (Stripe, GHL tokens, pipeline configuration) will need to be set up fresh
               </div>
             </div>
           )}
@@ -200,12 +200,12 @@ export default function CopySiteModal({ isOpen, onClose, onSuccess }) {
               <div className="space-y-1">
                 <p>✓ All pages and content</p>
                 <p>✓ Templates and sections</p>
-                <p>✓ Pipeline configuration</p>
-                <p>✓ Payment plans</p>
+                <p>✓ Payment plan structure</p>
+                <p>✓ Uploaded images (copied)</p>
               </div>
             </div>
             <div className="mt-3 text-xs text-gray-600">
-              <strong>Not copied:</strong> Customer data, orders, uploaded files, Stripe/GHL tokens
+              <strong>Not copied:</strong> Customer data, orders, Stripe/GHL integrations, pipeline configurations
             </div>
           </div>
         </div>

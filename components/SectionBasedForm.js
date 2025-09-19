@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import FileUpload from './FileUpload'
 import SliderField from './TemplateComponents/SliderField'
 import FAQField from './TemplateComponents/FAQField'
+import RichTextField from './TemplateComponents/RichTextField'
 
 export default function SectionBasedForm({ 
   template, 
@@ -281,6 +282,17 @@ export default function SectionBasedForm({
             minFAQs={field.minFAQs || 1}
             maxFAQs={field.maxFAQs || 20}
             required={field.required}
+          />
+        )
+      
+      case 'richtext':
+        return (
+          <RichTextField
+            value={value || ''}
+            onChange={(content) => handleFieldChange(section.key, field.key, content)}
+            label={field.label}
+            description={field.description}
+            placeholder={`Enter ${field.label.toLowerCase()}...`}
           />
         )
       

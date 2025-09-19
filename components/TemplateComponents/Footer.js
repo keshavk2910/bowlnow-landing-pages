@@ -16,7 +16,19 @@ const Footer = ({ content, site, themeColor }) => {
             <div className='p-4 rounded-lg'>
               <h3 className='text-2xl font-bold text-white mb-4'>Contact</h3>
               <p className='text-white mb-4'>{site.contact_info} </p>
-              <p className='text-white mb-4'>{site.contact_phone} </p>
+              <a
+                target='_blank'
+                href={`mailto:${site.contact_email}`}
+                className='text-white mb-4 block'
+              >
+                {site.contact_email}{' '}
+              </a>
+              <a
+                href={`tel:${site.contact_phone}`}
+                className='text-white mb-4 block'
+              >
+                {site.contact_phone}{' '}
+              </a>
             </div>
           </div>
         </div>

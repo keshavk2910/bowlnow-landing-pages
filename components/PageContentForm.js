@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import FileUpload from './FileUpload'
 import SliderField from './TemplateComponents/SliderField'
 import FAQField from './TemplateComponents/FAQField'
+import RichTextField from './TemplateComponents/RichTextField'
 import SectionBasedForm from './SectionBasedForm'
 import PagePipelineConfig from './PagePipelineConfig'
 

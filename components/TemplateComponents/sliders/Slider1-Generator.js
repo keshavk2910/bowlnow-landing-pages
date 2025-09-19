@@ -92,7 +92,7 @@ const Slider1Generator = ({ content, themeColor }) => {
   };
 
   return (
-    <div className='w-full relative pb-20'>
+    <div className='w-full relative pb-20 slider1'>
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={16}
@@ -139,7 +139,7 @@ const Slider1Generator = ({ content, themeColor }) => {
                 bg-white shadow-md 
                 p-4 sm:p-6 
                 flex mx-auto relative
-                h-[350px] xs:h-[400px] sm:h-[500px] md:h-[550px] lg:h-[600px]
+                h-[350px] xs:h-[400px] sm:h-[500px] md:h-[600px] lg:h-[650px]
               `}
               style={{
                 borderRadius: '15px',
@@ -152,7 +152,7 @@ const Slider1Generator = ({ content, themeColor }) => {
               }}
             >
               {/* add overlay gradient dark bottom light top */}
-              <div className='overlay absolute inset-0 bg-gradient-to-t from-[rgba(0,0,0,0.9)] to-[rgba(0,0,0,0)]'></div>
+              <div className='overlay absolute inset-0 bg-gradient-to-t from-[rgba(0,0,0,0.9)] to-[rgba(0,0,0,0.1)]'></div>
               <div className='flex flex-col justify-end z-10 px-3 sm:px-5 py-6 sm:py-8'>
                 {slide.title && (
                   <h4 className='text-2xl sm:text-3xl md:text-4xl text-white font-semibold mb-3 sm:mb-5'>
@@ -160,9 +160,10 @@ const Slider1Generator = ({ content, themeColor }) => {
                   </h4>
                 )}
                 {slide.description && (
-                  <p className='text-white text-xs sm:text-sm font-semibold w-full sm:w-2/3'>
-                    {slide.description}
-                  </p>
+                  <div
+                    dangerouslySetInnerHTML={{ __html: slide.description }}
+                    className='text-white text-xs sm:text-sm font-semibold w-full sm:w-2/3'
+                  ></div>
                 )}
                 {slide.buttonText && (
                   <a
@@ -231,6 +232,51 @@ const Slider1Generator = ({ content, themeColor }) => {
             .slider1-prev, .slider1-next {
               display: flex !important;
             }
+          }
+          
+          /* H2 styles in slider1 */
+          .slider1 h2 {
+            font-size: 16px;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+          }
+            .slider1 p {
+            font-size: 14px;
+            margin-bottom: 0.5rem;
+            font-weight: 400;
+          }
+          
+          /* Arrow styles for list items */
+          .slider1 ul {
+            list-style: none;
+            padding-left: 0;
+          }
+          
+          .slider1 ul li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.5rem;
+          }
+          
+          .slider1 ul li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 8px solid ${themeColor || '#6366f1'};
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+          }
+          
+          .slider1 ul li:hover::before {
+            border-left-color: ${
+              themeColor
+                ? `color-mix(in srgb, ${themeColor} 80%, black)`
+                : '#4f46e5'
+            };
           }
         `}
       </style>

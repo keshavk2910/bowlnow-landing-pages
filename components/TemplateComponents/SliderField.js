@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import FileUpload from '../FileUpload';
+import RichTextField from './RichTextField';
 
 export default function SliderField({
   value = [],
@@ -170,16 +171,14 @@ export default function SliderField({
 
                   <div>
                     <label className='block text-xs font-medium text-gray-700 mb-1'>
-                      Description
+                      Rich Description
                     </label>
-                    <textarea
-                      rows={2}
-                      value={slide.description}
-                      onChange={(e) =>
-                        updateSlide(index, 'description', e.target.value)
-                      }
-                      className='w-full px-2 py-1 border border-gray-300 rounded text-sm'
-                      placeholder='Slide description'
+                    <RichTextField
+                      value={slide.description || ''}
+                      onChange={(content) => updateSlide(index, 'description', content)}
+                      placeholder='Enter rich formatted description...'
+                      description='Use formatting tools for rich content'
+                      className='text-sm'
                     />
                   </div>
 

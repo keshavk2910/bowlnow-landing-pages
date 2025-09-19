@@ -1,9 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
 import ContactForm from '../ContactForm';
 import Footer from '../TemplateComponents/Footer';
-import FAQAccordion from '../TemplateComponents/faq';
+import Slider1Generator from '../TemplateComponents/sliders/Slider1-Generator';
 
-export default function BirthdayParties({ content, site, page, sessionId }) {
+export default function BirthdayPartiesWithSlider({
+  content,
+  site,
+  page,
+  sessionId,
+}) {
   const headerRef = useRef(null);
   const [headerHeight, setHeaderHeight] = useState(0);
 
@@ -17,7 +22,7 @@ export default function BirthdayParties({ content, site, page, sessionId }) {
     window.addEventListener('resize', updateHeaderHeight);
     return () => window.removeEventListener('resize', updateHeaderHeight);
   }, []);
-  var { header, party_started, contact_form, faq_section } = content;
+  var { header, contact_form, party_slider, party_started } = content;
   // Default values
   const heroTitle = header?.hero_title || 'Birthday Parties';
 
@@ -114,62 +119,19 @@ export default function BirthdayParties({ content, site, page, sessionId }) {
           </div>
         </div>
       </section>
-      {/* Lets Get The Party Started */}
-
-      <section
-        className='py-10 md:py-20'
-        style={{
-          backgroundColor: '#E8E4D5',
-        }}
-      >
-        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-center items-center'>
-          <div className='w-full md:w-1/2  md:rounded-xl rounded-t-xl overflow-hidden flex-shrink-0 md:hidden block'>
-            <img
-              src={
-                party_started?.image ||
-                'https://partners.bowlnow.com/wp-content/uploads/2025/04/Birthday-Flyer-20250224.jpg'
-              }
-              alt='Party Started'
-              className='w-full h-full object-cover'
-            />
-          </div>
-          <div
-            className='flex justify-center md:items-start items-center p-6 md:p-10 w-full md:w-1/2 h-auto md:h-[600px] flex-col mb-6 md:mb-0 md:rounded-none rounded-b-xl'
-            style={{
-              backgroundColor: themeColor,
-            }}
-          >
-            <h2 className='text-2xl  md:text-5xl mb-4 md:mb-6 text-shadow-lg text-white text-left'>
-              {party_started?.title || 'Lets Get The Party Started'}
-            </h2>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: party_started?.desc || 'Book your next party with us',
-              }}
-              className='text-sm sm:text-md mb-6 md:mb-8 text-gray-200 text-center md:text-left'
-            ></div>
-            <a
-              href={party_started?.cta_link || '#form'}
-              className='bg-white text-black px-6 md:px-8 py-3 rounded-full text-center font-semibold hover:bg-gray-100 transition-colors duration-200 w-full md:w-auto'
-            >
-              {party_started?.cta_text || 'Book your next party with us'}
-            </a>
-          </div>
-          <div className='w-full md:w-1/2 h-[700px]  md:h-[700px] rounded-xl overflow-hidden flex-shrink-0 md:block hidden'>
-            <img
-              src={
-                party_started?.image ||
-                'https://partners.bowlnow.com/wp-content/uploads/2025/04/Birthday-Flyer-20250224.jpg'
-              }
-              alt='Party Started'
-              className='w-full h-full object-cover'
-            />
-          </div>
-        </div>
+      {/* Parties slider */}
+      <section className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-15'>
+        <h3 className='text-3xl md:text-5xl font-bold text-black mb-4'>
+          {party_slider.slider_1_title || 'Our Parties'}
+        </h3>
       </section>
 
+      {party_slider.enabled && (
+        <Slider1Generator content={party_slider} themeColor={themeColor} />
+      )}
+
       {/* Booking Form Section */}
-      <div id='form' className='py-10 md:py-20 bg-white'>
+      <div id='form' className=' bg-white'>
         <ContactForm
           content={contact_form}
           themeColor={themeColor}
@@ -178,22 +140,78 @@ export default function BirthdayParties({ content, site, page, sessionId }) {
           sessionId={sessionId}
         />
       </div>
-      {/* FAQ Section */}
-      <section className='pb-10 md:pb-20 bg-white'>
-        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center'>
-          <h2 className='text-xl sm:text-2xl md:text-5xl font-bold mb-6 md:mb-10 text-black'>
-            {faq_section?.title || "Tips for a great kid's birthday party!"}
-          </h2>
-        </div>
-        <div className='px-2 sm:px-4'>
-          <FAQAccordion
-            questions={faq_section?.questions}
-            sample_questions={sample_questions}
-          />
-        </div>
-      </section>
-      {/* FAQ List */}
+      {/* Lets Get The Party Started */}
 
+      {party_started.enabled && (
+        <section
+          className='py-10 md:py-20 party-started'
+          style={{
+            backgroundColor: '#E8E4D5',
+          }}
+        >
+          <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-center items-center'>
+            <div className='w-full md:w-1/2  md:rounded-xl rounded-t-xl overflow-hidden flex-shrink-0 md:hidden block'>
+              <img
+                src={
+                  party_started?.image ||
+                  'https://partners.bowlnow.com/wp-content/uploads/2025/04/Birthday-Flyer-20250224.jpg'
+                }
+                alt='Party Started'
+                className='w-full h-full object-cover'
+              />
+            </div>
+            <div
+              className='flex justify-center md:items-start items-center p-6 md:p-10 w-full md:w-1/2 h-auto md:h-[600px] flex-col mb-6 md:mb-0 md:rounded-none rounded-b-xl'
+              style={{
+                backgroundColor: themeColor,
+              }}
+            >
+              <h2 className='text-2xl  md:text-5xl mb-4 md:mb-6 text-shadow-lg text-white text-left'>
+                {party_started?.title || 'Lets Get The Party Started'}
+              </h2>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: party_started?.desc || 'Book your next party with us',
+                }}
+                className='text-sm sm:text-md mb-6 md:mb-8 text-gray-200 text-center md:text-left'
+              ></div>
+              <a
+                href={party_started?.cta_link || '#form'}
+                className='bg-white text-black px-6 md:px-8 py-3 rounded-full text-center font-semibold hover:bg-gray-100 transition-colors duration-200 w-full md:w-auto'
+              >
+                {party_started?.cta_text || 'Book your next party with us'}
+              </a>
+            </div>
+            <div className='w-full md:w-1/2 h-[700px]  md:h-[700px] rounded-xl overflow-hidden flex-shrink-0 md:block hidden'>
+              <img
+                src={
+                  party_started?.image ||
+                  'https://partners.bowlnow.com/wp-content/uploads/2025/04/Birthday-Flyer-20250224.jpg'
+                }
+                alt='Party Started'
+                className='w-full h-full object-cover'
+              />
+            </div>
+          </div>
+
+          <style
+            dangerouslySetInnerHTML={{
+              __html: `
+              .party-started ul {
+              margin-top: 1rem;
+            list-style: disc;
+            padding-left: 0;
+          }
+        
+              .party-started ul li {
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+          }
+          `,
+            }}
+          />
+        </section>
+      )}
       {/* Footer */}
       <Footer content={content} site={site} themeColor={themeColor} />
     </div>

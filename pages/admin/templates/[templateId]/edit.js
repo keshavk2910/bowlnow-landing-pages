@@ -739,6 +739,7 @@ function FieldEditor({
             <option value='image'>Image Upload</option>
             <option value='slider'>Image Slider</option>
             <option value='faq'>FAQ Section</option>
+            <option value='richtext'>Rich Text (WYSIWYG)</option>
           </select>
         </div>
 

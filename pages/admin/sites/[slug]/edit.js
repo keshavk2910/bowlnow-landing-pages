@@ -25,6 +25,7 @@ export default function EditSitePage() {
     },
     contact_info: '',
     contact_phone: '',
+    contact_email: '',
     footer_description: '',
     status: 'active'
   })
@@ -53,6 +54,7 @@ export default function EditSitePage() {
           },
           contact_info: data.site.contact_info || '',
           contact_phone: data.site.contact_phone || '',
+          contact_email: data.site.contact_email || '',
           footer_description: data.site.footer_description || '',
           status: data.site.status
         })
@@ -281,6 +283,20 @@ export default function EditSitePage() {
                     onChange={(e) => handleInputChange('contact_phone', e.target.value)}
                     className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                     placeholder="(555) 123-4567"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="contact_email" className="block text-sm font-medium text-gray-700">
+                    Contact Email
+                  </label>
+                  <input
+                    type="email"
+                    id="contact_email"
+                    value={formData.contact_email}
+                    onChange={(e) => handleInputChange('contact_email', e.target.value)}
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="contact@business.com"
                   />
                 </div>
                 

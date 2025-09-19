@@ -154,7 +154,7 @@ export default function LandingPageTemplate({
       {features_slider.enabled && (
         <section className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-15'>
           <h3 className='text-3xl md:text-5xl font-bold text-black mb-4'>
-            Our Features
+            {features_slider.slider_1_title || 'Our Features'}
           </h3>
         </section>
       )}
@@ -175,13 +175,15 @@ export default function LandingPageTemplate({
 
       {/* Contact Form Section */}
       {contact_form?.enabled && (
-        <ContactForm
-          content={contact_form}
-          themeColor={themeColor}
-          siteId={site.id}
-          pageId={page.id}
-          sessionId={sessionId}
-        />
+        <div id='form'>
+          <ContactForm
+            content={contact_form}
+            themeColor={themeColor}
+            siteId={site.id}
+            pageId={page.id}
+            sessionId={sessionId}
+          />
+        </div>
       )}
 
       {/* Footer */}

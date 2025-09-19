@@ -10,10 +10,39 @@ export default function SitesPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('all'); // all, active, inactive
   const [showCopyModal, setShowCopyModal] = useState(false);
+  const [viewMode, setViewMode] = useState('grid'); // grid, table
 
   useEffect(() => {
     fetchSites();
+    // Load view preference from cookie
+    const savedViewMode = getCookie('admin_sites_view_mode');
+    if (savedViewMode && (savedViewMode === 'grid' || savedViewMode === 'table')) {
+      setViewMode(savedViewMode);
+    }
   }, []);
+
+  // Cookie helper functions
+  function setCookie(name, value, days = 365) {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+  }
+
+  function getCookie(name) {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+      if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+  }
+
+  function handleViewModeChange(newViewMode) {
+    setViewMode(newViewMode);
+    setCookie('admin_sites_view_mode', newViewMode);
+  }
 
   async function fetchSites() {
     try {
@@ -147,26 +176,84 @@ export default function SitesPage() {
                 <option value='inactive'>Inactive</option>
               </select>
             </div>
+
+            {/* View Toggle */}
+            <div className='flex rounded-md border border-gray-300'>
+              <button
+                onClick={() => handleViewModeChange('grid')}
+                className={`px-3 py-2 text-sm font-medium rounded-l-md transition-colors ${
+                  viewMode === 'grid'
+                    ? 'bg-indigo-600 text-white'
+                    : 'bg-white text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                <svg className="h-4 w-4 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+                Grid
+              </button>
+              <button
+                onClick={() => handleViewModeChange('table')}
+                className={`px-3 py-2 text-sm font-medium rounded-r-md transition-colors ${
+                  viewMode === 'table'
+                    ? 'bg-indigo-600 text-white'
+                    : 'bg-white text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                <svg className="h-4 w-4 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M3 14h18m-9-4v8m-7 0V4a1 1 0 011-1h3M3 4h18M3 18h18" />
+                </svg>
+                Table
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Sites Grid */}
+        {/* Sites Display */}
         {loading ? (
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className='bg-white rounded-lg shadow animate-pulse'>
-                <div className='p-6'>
-                  <div className='h-6 bg-gray-200 rounded w-3/4 mb-2'></div>
-                  <div className='h-4 bg-gray-200 rounded w-1/2 mb-4'></div>
-                  <div className='space-y-2'>
-                    <div className='h-4 bg-gray-200 rounded'></div>
-                    <div className='h-4 bg-gray-200 rounded w-5/6'></div>
+          viewMode === 'grid' ? (
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} className='bg-white rounded-lg shadow animate-pulse'>
+                  <div className='p-6'>
+                    <div className='h-6 bg-gray-200 rounded w-3/4 mb-2'></div>
+                    <div className='h-4 bg-gray-200 rounded w-1/2 mb-4'></div>
+                    <div className='space-y-2'>
+                      <div className='h-4 bg-gray-200 rounded'></div>
+                      <div className='h-4 bg-gray-200 rounded w-5/6'></div>
+                    </div>
                   </div>
                 </div>
+              ))}
+            </div>
+          ) : (
+            <div className='bg-white rounded-lg shadow'>
+              <div className='animate-pulse'>
+                <div className='px-6 py-4 border-b border-gray-200'>
+                  <div className='h-6 bg-gray-200 rounded w-1/4'></div>
+                </div>
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div key={i} className='px-6 py-4 border-b border-gray-200'>
+                    <div className='flex items-center justify-between'>
+                      <div className='flex items-center space-x-4'>
+                        <div className='h-10 w-10 bg-gray-200 rounded-full'></div>
+                        <div className='space-y-1'>
+                          <div className='h-4 bg-gray-200 rounded w-32'></div>
+                          <div className='h-3 bg-gray-200 rounded w-24'></div>
+                        </div>
+                      </div>
+                      <div className='flex space-x-4'>
+                        <div className='h-4 bg-gray-200 rounded w-16'></div>
+                        <div className='h-4 bg-gray-200 rounded w-16'></div>
+                        <div className='h-4 bg-gray-200 rounded w-16'></div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        ) : (
+            </div>
+          )
+        ) : viewMode === 'grid' ? (
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
             {filteredSites.map((site) => (
               <SiteCard
@@ -177,6 +264,12 @@ export default function SitesPage() {
               />
             ))}
           </div>
+        ) : (
+          <SitesTable
+            sites={filteredSites}
+            onToggleStatus={toggleSiteStatus}
+            onDelete={deleteSite}
+          />
         )}
 
         {!loading && filteredSites.length === 0 && (
@@ -354,6 +447,176 @@ function SiteCard({ site, onToggleStatus, onDelete }) {
         </div>
       </div>
     </div>
+  );
+}
+
+function SitesTable({ sites, onToggleStatus, onDelete }) {
+  return (
+    <div className='bg-white rounded-lg shadow overflow-hidden'>
+      <table className='min-w-full divide-y divide-gray-200'>
+        <thead className='bg-gray-50'>
+          <tr>
+            <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+              Site
+            </th>
+            <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+              Stats
+            </th>
+            <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+              Integrations
+            </th>
+            <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+              Status
+            </th>
+            <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody className='bg-white divide-y divide-gray-200'>
+          {sites.map((site) => (
+            <SiteTableRow
+              key={site.id}
+              site={site}
+              onToggleStatus={onToggleStatus}
+              onDelete={onDelete}
+            />
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function SiteTableRow({ site, onToggleStatus, onDelete }) {
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  const handleToggleStatus = async () => {
+    setIsUpdating(true);
+    try {
+      await onToggleStatus(site.id, site.status);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleDelete = () => {
+    onDelete(site.id, site.client_name);
+  };
+
+  return (
+    <tr className='hover:bg-gray-50'>
+      {/* Site Info */}
+      <td className='px-6 py-4 whitespace-nowrap'>
+        <div className='flex items-center'>
+          <div className='h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center'>
+            <span className='text-sm font-medium text-indigo-700'>
+              {site.client_name.charAt(0).toUpperCase()}
+            </span>
+          </div>
+          <div className='ml-4'>
+            <div className='text-sm font-medium text-gray-900'>{site.client_name}</div>
+            <div className='text-sm text-gray-500'>{site.slug}</div>
+          </div>
+        </div>
+      </td>
+
+      {/* Stats */}
+      <td className='px-6 py-4 whitespace-nowrap'>
+        <div className='text-sm text-gray-900'>
+          <div className='flex space-x-4'>
+            <span><strong>{site.pageCount}</strong> pages</span>
+            <span><strong>{site.customerCount}</strong> customers</span>
+          </div>
+          <div className='flex space-x-4 text-gray-500'>
+            <span>{site.orderCount} orders</span>
+            <span>${site.totalRevenue.toFixed(0)} revenue</span>
+          </div>
+        </div>
+      </td>
+
+      {/* Integrations */}
+      <td className='px-6 py-4 whitespace-nowrap'>
+        <div className='flex items-center space-x-4'>
+          <div className='flex items-center'>
+            <div
+              className={`h-2 w-2 rounded-full mr-2 ${
+                site.stripe_account_id ? 'bg-green-400' : 'bg-gray-300'
+              }`}
+            ></div>
+            <span className='text-sm text-gray-600'>Stripe</span>
+          </div>
+          <div className='flex items-center'>
+            <div
+              className={`h-2 w-2 rounded-full mr-2 ${
+                site.ghl_location_id ? 'bg-green-400' : 'bg-gray-300'
+              }`}
+            ></div>
+            <span className='text-sm text-gray-600'>GHL</span>
+          </div>
+        </div>
+      </td>
+
+      {/* Status */}
+      <td className='px-6 py-4 whitespace-nowrap'>
+        <span
+          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+            site.status === 'active'
+              ? 'bg-green-100 text-green-800'
+              : 'bg-gray-100 text-gray-800'
+          }`}
+        >
+          {site.status}
+        </span>
+      </td>
+
+      {/* Actions */}
+      <td className='px-6 py-4 whitespace-nowrap text-sm font-medium'>
+        <div className='flex items-center space-x-2'>
+          <Link
+            href={`/admin/sites/${site.slug}?tab=pages`}
+            className='text-indigo-600 hover:text-indigo-900'
+          >
+            Manage
+          </Link>
+          
+          <Link
+            href={`${
+              process.env.NEXT_PUBLIC_FRONTEND_DOMAIN ||
+              'https://partners.bowlnow.com'
+            }/${site.slug}`}
+            target='_blank'
+            rel='noopener noreferrer'
+            className='text-blue-600 hover:text-blue-900 flex items-center'
+          >
+            View <ExternalLinkIcon className='h-3 w-3 ml-1' />
+          </Link>
+
+          <button
+            onClick={handleToggleStatus}
+            disabled={isUpdating}
+            className={`transition-colors ${
+              site.status === 'active'
+                ? 'text-red-600 hover:text-red-900'
+                : 'text-green-600 hover:text-green-900'
+            } ${isUpdating ? 'opacity-50 cursor-not-allowed' : ''}`}
+          >
+            {isUpdating
+              ? 'Updating...'
+              : site.status === 'active'
+              ? 'Deactivate'
+              : 'Activate'}
+          </button>
+
+          <button
+            onClick={handleDelete}
+            className='text-red-600 hover:text-red-900'
+          >
+            Delete
+          </button>
+        </div>
+      </td>
+    </tr>
   );
 }
 

@@ -271,7 +271,7 @@ const Slider2Section = ({ content, themeColor }) => {
   }
 
   return (
-    <section className='w-full mx-auto px-2 sm:px-4 lg:px-12 py-20 bg-black min-h-[90vh] flex flex-col justify-center'>
+    <section className='w-full mx-auto px-2 sm:px-4 lg:px-12 py-20 bg-black min-h-[90vh] flex flex-col justify-center slider2'>
       <h3 className='text-4xl md:text-6xl font-bold text-white mb-12 text-center tracking-tight drop-shadow-lg'>
         {content?.slider2_title || 'Parties & Events'}
       </h3>
@@ -361,9 +361,10 @@ const Slider2Section = ({ content, themeColor }) => {
                     </h4>
                   )}
                   {slide.description && (
-                    <p className='text-white text-lg md:text-xl font-medium mb-5 drop-shadow-md'>
-                      {slide.description}
-                    </p>
+                    <div
+                      className='text-white text-lg md:text-xl font-medium mb-5 drop-shadow-md'
+                      dangerouslySetInnerHTML={{ __html: slide.description }}
+                    ></div>
                   )}
                   {slide.buttonText && (
                     <a
