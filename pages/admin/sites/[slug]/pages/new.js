@@ -354,10 +354,44 @@ export default function NewPageMultiStep() {
                 {/* Template Preview */}
                 {selectedTemplate && (
                   <div className="bg-gray-50 rounded-lg p-4">
-                    <h4 className="text-sm font-medium text-gray-900 mb-2">Template: {selectedTemplate.name}</h4>
-                    <p className="text-sm text-gray-600 mb-3">{selectedTemplate.category} template</p>
-                    <div className="text-xs text-gray-500">
-                      Fields: {selectedTemplate.config_schema.fields?.length || 0} customizable fields
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-900 mb-2">Template: {selectedTemplate.name}</h4>
+                        <p className="text-sm text-gray-600 mb-3">{selectedTemplate.category} template</p>
+                        <div className="text-xs text-gray-500">
+                          {selectedTemplate.config_schema?.sections?.length || selectedTemplate.config_schema?.fields?.length || 0} {selectedTemplate.config_schema?.sections ? 'sections' : 'fields'}
+                        </div>
+                        {selectedTemplate.component_file && (
+                          <div className="text-xs text-blue-600 mt-2">
+                            Component: {selectedTemplate.component_file}
+                          </div>
+                        )}
+                      </div>
+                      
+                      {selectedTemplate.template_image_url && (
+                        <div>
+                          <label className="block text-xs font-medium text-gray-700 mb-1">
+                            Template Preview
+                          </label>
+                          <div 
+                            className="relative h-32 bg-gray-200 rounded-lg overflow-hidden cursor-pointer group"
+                            onClick={() => window.open(selectedTemplate.template_image_url, '_blank')}
+                          >
+                            <img
+                              src={selectedTemplate.template_image_url}
+                              alt={selectedTemplate.name}
+                              className="w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all flex items-center justify-center">
+                              <div className="text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}

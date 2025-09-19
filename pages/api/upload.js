@@ -17,7 +17,7 @@ export default async function handler(req, res) {
 
   try {
     const form = new IncomingForm({
-      maxFileSize: 10 * 1024 * 1024, // 10MB limit
+      maxFileSize: 100 * 1024 * 1024, // 100MB limit
       keepExtensions: true,
     })
 
@@ -37,13 +37,17 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing required fields' })
     }
 
-    // Determine if this is a logo upload
+    // Determine upload type
     const isLogo = fieldKey === 'site_logo'
+    const isTemplate = fieldKey === 'template_image' || fieldKey === 'template_thumbnail'
 
-    // Get site information
-    const site = await getSiteById(siteId)
-    if (!site) {
-      return res.status(404).json({ error: 'Site not found' })
+    // Get site information (skip for template uploads)
+    let site = null
+    if (!isTemplate) {
+      site = await getSiteById(siteId)
+      if (!site) {
+        return res.status(404).json({ error: 'Site not found' })
+      }
     }
 
     // Get page name if pageId provided (only for page files, not logos)
@@ -68,23 +72,27 @@ export default async function handler(req, res) {
     })
 
     // Upload to Supabase Storage
-    const uploadResult = await uploadFileToStorage(fileToUpload, site.client_name, pageName, isLogo)
+    const siteName = isTemplate ? 'template' : site.client_name
+    const uploadResult = await uploadFileToStorage(fileToUpload, siteName, pageName, isLogo, isTemplate)
 
-    // Save file record to database
-    const fileRecord = await saveFileRecord(
-      {
-        ...uploadResult,
-        name: file.originalFilename || file.newFilename
-      },
-      siteId,
-      pageId || null,
-      fieldKey,
-      {
-        uploadedAt: new Date().toISOString(),
-        userAgent: req.headers['user-agent'],
-        ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress
-      }
-    )
+    // Save file record to database (skip for template uploads)
+    let fileRecord = null
+    if (!isTemplate) {
+      fileRecord = await saveFileRecord(
+        {
+          ...uploadResult,
+          name: file.originalFilename || file.newFilename
+        },
+        siteId,
+        pageId || null,
+        fieldKey,
+        {
+          uploadedAt: new Date().toISOString(),
+          userAgent: req.headers['user-agent'],
+          ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress
+        }
+      )
+    }
 
     // Clean up temporary file
     fs.unlinkSync(file.filepath)
@@ -93,11 +101,11 @@ export default async function handler(req, res) {
       success: true,
       message: 'File uploaded successfully',
       file: {
-        id: fileRecord.id,
-        url: fileRecord.file_url,
-        filename: fileRecord.filename,
-        size: fileRecord.file_size,
-        type: fileRecord.file_type
+        id: fileRecord?.id || 'template_upload',
+        url: uploadResult.url,
+        filename: file.originalFilename || file.newFilename,
+        size: uploadResult.size,
+        type: uploadResult.type
       }
     })
 

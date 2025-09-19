@@ -5,6 +5,7 @@ export default function TemplatesPage() {
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
+  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     fetchTemplates();
@@ -126,7 +127,12 @@ export default function TemplatesPage() {
         ) : (
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
             {filteredTemplates.map((template) => (
-              <TemplateCard key={template.id} template={template} onDelete={deleteTemplate} />
+              <TemplateCard 
+                key={template.id} 
+                template={template} 
+                onDelete={deleteTemplate}
+                onImageClick={setSelectedImage}
+              />
             ))}
           </div>
         )}
@@ -142,11 +148,37 @@ export default function TemplatesPage() {
           </div>
         )}
       </div>
+
+      {/* Image Modal */}
+      {selectedImage && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex flex-col items-center justify-center z-50 p-4" onClick={() => setSelectedImage(null)}>
+          {/* Title at Top */}
+          <div className="text-white text-center mb-4 flex-shrink-0">
+            <h3 className="text-2xl font-semibold">{selectedImage.title}</h3>
+            <p className="text-gray-300 mt-1">Template Preview</p>
+          </div>
+          
+          {/* Image Container */}
+          <div className="flex-1 flex items-center justify-center max-h-[calc(100vh-120px)] w-full">
+            <img
+              src={selectedImage.url}
+              alt={selectedImage.title}
+              className="max-h-full w-auto object-contain rounded-lg shadow-2xl"
+              style={{ maxHeight: 'calc(100vh - 120px)' }}
+            />
+          </div>
+          
+          {/* Footer */}
+          <div className="text-center mt-4 flex-shrink-0">
+            <p className="text-gray-300 text-sm">Click anywhere to close</p>
+          </div>
+        </div>
+      )}
     </AdminLayout>
   );
 }
 
-function TemplateCard({ template, onDelete }) {
+function TemplateCard({ template, onDelete, onImageClick }) {
   const typeColors = {
     landing: 'bg-blue-100 text-blue-800',
     parties: 'bg-purple-100 text-purple-800',
@@ -171,8 +203,28 @@ function TemplateCard({ template, onDelete }) {
 
   return (
     <div className='bg-white rounded-lg shadow hover:shadow-md transition-shadow'>
-      <div className='h-48 bg-gradient-to-br from-gray-100 to-gray-200 rounded-t-lg flex items-center justify-center'>
-        <div className='text-6xl'>{typeIcons[template.type] || '📄'}</div>
+      <div 
+        className='h-48 bg-gradient-to-br from-gray-100 to-gray-200 rounded-t-lg flex items-center justify-center cursor-pointer relative overflow-hidden'
+        onClick={() => template.template_image_url && onImageClick({ url: template.template_image_url, title: template.name })}
+      >
+        {template.template_image_url ? (
+          <>
+            <img
+              src={template.template_image_url}
+              alt={template.name}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition-all flex items-center justify-center">
+              <div className="text-white opacity-0 hover:opacity-100 transition-opacity">
+                <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                </svg>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className='text-6xl'>{typeIcons[template.type] || '📄'}</div>
+        )}
       </div>
 
       <div className='p-6'>

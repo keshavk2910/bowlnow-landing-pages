@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import AdminLayout from '../../../../components/admin/AdminLayout';
+import FileUpload from '../../../../components/FileUpload';
 
 export default function EditTemplateSections() {
   const router = useRouter();
@@ -16,6 +17,7 @@ export default function EditTemplateSections() {
     category: '',
     component_file: '',
     component_path: '',
+    template_image_url: '',
     config_schema: {
       sections: [],
     },
@@ -45,6 +47,7 @@ export default function EditTemplateSections() {
           ...templateData,
           component_file: templateData.component_file || '',
           component_path: templateData.component_path || '',
+          template_image_url: templateData.template_image_url || '',
           config_schema: {
             sections: templateData.config_schema?.sections || [],
           },
@@ -99,6 +102,14 @@ export default function EditTemplateSections() {
         component_file: component.file,
         component_path: component.path
       }));
+    }
+  };
+
+  const handleTemplateImageUploaded = (file) => {
+    if (file) {
+      setFormData(prev => ({ ...prev, template_image_url: file.url }));
+    } else {
+      setFormData(prev => ({ ...prev, template_image_url: '' }));
     }
   };
 
@@ -296,6 +307,47 @@ export default function EditTemplateSections() {
             >
               Preview
             </Link>
+          </div>
+        </div>
+
+        {/* Template Image */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Template Image</h3>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Template Preview Image
+              </label>
+              <FileUpload
+                value={formData.template_image_url}
+                onFileUploaded={handleTemplateImageUploaded}
+                siteId="template" // Special identifier for templates
+                pageId={null}
+                fieldKey="template_image"
+                allowedTypes={['image']}
+                maxSizeMB={10}
+                multiple={false}
+              />
+              <p className="text-xs text-gray-500 mt-2">
+                Main template preview image (recommended: 800x600px)
+              </p>
+            </div>
+
+            {formData.template_image_url && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Image Preview
+                </label>
+                <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                  <img
+                    src={formData.template_image_url}
+                    alt={`${formData.name} preview`}
+                    className="w-full h-48 object-cover rounded-lg"
+                  />
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

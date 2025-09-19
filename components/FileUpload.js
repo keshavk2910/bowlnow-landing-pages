@@ -7,7 +7,7 @@ export default function FileUpload({
   pageId, 
   fieldKey, 
   allowedTypes = ['image'], 
-  maxSizeMB = 10,
+  maxSizeMB = 100,
   multiple = false,
   className = ""
 }) {
