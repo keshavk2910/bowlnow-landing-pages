@@ -66,10 +66,13 @@ export default async function handler(req, res) {
     // Read file data
     const fileBuffer = fs.readFileSync(file.filepath)
     
-    // Create File object for upload
-    const fileToUpload = new File([fileBuffer], file.originalFilename || file.newFilename, {
-      type: file.mimetype
-    })
+    // Create Blob-like object for upload (Node.js compatible)
+    const fileToUpload = {
+      buffer: fileBuffer,
+      name: file.originalFilename || file.newFilename,
+      type: file.mimetype,
+      size: fileBuffer.length
+    }
 
     // Upload to Supabase Storage
     const siteName = isTemplate ? 'template' : site.client_name
