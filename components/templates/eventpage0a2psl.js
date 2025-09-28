@@ -5,7 +5,7 @@ import BookYourEventHalf from '../TemplateComponents/BookYourEventHalf';
 import Slider2Section from '../TemplateComponents/sliders/Slider2Section';
 import Footer from '../TemplateComponents/Footer';
 import ContactForm from '../ContactForm';
-export default function LandingPageTemplate({
+export default function eventpage0a2psl({
   content = {},
   site = {},
   funnel = {},
@@ -96,53 +96,72 @@ export default function LandingPageTemplate({
       </header>
       {header.enabled && (
         <>
-          {/* Hero Section */}
-          <div
-            className='relative flex flex-col justify-center text-white'
-            style={{
-              backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${heroBackground})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              minHeight: heroMinHeight,
-            }}
-          >
-            <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full'>
-              <div className='px-4 sm:px-6 lg:px-8'>
-                <h1 className='text-4xl md:text-6xl font-bold mb-6 text-white'>
-                  {heroTitle}
-                </h1>
-                {heroSubtitle && (
-                  <p className='text-xl md:text-2xl mb-8 text-white'>
-                    {heroSubtitle}
-                  </p>
-                )}
-                <div className='space-y-4 sm:space-y-0 sm:space-x-4 sm:flex sm:justify-start'>
-                  <a
-                    href={ctaLink}
-                    className='inline-block px-8 py-3 text-lg font-semibold rounded-full transition-colors duration-200 text-white'
-                    style={{
-                      backgroundColor: themeColor,
-                      color: 'white',
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.target.style.backgroundColor = '#3730A3')
-                    }
-                    onMouseLeave={(e) =>
-                      (e.target.style.backgroundColor = themeColor)
-                    }
-                  >
-                    {ctaText}
-                  </a>
+        {/* Hero Section - Corporate Events Style */}
+          <div className='relative flex items-center justify-between text-white min-h-[60vh] bg-black'>
+            {/* Full Width Grid Container */}
+            <div className='w-full'>
+              <div className='grid grid-cols-1 lg:grid-cols-2 gap-0 items-center min-h-[40vh] w-full'>
+                
+                {/* Left Side - Text Content on Black Background */}
+                <div className='text-left flex flex-col justify-center px-4 sm:px-6 lg:px-12 xl:px-16'>
+                  <div className='max-w-2xl'>
+                    <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white leading-tight'>
+                      {heroTitle || 'Corporate Events'}
+                    </h1>
+                    
+                    {heroSubtitle && (
+                      <p className='text-lg md:text-xl mb-8 text-gray-300 leading-relaxed'>
+                        {heroSubtitle}
+                      </p>
+                    )}
+                    
+                    {/* CTA Button */}
+                    <div>
+                      <a
+                        href={ctaLink}
+                        className='inline-block px-8 py-4 text-base font-bold rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl'
+                        style={{
+                          backgroundColor: '#DC2626',
+                          color: 'white',
+                          border: '2px solid transparent',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.target.style.backgroundColor = '#B91C1C';
+                          e.target.style.borderColor = '#DC2626';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.backgroundColor = '#DC2626';
+                          e.target.style.borderColor = 'transparent';
+                        }}
+                      >
+                        {ctaText}
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Right Side - Background Image (50% width) */}
+                <div 
+                  className='w-full h-full min-h-[60vh] lg:min-h-[80vh] bg-cover bg-center bg-no-repeat'
+                  style={{
+                    backgroundImage: `url(${heroBackground})`,
+                  }}
+                >
                 </div>
               </div>
             </div>
 
-            {/* Scroll indicator */}
-            <div className='absolute bottom-8 left-1/2 transform -translate-x-1/2'>
-              <div className='animate-bounce'>
-                <ChevronDownIcon className='h-6 w-6' />
-              </div>
+            {/* Decorative Elements */}
+            <div className='absolute top-16 right-16 hidden xl:block'>
+              <div className='w-3 h-3 bg-red-500 rounded-full animate-pulse'></div>
             </div>
+            
+            <div className='absolute bottom-20 left-16 hidden xl:block'>
+              <div className='w-2 h-2 bg-gray-400 opacity-40 rounded-full'></div>
+            </div>
+
+            {/* Bottom fade effect */}
+            <div className='absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/20 to-transparent'></div>
           </div>
         </>
       )}

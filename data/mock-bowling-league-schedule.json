@@ -1,0 +1,210 @@
+{
+  "id": "789e0123-e89b-12d3-a456-426614174007",
+  "funnel_id": "456e7890-e89b-12d3-a456-426614174001",
+  "template_id": "template-bowling-league-001",
+  "page_order": 1,
+  "slug": "home",
+  "content": {
+    "title": "Bowling League Schedule - Pleasant Hill Lanes",
+    "meta_description": "Join our bowling leagues! View schedules for men's, women's, mixed, senior, and youth leagues. Sign up today for competitive and recreational bowling.",
+    
+    "header": {
+      "hero_title": "Join Our Bowling Leagues",
+      "hero_subtitle": "Competitive and recreational leagues for all skill levels",
+      "hero_background": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1920&h=1080&fit=crop",
+      "header_cta_text": "Join a League",
+      "header_cta_link": "#league-schedule",
+      "enabled": true
+    },
+    
+    "features_slider": {
+      "slider_1_title": "Why Bowl in Our Leagues?",
+      "slider_1_items": [
+        {
+          "title": "Competitive Play",
+          "description": "Challenge yourself against bowlers of all skill levels",
+          "image": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=600&fit=crop"
+        },
+        {
+          "title": "Social Atmosphere",
+          "description": "Meet new friends and enjoy a fun social environment",
+          "image": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop"
+        },
+        {
+          "title": "Weekly Fun",
+          "description": "Regular weekly games to improve your skills",
+          "image": "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=800&h=600&fit=crop"
+        }
+      ],
+      "enabled": true
+    },
+    
+    "league_schedule": {
+      "section_title": "Bowling League Schedule",
+      "section_subtitle": "Find the perfect league for your schedule and skill level. All leagues start in September.",
+      "schedule_table": [
+        {
+          "id": 1,
+          "day": "Monday Start September",
+          "league": "Christian Women",
+          "type": "Women",
+          "per_team": 3,
+          "time": "12:30pm"
+        },
+        {
+          "id": 2,
+          "day": "Tuesday Start September",
+          "league": "Blue Hen Ladies",
+          "type": "Women",
+          "per_team": 4,
+          "time": "6:00pm"
+        },
+        {
+          "id": 3,
+          "day": "Tuesday Start September",
+          "league": "Suburbanites",
+          "type": "Women",
+          "per_team": 4,
+          "time": "9:30am"
+        },
+        {
+          "id": 4,
+          "day": "Tuesday Start September",
+          "league": "Newport Men",
+          "type": "Men",
+          "per_team": 5,
+          "time": "6:10pm"
+        },
+        {
+          "id": 5,
+          "day": "Wednesday Start September",
+          "league": "Weds Mixed Seniors",
+          "type": "Senior Mixed",
+          "per_team": 4,
+          "time": "12:00pm"
+        },
+        {
+          "id": 6,
+          "day": "Wednesday Start September",
+          "league": "Wednesday Men",
+          "type": "Men",
+          "per_team": 5,
+          "time": "6:20pm"
+        },
+        {
+          "id": 7,
+          "day": "Thursday Start September",
+          "league": "Sparetimers",
+          "type": "Women",
+          "per_team": 3,
+          "time": "9:30am"
+        },
+        {
+          "id": 8,
+          "day": "Thursday Start September",
+          "league": "Gems",
+          "type": "Mixed",
+          "per_team": 4,
+          "time": "9:30am"
+        },
+        {
+          "id": 9,
+          "day": "Thursday Start September",
+          "league": "B & B Mixed",
+          "type": "Mixed",
+          "per_team": 4,
+          "time": "6:30pm"
+        },
+        {
+          "id": 10,
+          "day": "Thursday Start September",
+          "league": "Mixed Majors",
+          "type": "Mixed",
+          "per_team": 5,
+          "time": "6:30pm"
+        },
+        {
+          "id": 11,
+          "day": "Friday Start September",
+          "league": "Senior Red Pin",
+          "type": "Senior Mixed",
+          "per_team": 4,
+          "time": "12:00pm"
+        },
+        {
+          "id": 12,
+          "day": "Friday Start September",
+          "league": "Stanton Suburban",
+          "type": "Mixed",
+          "per_team": 4,
+          "time": "6:30pm"
+        },
+        {
+          "id": 13,
+          "day": "Saturday Start September",
+          "league": "Juniors",
+          "type": "Youth",
+          "per_team": null,
+          "time": "9:30am"
+        },
+        {
+          "id": 14,
+          "day": "Saturday Start September",
+          "league": "Bantams",
+          "type": "Youth",
+          "per_team": null,
+          "time": "9:30am"
+        },
+        {
+          "id": 15,
+          "day": "Saturday Start September",
+          "league": "Pee Wee (Bumper League)",
+          "type": "Youth",
+          "per_team": null,
+          "time": "9:30am"
+        },
+        {
+          "id": 16,
+          "day": "Saturday Start September",
+          "league": "Saturday Night League",
+          "type": "Adult Mix",
+          "per_team": 4,
+          "time": "6:30pm"
+        }
+      ],
+      "schedule_note": "Sign up for Youth League Click here",
+      "contact_info": "Call (555) 123-4567 or visit our pro shop to sign up for any league. Early registration recommended!",
+      "enabled": true
+    },
+    
+    "book_your_event": {
+      "book_event_title": "Book Your League Today",
+      "book_event_desc": "Ready to join the fun? Contact us to sign up for any of our leagues or get more information about our competitive and recreational bowling leagues.",
+      "book_event_image": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=400&fit=crop",
+      "book_event_cta_text": "Contact Us",
+      "book_event_cta_link": "#contact",
+      "enabled": true
+    },
+    
+    "contact_form": {
+      "form_title": "Join a League or Get More Info",
+      "form_subtitle": "Fill out the form below and we'll help you find the perfect league for your schedule and skill level.",
+      "enabled": true
+    },
+    
+    "main_cta": {
+      "cta_text": "Join a League",
+      "cta_link": "#contact"
+    }
+  },
+  "tracking_pixels": {},
+  "is_published": true,
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z",
+  "templates": {
+    "id": "template-bowling-league-001",
+    "name": "Bowling League Schedule",
+    "type": "bowling-league",
+    "category": "entertainment"
+  }
+}

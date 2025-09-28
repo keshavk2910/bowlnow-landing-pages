@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { safeImageUrl } from '../../utils/templateSafety';
 
 export default function BowlingTemplate({
-  content,
-  site,
-  funnel,
-  page,
+  content = {},
+  site = {},
+  funnel = {},
+  page = {},
   sessionId,
   onFormSubmit,
   onCheckoutClick,
@@ -85,10 +86,10 @@ export default function BowlingTemplate({
   const heroCtaLink = content.hero_cta_link || '#booking';
   const heroBackground =
     content.hero_background || '/api/placeholder/1920/1080';
-  const themeColor = site.settings?.theme_color || '#DC2626';
+  const themeColor = site?.settings?.theme_color || '#DC2626';
 
-  // Default features
-  const features = content.features || [
+  // Default features with array safety
+  const features = Array.isArray(content.features) ? content.features : [
     {
       title: 'Open Bowling',
       description: 'Walk-in bowling available daily',
@@ -111,8 +112,8 @@ export default function BowlingTemplate({
     },
   ];
 
-  // Default carousel items
-  const carouselItems = content.carousel_items || [
+  // Default carousel items with array safety
+  const carouselItems = Array.isArray(content.carousel_items) ? content.carousel_items : [
     {
       title: 'Summer Bowling Special',
       description: 'Beat the heat with cool savings on summer bowling packages',
@@ -142,7 +143,7 @@ export default function BowlingTemplate({
             <div className='flex items-center'>
               <div className='flex-shrink-0'>
                 <h1 className='text-2xl font-bold text-gray-900'>
-                  {site.client_name}
+                  {site?.client_name || 'Bowling Center'}
                 </h1>
               </div>
             </div>
@@ -313,8 +314,8 @@ export default function BowlingTemplate({
                       </div>
                       <div className='relative h-80 lg:h-96'>
                         <Image
-                          src={item.image}
-                          alt={item.title}
+                          src={safeImageUrl(item.image, '/api/placeholder/400/300')}
+                          alt={item.title || 'Event image'}
                           fill
                           className='object-cover rounded-xl shadow-lg'
                         />
@@ -404,7 +405,7 @@ export default function BowlingTemplate({
             </div>
             <div className='relative h-96'>
               <Image
-                src={content.about_image || '/api/placeholder/600/400'}
+                src={safeImageUrl(content.about_image, '/api/placeholder/600/400')}
                 alt='About us'
                 fill
                 className='object-cover rounded-xl shadow-lg'
@@ -434,7 +435,7 @@ export default function BowlingTemplate({
                   Booking Request Received!
                 </h3>
                 <p className='text-xl text-gray-600 mb-4'>
-                  Thank you for choosing {site.client_name}!
+                  Thank you for choosing {site?.client_name || 'our bowling center'}!
                 </p>
                 <p className='text-gray-600'>
                   We&apos;ll contact you within 24 hours to confirm your booking
@@ -706,7 +707,7 @@ export default function BowlingTemplate({
           {/* Footer */}
           <div className='border-t border-gray-700 mt-12 pt-8 text-center'>
             <p className='text-gray-400'>
-              © 2024 {site.client_name}. All rights reserved. | Family owned and
+              © 2024 {site?.client_name || 'Bowling Center'}. All rights reserved. | Family owned and
               operated since 1962
             </p>
           </div>

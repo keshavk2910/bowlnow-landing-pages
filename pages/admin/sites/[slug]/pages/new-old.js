@@ -184,6 +184,7 @@ export default function NewPagePage() {
                     <option value="parties">Party Events</option>
                     <option value="events">Events Booking</option>
                     <option value="bookings">Bookings Management</option>
+                    <option value="bowling">Bowling Alley</option>
                     <option value="checkout">Checkout Page</option>
                     <option value="thank-you">Thank You Page</option>
                   </select>

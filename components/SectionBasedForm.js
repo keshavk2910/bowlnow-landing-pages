@@ -3,6 +3,7 @@ import FileUpload from './FileUpload'
 import SliderField from './TemplateComponents/SliderField'
 import FAQField from './TemplateComponents/FAQField'
 import RichTextField from './TemplateComponents/RichTextField'
+import TableField from './TemplateComponents/TableField'
 
 export default function SectionBasedForm({ 
   template, 
@@ -281,6 +282,20 @@ export default function SectionBasedForm({
             description={field.description}
             minFAQs={field.minFAQs || 1}
             maxFAQs={field.maxFAQs || 20}
+            required={field.required}
+          />
+        )
+
+      case 'table':
+        return (
+          <TableField
+            value={value || []}
+            onChange={(tableData) => handleFieldChange(section.key, field.key, tableData)}
+            label={field.label}
+            description={field.description}
+            columns={field.columns || []}
+            minRows={field.minRows || 1}
+            maxRows={field.maxRows || 50}
             required={field.required}
           />
         )

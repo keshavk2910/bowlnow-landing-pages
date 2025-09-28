@@ -235,7 +235,6 @@ const Slider2Section = ({ content, themeColor }) => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
-  const [activeSlideIndex, setActiveSlideIndex] = useState(1);
 
   // Detect mobile (width <= 900px)
   useEffect(() => {
@@ -309,9 +308,6 @@ const Slider2Section = ({ content, themeColor }) => {
               swiper.navigation.update();
             }
           }}
-          onSlideChange={(swiper) => {
-            setActiveSlideIndex(swiper.realIndex);
-          }}
           pagination={{
             el: '.slider2-modern-pagination',
             clickable: true,
@@ -359,6 +355,17 @@ const Slider2Section = ({ content, themeColor }) => {
                 />
                 <div className='slider2-modern-overlay' />
                 <div className='slider2-modern-content'>
+                  {slide.title && (
+                    <h4 className='text-3xl md:text-4xl font-bold mb-4 drop-shadow-lg tracking-tight'>
+                      {slide.title}
+                    </h4>
+                  )}
+                  {slide.description && (
+                    <div
+                      className='text-white text-lg md:text-xl font-medium mb-5 drop-shadow-md'
+                      dangerouslySetInnerHTML={{ __html: slide.description }}
+                    ></div>
+                  )}
                   {slide.buttonText && (
                     <a
                       href={slide.buttonLink}
@@ -475,25 +482,6 @@ const Slider2Section = ({ content, themeColor }) => {
           {/* Pagination */}
           <div className='slider2-modern-pagination' />
         </Swiper>
-
-        {/* Title and Description below slider */}
-        <div className='w-full max-w-4xl mx-auto mt-8 text-center text-white'>
-          {loopedSlides[activeSlideIndex] && (
-            <div className='transition-all duration-500 ease-in-out'>
-              {loopedSlides[activeSlideIndex].title && (
-                <h4 className='text-3xl md:text-5xl font-bold mb-6 drop-shadow-lg tracking-tight'>
-                  {loopedSlides[activeSlideIndex].title}
-                </h4>
-              )}
-              {loopedSlides[activeSlideIndex].description && (
-                <div
-                  className='text-white text-lg md:text-xl font-medium drop-shadow-md max-w-3xl mx-auto'
-                  dangerouslySetInnerHTML={{ __html: loopedSlides[activeSlideIndex].description }}
-                ></div>
-              )}
-            </div>
-          )}
-        </div>
       </div>
     </section>
   );
