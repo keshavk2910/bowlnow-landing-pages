@@ -1,0 +1,138 @@
+{
+  "test_name": "Image Field Update Test",
+  "description": "Test data to verify that image field updates properly map to components",
+  "test_cases": [
+    {
+      "name": "BookYourEventHalf - Complete Image Data",
+      "section_key": "book_your_event_half",
+      "component_name": "BookYourEventHalf",
+      "form_data": {
+        "enabled": true,
+        "title": "Book Your Corporate Event",
+        "subtitle": "Professional event planning services",
+        "description": "Transform your corporate gathering into an unforgettable experience with our comprehensive event planning services.",
+        "background_image": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1200&h=800&fit=crop",
+        "image_alt": "Professional corporate event setup with bowling lanes",
+        "cta_text": "Plan Your Event",
+        "cta_link": "https://example.com/contact"
+      },
+      "expected_component_props": {
+        "enabled": true,
+        "title": "Book Your Corporate Event",
+        "subtitle": "Professional event planning services",
+        "description": "Transform your corporate gathering into an unforgettable experience with our comprehensive event planning services.",
+        "background_image": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1200&h=800&fit=crop",
+        "image_alt": "Professional corporate event setup with bowling lanes",
+        "cta_text": "Plan Your Event",
+        "cta_link": "https://example.com/contact"
+      }
+    },
+    {
+      "name": "BookYourEventLeft - Complete Image Data",
+      "section_key": "book_your_event_left",
+      "component_name": "BookYourEventLeft",
+      "form_data": {
+        "enabled": true,
+        "title": "Birthday Party Packages",
+        "subtitle": "Celebrate in style",
+        "description": "Make your next birthday celebration unforgettable with our complete party packages including food, decorations, and dedicated party host.",
+        "background_image": "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800&h=600&fit=crop",
+        "image_alt": "Happy children celebrating birthday party at bowling alley",
+        "image_position": "right",
+        "show_image": true,
+        "cta_text": "Book Party",
+        "cta_link": "https://example.com/parties"
+      },
+      "expected_component_props": {
+        "enabled": true,
+        "title": "Birthday Party Packages",
+        "subtitle": "Celebrate in style",
+        "description": "Make your next birthday celebration unforgettable with our complete party packages including food, decorations, and dedicated party host.",
+        "background_image": "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800&h=600&fit=crop",
+        "image_alt": "Happy children celebrating birthday party at bowling alley",
+        "image_position": "right",
+        "show_image": true,
+        "cta_text": "Book Party",
+        "cta_link": "https://example.com/parties"
+      }
+    },
+    {
+      "name": "BookYourEventHalf - No Image Data",
+      "section_key": "book_your_event_half",
+      "component_name": "BookYourEventHalf",
+      "form_data": {
+        "enabled": true,
+        "title": "Simple Event Booking",
+        "subtitle": "Quick and easy",
+        "description": "Book your event with our streamlined process.",
+        "cta_text": "Book Now",
+        "cta_link": "#contact"
+      },
+      "expected_component_props": {
+        "enabled": true,
+        "title": "Simple Event Booking",
+        "subtitle": "Quick and easy",
+        "description": "Book your event with our streamlined process.",
+        "background_image": "https://partners.bowlnow.com/wp-content/uploads/2025/04/join-bg-e1744693267594.jpg",
+        "image_alt": "",
+        "cta_text": "Book Now",
+        "cta_link": "#contact"
+      }
+    },
+    {
+      "name": "BookYourEventLeft - Image Hidden",
+      "section_key": "book_your_event_left",
+      "component_name": "BookYourEventLeft",
+      "form_data": {
+        "enabled": true,
+        "title": "Text Only Section",
+        "subtitle": "No image display",
+        "description": "This section shows only text content without any image.",
+        "background_image": "https://example.com/image.jpg",
+        "image_alt": "Hidden image",
+        "image_position": "left",
+        "show_image": false,
+        "cta_text": "Learn More",
+        "cta_link": "#info"
+      },
+      "expected_component_props": {
+        "enabled": true,
+        "title": "Text Only Section",
+        "subtitle": "No image display",
+        "description": "This section shows only text content without any image.",
+        "background_image": "https://example.com/image.jpg",
+        "image_alt": "Hidden image",
+        "image_position": "left",
+        "show_image": false,
+        "cta_text": "Learn More",
+        "cta_link": "#info"
+      }
+    }
+  ],
+  "validation_tests": [
+    {
+      "name": "Valid Image URL",
+      "image_data": {
+        "background_image": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=600",
+        "image_alt": "Valid alt text"
+      },
+      "expected_valid": true
+    },
+    {
+      "name": "Invalid Image URL",
+      "image_data": {
+        "background_image": "not-a-valid-url",
+        "image_alt": "Valid alt text"
+      },
+      "expected_valid": false
+    },
+    {
+      "name": "Long Alt Text",
+      "image_data": {
+        "background_image": "https://example.com/image.jpg",
+        "image_alt": "This is a very long alt text that exceeds the maximum character limit of 255 characters. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+      },
+      "expected_valid": false
+    }
+  ]
+}

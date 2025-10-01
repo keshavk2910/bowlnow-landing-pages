@@ -1,0 +1,28 @@
+{
+  "id": "test-image-fields",
+  "template_id": "bowling-template-001",
+  "content": {
+    "book_your_event_half": {
+      "enabled": true,
+      "title": "Book Your Event Half Test",
+      "subtitle": "Testing image field functionality",
+      "description": "This is a test to verify that image fields work properly in the BookYourEventHalf component.",
+      "background_image": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=600&fit=crop",
+      "image_alt": "Bowling alley event booking test image",
+      "cta_text": "Test CTA",
+      "cta_link": "#test"
+    },
+    "book_your_event_left": {
+      "enabled": true,
+      "title": "Book Your Event Left Test",
+      "subtitle": "Testing image field functionality",
+      "description": "This is a test to verify that image fields work properly in the BookYourEventLeft component.",
+      "background_image": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop",
+      "image_alt": "Bowling lanes test image",
+      "image_position": "left",
+      "show_image": true,
+      "cta_text": "Test CTA",
+      "cta_link": "#test"
+    }
+  }
+}

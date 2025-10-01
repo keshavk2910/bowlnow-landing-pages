@@ -280,9 +280,10 @@ export default function ContactForm({
   }
   var title = '';
   var subtitle = '';
-  var submit_text = '';
-  if (content?.title) {
-    title = content.title;
+  var submit_text = 'Submit';
+  console.log(content.form_title);
+  if (content?.title || content?.form_title) {
+    title = content.title || content.form_title;
   }
   if (content?.subtitle) {
     subtitle = content.subtitle;
@@ -293,7 +294,7 @@ export default function ContactForm({
 
   return (
     <div
-      className={`bg-white rounded-lg shadow-2xl p-8 ${className} max-w-2xl mx-auto my-20 mx-10`}
+      className={`bg-white rounded-lg shadow-2xl p-8 ${className} max-w-2xl mx-auto my-8 mx-10`}
     >
       <div className='text-center mb-8'>
         <h2 className='text-3xl font-bold text-gray-900 mb-4'>{title}</h2>

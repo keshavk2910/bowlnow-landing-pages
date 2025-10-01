@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react'
+import FileUpload from '../FileUpload'
+import RichTextField from './RichTextField'
 
 export default function TableField({ 
   value = [], 
@@ -8,7 +10,9 @@ export default function TableField({
   columns = [],
   minRows = 1,
   maxRows = 50,
-  required = false
+  required = false,
+  siteId = null,
+  pageId = null
 }) {
   const [tableData, setTableData] = useState(Array.isArray(value) ? value : [])
   const [tableColumns, setTableColumns] = useState(Array.isArray(columns) && columns.length > 0 ? columns : [
@@ -146,6 +150,50 @@ export default function TableField({
               </option>
             ))}
           </select>
+        )
+      case 'image':
+        return (
+          <div className="space-y-2">
+            <FileUpload
+              value={value}
+              onFileUploaded={(file) => {
+                const imageUrl = file?.url || null
+                updateRow(rowIndex, column.key, imageUrl)
+              }}
+              siteId={siteId}
+              pageId={pageId}
+              fieldKey={`${label}_${column.key}_${rowIndex}`}
+              allowedTypes={['image']}
+              maxSizeMB={5}
+              multiple={false}
+            />
+            {value && (
+              <div className="text-xs text-gray-500 truncate" title={value}>
+                {value.length > 30 ? `${value.substring(0, 30)}...` : value}
+              </div>
+            )}
+          </div>
+        )
+      case 'richtext':
+        return (
+          <div className="min-w-[300px]">
+            <RichTextField
+              value={value}
+              onChange={(newValue) => updateRow(rowIndex, column.key, newValue)}
+              placeholder={`Enter ${column.label.toLowerCase()}...`}
+              minHeight="100px"
+            />
+          </div>
+        )
+      case 'textarea':
+        return (
+          <textarea
+            value={value}
+            onChange={(e) => updateRow(rowIndex, column.key, e.target.value)}
+            className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-indigo-500 min-h-[80px]"
+            placeholder={column.label}
+            rows="3"
+          />
         )
       default:
         return (
@@ -309,3 +357,6 @@ function TableIcon(props) {
     </svg>
   )
 }
+
+
+

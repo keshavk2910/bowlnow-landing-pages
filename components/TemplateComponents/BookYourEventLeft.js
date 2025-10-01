@@ -1,13 +1,15 @@
 import React from 'react'
 
-export default function BookYourEventHalf({ content = {}, themeColor = '#4F46E5', section = {} }) {
+export default function BookYourEventLeft({ content = {}, themeColor = '#4F46E5', section = {} }) {
   // Section metadata
-  const sectionTitle = section.title || ''
-  const sectionDescription = section.description || ''
+  const sectionTitle = section.title || 'Book Your Event Half Section'
+  const sectionDescription = section.description || 'Two-column layout with content and image for event booking'
   const {
     title = '',
     subtitle = '',
     description = 'Pleasant Hill Lanes is your premier facility for corporate outings, team building, youth events, fundraising and much more! Our team of event planners are ready to help you organize and book your next event!',
+    show_image = true,
+    image_position = 'left',
     cta_text = 'Book Now',
     cta_link = '#form',
     background_image = 'https://partners.bowlnow.com/wp-content/uploads/2025/04/join-bg-e1744693267594.jpg',
@@ -30,21 +32,25 @@ export default function BookYourEventHalf({ content = {}, themeColor = '#4F46E5'
 
         <div className='rounded-3xl overflow-hidden shadow-xl'>
           <div className='flex flex-col md:flex-row'>
-            {/* Mobile Image */}
-            <div
-              className='w-full md:w-1/2 h-56 md:h-auto block md:hidden'
-              style={{
-                backgroundImage: `url('${background_image}')`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }}
-              role="img"
-              aria-label={image_alt || title || 'Event booking image'}
-            ></div>
-            
+            {/* Mobile Image - Always shows first on mobile */}
+            {show_image && (
+              <div
+                className='w-full md:w-1/2 h-56 md:h-auto block md:hidden'
+                style={{
+                  backgroundImage: `url('${background_image}')`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                }}
+                role="img"
+                aria-label={image_alt || title || 'Event booking image'}
+              ></div>
+            )}
+
             {/* Content */}
             <div
-              className='w-full md:w-1/2 p-8 md:p-10 md:py-20 text-white flex flex-col justify-center'
+              className={`w-full md:w-1/2 p-8 md:p-10 md:py-20 text-white flex flex-col justify-center ${
+                image_position === 'right' ? 'md:order-1' : 'md:order-2'
+              }`}
               style={{
                 backgroundColor: themeColor,
               }}
@@ -131,17 +137,21 @@ export default function BookYourEventHalf({ content = {}, themeColor = '#4F46E5'
               )}
             </div>
             
-            {/* Desktop Image */}
-            <div
-              className='w-full md:w-1/2 h-56 md:h-auto hidden md:block'
-              style={{
-                backgroundImage: `url('${background_image}')`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }}
-              role="img"
-              aria-label={image_alt || title || 'Event booking image'}
-            ></div>
+            {/* Desktop Image - Fills the section */}
+            {show_image && (
+              <div
+                className={`w-full md:w-1/2 h-56 md:h-auto hidden md:block ${
+                  image_position === 'right' ? 'md:order-2' : 'md:order-1'
+                }`}
+                style={{
+                  backgroundImage: `url('${background_image}')`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                }}
+                role="img"
+                aria-label={image_alt || title || 'Event booking image'}
+              ></div>
+            )}
           </div>
         </div>
       </div>

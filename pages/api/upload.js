@@ -30,8 +30,14 @@ export default async function handler(req, res) {
 
     const file = Array.isArray(files.file) ? files.file[0] : files.file
     const siteId = Array.isArray(fields.siteId) ? fields.siteId[0] : fields.siteId
-    const pageId = Array.isArray(fields.pageId) ? fields.pageId[0] : fields.pageId
+    let pageId = Array.isArray(fields.pageId) ? fields.pageId[0] : fields.pageId
     const fieldKey = Array.isArray(fields.fieldKey) ? fields.fieldKey[0] : fields.fieldKey
+
+    // Validate and normalize pageId immediately - convert invalid values to null
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+    if (pageId && (pageId === 'temp' || pageId.trim() === '' || !uuidRegex.test(pageId))) {
+      pageId = null
+    }
 
     if (!file || !siteId || !fieldKey) {
       return res.status(400).json({ error: 'Missing required fields' })
@@ -52,6 +58,7 @@ export default async function handler(req, res) {
 
     // Get page name if pageId provided (only for page files, not logos)
     let pageName = 'general'
+    // pageId is already validated and normalized to null if invalid
     if (pageId && !isLogo) {
       const supabase = createRouteHandlerClient()
       const { data: page } = await supabase
@@ -59,7 +66,7 @@ export default async function handler(req, res) {
         .select('name')
         .eq('id', pageId)
         .single()
-      
+
       pageName = page?.name || 'unknown-page'
     }
 
@@ -81,13 +88,14 @@ export default async function handler(req, res) {
     // Save file record to database (skip for template uploads)
     let fileRecord = null
     if (!isTemplate) {
+      // pageId is already validated and normalized to null if invalid
       fileRecord = await saveFileRecord(
         {
           ...uploadResult,
           name: file.originalFilename || file.newFilename
         },
         siteId,
-        pageId || null,
+        pageId,
         fieldKey,
         {
           uploadedAt: new Date().toISOString(),

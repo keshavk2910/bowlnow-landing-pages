@@ -58,6 +58,14 @@ export default function SliderField({
     onChange(updatedSlides);
   };
 
+  const updateSlideMultiple = (index, updates) => {
+    const updatedSlides = slides.map((slide, i) =>
+      i === index ? { ...slide, ...updates } : slide
+    );
+    setSlides(updatedSlides);
+    onChange(updatedSlides);
+  };
+
   const removeSlide = async (index) => {
     if (!confirm('Are you sure you want to remove this slide?')) return;
 
@@ -112,13 +120,40 @@ export default function SliderField({
               className='border border-gray-200 rounded-lg p-4'
             >
               <div className='grid grid-cols-1 lg:grid-cols-3 gap-4'>
-                {/* Image Preview */}
+                {/* Image Preview and Edit */}
                 <div className='space-y-2'>
                   <div className='aspect-video bg-gray-100 rounded-lg overflow-hidden'>
                     <img
                       src={slide.url}
                       alt={slide.title || `Slide ${index + 1}`}
                       className='w-full h-full object-cover'
+                    />
+                  </div>
+                  <div className='space-y-2'>
+                    <FileUpload
+                      value={slide.url}
+                      onFileUploaded={(uploadedFile) => {
+                        if (uploadedFile) {
+                          updateSlideMultiple(index, {
+                            url: uploadedFile.url,
+                            id: uploadedFile.id,
+                            filename: uploadedFile.filename
+                          });
+                        } else {
+                          // User clicked remove - clear the image
+                          updateSlideMultiple(index, {
+                            url: '',
+                            id: null,
+                            filename: ''
+                          });
+                        }
+                      }}
+                      siteId={siteId}
+                      pageId={pageId}
+                      fieldKey={`${fieldKey}_slide_${index}`}
+                      allowedTypes={['image']}
+                      maxSizeMB={5}
+                      multiple={false}
                     />
                   </div>
                   <div className='flex justify-between items-center'>
@@ -128,6 +163,7 @@ export default function SliderField({
                     <div className='flex space-x-2'>
                       {index > 0 && (
                         <button
+                          type='button'
                           onClick={() => moveSlide(index, index - 1)}
                           className='text-xs text-indigo-600 hover:text-indigo-800'
                         >
@@ -136,6 +172,7 @@ export default function SliderField({
                       )}
                       {index < slides.length - 1 && (
                         <button
+                          type='button'
                           onClick={() => moveSlide(index, index + 1)}
                           className='text-xs text-indigo-600 hover:text-indigo-800'
                         >
@@ -143,6 +180,7 @@ export default function SliderField({
                         </button>
                       )}
                       <button
+                        type='button'
                         onClick={() => removeSlide(index)}
                         className='text-xs text-red-600 hover:text-red-800'
                       >

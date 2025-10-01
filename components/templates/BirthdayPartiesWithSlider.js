@@ -2,6 +2,10 @@ import { useState, useRef, useEffect } from 'react';
 import ContactForm from '../ContactForm';
 import Footer from '../TemplateComponents/Footer';
 import Slider1Generator from '../TemplateComponents/sliders/Slider1-Generator';
+import BookYourEventLeft from '../TemplateComponents/BookYourEventLeft';
+import Review from '../TemplateComponents/Review';
+import FAQAccordion from '../TemplateComponents/faq';
+import Header2 from '../TemplateComponents/Header2';
 
 export default function BirthdayPartiesWithSlider({
   content,
@@ -22,9 +26,24 @@ export default function BirthdayPartiesWithSlider({
     window.addEventListener('resize', updateHeaderHeight);
     return () => window.removeEventListener('resize', updateHeaderHeight);
   }, []);
-  var { header, contact_form, party_slider, party_started } = content;
+  var {
+    header = {},
+    main_cta = {},
+    contact_form,
+    party_slider,
+    party_started,
+    book_your_event_left = {},
+    book_your_event_left_2 = {},
+    book_your_event_left_3 = {},
+    book_your_event_left_4 = {},
+    review_section = {},
+    faq_section = {}
+  } = content;
   // Default values
-  const heroTitle = header?.hero_title || 'Birthday Parties';
+  const heroTitle = header?.hero_title || '';
+  const heroSubtitle = header?.hero_subtitle || '';
+  const ctaText = main_cta?.cta_text || '';
+  const ctaLink = main_cta?.cta_link || '#form';
 
   const heroBackground =
     header?.hero_background ||
@@ -58,77 +77,85 @@ export default function BirthdayPartiesWithSlider({
 
   return (
     <div className='min-h-screen bg-white'>
-      {/* Header */}
-      <header
-        ref={headerRef}
-        className='bg-black shadow-sm sticky top-0 z-50 py-4 border-b-[0.5px] border-white'
-      >
-        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <div className='flex items-center justify-between h-16'>
-            <div className='flex-shrink-0'>
-              <img
-                src={
-                  site.logo_url ||
-                  'https://partners.bowlnow.com/wp-content/uploads/2025/04/logo.png'
-                }
-                alt='BowlNow Logo'
-                className='w-[99px] h-[80px] object-contain'
-              />
-            </div>
-            <div>
-              <a
-                href={header?.header_cta_link || '#form'}
-                className='text-white px-6 py-2 rounded-full font-semibold'
-                target={
-                  header?.header_cta_link &&
-                  !header?.header_cta_link.startsWith('#')
-                    ? '_blank'
-                    : '_self'
-                }
-                style={{
-                  backgroundColor: themeColor,
-                }}
-              >
-                {header?.header_cta_text || 'Reserve a Lane'}
-              </a>
-            </div>
-          </div>
-        </div>
-      </header>
-      {/* Hero Section */}
-      <section className=''>
-        <div className='flex flex-col md:flex-row w-full'>
-          <div className='bg-black text-white flex justify-center items-center w-full md:w-1/2 h-[300px] md:h-[500px] md:flex hidden'>
-            <h1 className='text-3xl sm:text-4xl md:text-7xl font-bold mb-6 text-shadow-lg text-center px-2'>
+      {/* Header - Required */}
+      <Header2 ref={headerRef} header={header} themeColor={themeColor} site={site} />
+
+      {/* Hero Section with Background Image */}
+      {header.enabled !== false && (
+        <section
+          className='relative flex items-center justify-center text-white'
+          style={{
+            minHeight: heroMinHeight,
+            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${heroBackground})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+          }}
+        >
+          <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10'>
+            <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold mb-6'>
               {heroTitle}
             </h1>
+            <p className='text-xl md:text-2xl mb-8 max-w-3xl mx-auto'>
+              {heroSubtitle}
+            </p>
+            {main_cta.enabled !== false && (
+              <a
+                href={ctaLink}
+                className='inline-block px-8 py-4 text-lg font-semibold text-white rounded-full hover:opacity-90 transition-opacity'
+                style={{ backgroundColor: themeColor }}
+              >
+                {ctaText}
+              </a>
+            )}
           </div>
-          <div className='w-full md:w-1/2 h-[200px] md:h-[500px] relative'>
-            <div
-              className='w-full h-full'
-              style={{
-                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${heroBackground})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }}
-            >
-              <h1 className='text-4xl sm:text-4xl md:text-5xl font-bold mb-6 text-shadow-lg text-white text-center px-2 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 md:hidden block'>
-                {heroTitle}
-              </h1>
-            </div>
-          </div>
-        </div>
-      </section>
-      {/* Parties slider */}
-      <section className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-15'>
-        <h3 className='text-3xl md:text-5xl font-bold text-black mb-4'>
-          {party_slider.slider_1_title || 'Our Parties'}
-        </h3>
-      </section>
-
-      {party_slider.enabled && (
-        <Slider1Generator content={party_slider} themeColor={themeColor} />
+        </section>
       )}
+
+      {/* Book Your Event Left - Optional */}
+      {book_your_event_left.enabled && (
+        <BookYourEventLeft
+          content={book_your_event_left}
+          themeColor={themeColor}
+        />
+      )}
+
+      {/* Book Your Event Left 2 - Optional */}
+      {book_your_event_left_2.enabled && (
+        <BookYourEventLeft
+          content={book_your_event_left_2}
+          themeColor={themeColor}
+        />
+      )}
+
+      {/* Book Your Event Left 3 - Optional */}
+      {book_your_event_left_3.enabled && (
+        <BookYourEventLeft
+          content={book_your_event_left_3}
+          themeColor={themeColor}
+        />
+      )}
+
+      {/* Book Your Event Left 4 - Optional */}
+      {book_your_event_left_4.enabled && (
+        <BookYourEventLeft
+          content={book_your_event_left_4}
+          themeColor={themeColor}
+        />
+      )}
+      
+      {/* Parties slider */}
+      {party_slider.enabled && (
+        <>
+        <section className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-15'>
+          <h3 className='text-3xl md:text-5xl font-bold text-black mb-4'>
+            {party_slider.slider_1_title || 'Our Parties'}
+          </h3>
+        </section>
+        <Slider1Generator content={party_slider} themeColor={themeColor} />
+        </>
+      )}
+
 
       {/* Booking Form Section */}
       <div id='form' className=' bg-white'>
@@ -173,8 +200,56 @@ export default function BirthdayPartiesWithSlider({
                 dangerouslySetInnerHTML={{
                   __html: party_started?.desc || 'Book your next party with us',
                 }}
-                className='text-sm sm:text-md mb-6 md:mb-8 text-gray-200 text-center md:text-left'
+                className='description-content text-sm sm:text-md mb-6 md:mb-8 text-gray-200 text-center md:text-left'
               ></div>
+              <style jsx>{`
+                .description-content :global(h1) {
+                  font-size: 2rem;
+                  font-weight: 700;
+                  color: white;
+                  margin-bottom: 1rem;
+                  line-height: 1.2;
+                }
+                .description-content :global(h2) {
+                  font-size: 1.5rem;
+                  font-weight: 700;
+                  color: white;
+                  margin-bottom: 0.75rem;
+                  line-height: 1.3;
+                }
+                .description-content :global(h3) {
+                  font-size: 1.25rem;
+                  font-weight: 600;
+                  color: white;
+                  margin-bottom: 0.5rem;
+                  line-height: 1.4;
+                }
+                .description-content :global(p) {
+                  font-size: 1rem;
+                  color: rgba(255, 255, 255, 0.95);
+                  margin-bottom: 0.75rem;
+                  line-height: 1.6;
+                }
+                .description-content :global(ul),
+                .description-content :global(ol) {
+                  margin-left: 1.5rem;
+                  margin-bottom: 0.75rem;
+                  color: rgba(255, 255, 255, 0.95);
+                }
+                .description-content :global(li) {
+                  margin-bottom: 0.25rem;
+                  line-height: 1.6;
+                }
+                .description-content :global(strong),
+                .description-content :global(b) {
+                  font-weight: 600;
+                  color: white;
+                }
+                .description-content :global(a) {
+                  color: white;
+                  text-decoration: underline;
+                }
+              `}</style>
               <a
                 href={party_started?.cta_link || '#form'}
                 className='bg-white text-black px-6 md:px-8 py-3 rounded-full text-center font-semibold hover:bg-gray-100 transition-colors duration-200 w-full md:w-auto'
@@ -193,25 +268,26 @@ export default function BirthdayPartiesWithSlider({
               />
             </div>
           </div>
-
-          <style
-            dangerouslySetInnerHTML={{
-              __html: `
-              .party-started ul {
-              margin-top: 1rem;
-            list-style: disc;
-            padding-left: 0;
-          }
-        
-              .party-started ul li {
-            margin-bottom: 0.5rem;
-            font-size: 1rem;
-          }
-          `,
-            }}
-          />
         </section>
       )}
+
+      
+      {/* FAQ Section - Optional */}
+      {faq_section.enabled && (
+        <FAQAccordion
+          content={faq_section}
+          themeColor={themeColor}
+        />
+      )}
+
+      {/* Review Section - Optional */}
+      {review_section.enabled && (
+        <Review
+          content={review_section}
+          themeColor={themeColor}
+        />
+      )}
+
       {/* Footer */}
       <Footer content={content} site={site} themeColor={themeColor} />
     </div>

@@ -49,7 +49,20 @@ export default function TemplatesPage() {
         alert('Template deleted successfully')
       } else {
         const error = await response.json()
-        alert(error.error || 'Failed to delete template')
+
+        // Display detailed error message with site names
+        if (error.usedInSites && error.usedInSites.length > 0) {
+          const sitesList = error.usedInSites.join(', ')
+          const pageCountText = error.pageCount > 1 ? `${error.pageCount} pages` : '1 page'
+          alert(
+            `Cannot delete template "${templateName}".\n\n` +
+            `This template is currently used by ${pageCountText} in the following site(s):\n\n` +
+            `${sitesList}\n\n` +
+            `Please update or delete those pages first.`
+          )
+        } else {
+          alert(error.error || 'Failed to delete template')
+        }
       }
     } catch (error) {
       console.error('Error deleting template:', error)

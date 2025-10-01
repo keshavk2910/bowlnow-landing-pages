@@ -88,19 +88,23 @@ async function handleUpdateTemplate(req, res, templateId) {
 async function handleDeleteTemplate(req, res, templateId) {
   try {
     const supabase = createRouteHandlerClient()
-    
-    // First check if template is being used by any pages
+
+    // First check if template is being used by any pages and get site information
     const { data: pagesUsingTemplate, error: checkError } = await supabase
       .from('site_pages')
-      .select('id')
+      .select('id, site_id, sites(client_name, slug)')
       .eq('template_id', templateId)
-      .limit(1)
 
     if (checkError) throw checkError
 
     if (pagesUsingTemplate && pagesUsingTemplate.length > 0) {
-      return res.status(400).json({ 
-        error: 'Cannot delete template that is being used by pages. Update or delete those pages first.' 
+      // Extract unique site names
+      const usedInSites = [...new Set(pagesUsingTemplate.map(page => page.sites?.client_name).filter(Boolean))]
+
+      return res.status(400).json({
+        error: 'Cannot delete template that is being used by pages. Update or delete those pages first.',
+        usedInSites: usedInSites,
+        pageCount: pagesUsingTemplate.length
       })
     }
 
@@ -133,7 +137,7 @@ async function handleDeleteTemplate(req, res, templateId) {
 
   } catch (error) {
     console.error('Error deleting template:', error)
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to delete template',
       details: error.message
     })

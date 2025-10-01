@@ -37,8 +37,56 @@ const BookYourEventHalf1 = ({ content, themeColor }) => {
                 content?.book_event_desc_1 ||
                 'Pleasant Hill Lanes is your premier facility for corporate outings, team building, youth events, fundraising and much more! Our team ofevent planners are ready to help you organize and book your next event!',
             }}
-            className='text-sm mb-6 max-w-lg'
+            className='description-content mb-6 max-w-lg'
           ></div>
+          <style jsx>{`
+            .description-content :global(h1) {
+              font-size: 2rem;
+              font-weight: 700;
+              color: white;
+              margin-bottom: 1rem;
+              line-height: 1.2;
+            }
+            .description-content :global(h2) {
+              font-size: 1.5rem;
+              font-weight: 700;
+              color: white;
+              margin-bottom: 0.75rem;
+              line-height: 1.3;
+            }
+            .description-content :global(h3) {
+              font-size: 1.25rem;
+              font-weight: 600;
+              color: white;
+              margin-bottom: 0.5rem;
+              line-height: 1.4;
+            }
+            .description-content :global(p) {
+              font-size: 1rem;
+              color: rgba(255, 255, 255, 0.95);
+              margin-bottom: 0.75rem;
+              line-height: 1.6;
+            }
+            .description-content :global(ul),
+            .description-content :global(ol) {
+              margin-left: 1.5rem;
+              margin-bottom: 0.75rem;
+              color: rgba(255, 255, 255, 0.95);
+            }
+            .description-content :global(li) {
+              margin-bottom: 0.25rem;
+              line-height: 1.6;
+            }
+            .description-content :global(strong),
+            .description-content :global(b) {
+              font-weight: 600;
+              color: white;
+            }
+            .description-content :global(a) {
+              color: white;
+              text-decoration: underline;
+            }
+          `}</style>
           <a
             href={content?.book_event_cta_link_1 || '#form'}
             target='_blank'
@@ -47,7 +95,7 @@ const BookYourEventHalf1 = ({ content, themeColor }) => {
             {content?.book_event_cta_text_1 || 'Book Now'}
           </a>
         </div>
-        
+
       </div>
     </div>
   );

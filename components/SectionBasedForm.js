@@ -4,6 +4,7 @@ import SliderField from './TemplateComponents/SliderField'
 import FAQField from './TemplateComponents/FAQField'
 import RichTextField from './TemplateComponents/RichTextField'
 import TableField from './TemplateComponents/TableField'
+import { validateImageField, transformFormDataForStorage } from '../utils/componentFieldMapping'
 
 export default function SectionBasedForm({ 
   template, 
@@ -245,16 +246,33 @@ export default function SectionBasedForm({
       
       case 'image':
         return (
-          <FileUpload
-            value={value}
-            onFileUploaded={(file) => handleFieldChange(section.key, field.key, file?.url || null)}
-            siteId={siteId}
-            pageId={pageId}
-            fieldKey={fullKey}
-            allowedTypes={['image']}
-            maxSizeMB={5}
-            multiple={false}
-          />
+          <div className="space-y-2">
+            <FileUpload
+              value={value}
+              onFileUploaded={(file) => {
+                const imageUrl = file?.url || null
+                // Validate image field if URL is provided
+                if (imageUrl) {
+                  const validation = validateImageField({ background_image: imageUrl })
+                  if (!validation.isValid) {
+                    console.warn('Image validation warnings:', validation.errors)
+                  }
+                }
+                handleFieldChange(section.key, field.key, imageUrl)
+              }}
+              siteId={siteId}
+              pageId={pageId}
+              fieldKey={fullKey}
+              allowedTypes={['image']}
+              maxSizeMB={5}
+              multiple={false}
+            />
+            {value && (
+              <div className="text-xs text-gray-500">
+                Current image: {value.length > 50 ? `${value.substring(0, 50)}...` : value}
+              </div>
+            )}
+          </div>
         )
       
       case 'slider':
@@ -297,6 +315,8 @@ export default function SectionBasedForm({
             minRows={field.minRows || 1}
             maxRows={field.maxRows || 50}
             required={field.required}
+            siteId={siteId}
+            pageId={pageId}
           />
         )
       

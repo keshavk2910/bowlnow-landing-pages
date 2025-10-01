@@ -1,0 +1,41 @@
+{
+  "card_grid": {
+    "enabled": true,
+    "title": "Our Services",
+    "subtitle": "What we offer",
+    "columns": 3,
+    "rows": null,
+    "card_style": "default",
+    "max_cards_per_row": 4,
+    "min_cards_per_row": 1,
+    "cards": [
+      {
+        "id": 1,
+        "title": "Birthday Parties",
+        "description": "<p><strong>Make your birthday unforgettable!</strong></p><ul><li>Private party rooms</li><li>Customized decorations</li><li>Special birthday packages</li></ul><p><em>Book now for the best experience!</em></p>",
+        "icon": "🎉",
+        "image": "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400&h=300&fit=crop",
+        "cta_text": "Book Party",
+        "cta_link": "#contact"
+      },
+      {
+        "id": 2,
+        "title": "Corporate Events",
+        "description": "<p><strong>Team building made fun!</strong></p><ul><li>Group discounts available</li><li>Catering options</li><li>Professional event planning</li></ul><p>Perfect for <em>company outings</em> and team building activities.</p>",
+        "icon": "🏢",
+        "image": "https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=400&h=300&fit=crop",
+        "cta_text": "Plan Event",
+        "cta_link": "#contact"
+      },
+      {
+        "id": 3,
+        "title": "League Play",
+        "description": "<p><strong>Join our competitive leagues!</strong></p><ul><li>Weekly tournaments</li><li>All skill levels welcome</li><li>Prizes and trophies</li></ul><p>Meet new friends and improve your game with our <em>friendly community</em>.</p>",
+        "icon": "🏆",
+        "image": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop",
+        "cta_text": "Join League",
+        "cta_link": "#contact"
+      }
+    ]
+  }
+}

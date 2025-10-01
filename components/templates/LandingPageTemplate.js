@@ -4,7 +4,14 @@ import Slider1Generator from '../TemplateComponents/sliders/Slider1-Generator';
 import BookYourEventHalf from '../TemplateComponents/BookYourEventHalf';
 import Slider2Section from '../TemplateComponents/sliders/Slider2Section';
 import Footer from '../TemplateComponents/Footer';
+import Header from '../TemplateComponents/Header';
 import ContactForm from '../ContactForm';
+import TableSection from '../TemplateComponents/TableSection';
+import PromoBannerSection from '../TemplateComponents/PromoBannerSection';
+import BookYourEventLeft from '../TemplateComponents/BookYourEventLeft';
+import CardGrid from '../TemplateComponents/CardGrid';
+import RegisterNowSection from '../TemplateComponents/RegisterNowSection';
+import Review from '../TemplateComponents/Review';
 export default function LandingPageTemplate({
   content = {},
   site = {},
@@ -46,7 +53,13 @@ export default function LandingPageTemplate({
     events_slider = {},
     main_cta = {},
     contact_form = {},
-    book_your_event = {},
+    book_your_event_half = {},
+    table_section = {},
+    promo_banner = {},
+    book_your_event_left = {},
+    card_grid = {},
+    register_now_section = {},
+    review_section = {},
   } = content;
   // Default values with proper null checking
   const heroTitle = header.hero_title || 'Welcome to Our Business';
@@ -63,37 +76,7 @@ export default function LandingPageTemplate({
   return (
     <div className='min-h-screen bg-white'>
       {/* Header */}
-      <header
-        ref={headerRef}
-        className='bg-black shadow-sm sticky top-0 z-50 py-4 border-b-[0.5px] border-white'
-      >
-        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <div className='flex items-center justify-between h-16'>
-            <div className='flex-shrink-0'>
-              <img
-                src={
-                  site?.logo_url ||
-                  'https://partners.bowlnow.com/wp-content/uploads/2025/04/logo.png'
-                }
-                alt='BowlNow Logo'
-                className='w-[99px] h-[80px]'
-              />
-            </div>
-            <div className=''>
-              <a
-                href={header.header_cta_link || '#form'}
-                className='text-white px-6 py-2 rounded-full font-semibold'
-                target='_blank'
-                style={{
-                  backgroundColor: themeColor,
-                }}
-              >
-                {header.header_cta_text || 'Book an Event'}
-              </a>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header ref={headerRef} header={header} themeColor={themeColor} site={site} />
       {header.enabled && (
         <>
           {/* Hero Section */}
@@ -158,16 +141,51 @@ export default function LandingPageTemplate({
       {features_slider.enabled && (
         <Slider1Generator content={features_slider} themeColor={themeColor} />
       )}
-      {book_your_event.enabled && (
+
+      {/* Book Your Event Half - After Features Slider */}
+      {book_your_event_half.enabled && (
+        <BookYourEventHalf
+          content={book_your_event_half}
+          themeColor={themeColor}
+        />
+      )}
+
+      
+
+      {/* Table Section */}
+      {table_section.enabled && (
+        <TableSection content={table_section} themeColor={themeColor} />
+      )}
+
+      {/* Promo Banner Section */}
+      {promo_banner.enabled && (
         <section className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-15'>
-          <BookYourEventHalf
-            content={book_your_event}
-            themeColor={themeColor}
-          />
+          <PromoBannerSection content={promo_banner} themeColor={themeColor} />
         </section>
       )}
+
+      {/* Book Your Event Left Section */}
+      {book_your_event_left.enabled && (
+        <BookYourEventLeft content={book_your_event_left} themeColor={themeColor} />
+      )}
+
+      {/* Card Grid Section */}
+      {card_grid.enabled && (
+        <CardGrid content={card_grid} themeColor={themeColor} />
+      )}
+
+      {/* Register Now Section */}
+      {register_now_section.enabled && (
+        <RegisterNowSection content={register_now_section} themeColor={themeColor} />
+      )}
+
       {events_slider.enabled && (
         <Slider2Section content={events_slider} themeColor={themeColor} />
+      )}
+
+      {/* Review Section */}
+      {review_section.enabled && (
+        <Review content={review_section} themeColor={themeColor} />
       )}
 
       {/* Contact Form Section */}

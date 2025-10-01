@@ -11,27 +11,6 @@ export const BOWLING_LEAGUE_CONFIG = {
       order: 0,
       fields: [
         {
-          key: 'hero_title',
-          type: 'text',
-          label: 'Hero Title',
-          required: true,
-          description: 'Main headline for the bowling league page'
-        },
-        {
-          key: 'hero_subtitle',
-          type: 'text',
-          label: 'Hero Subtitle',
-          required: false,
-          description: 'Supporting text under the main headline'
-        },
-        {
-          key: 'hero_background',
-          type: 'image',
-          label: 'Hero Background Image',
-          required: false,
-          description: 'Background image for the hero section'
-        },
-        {
           key: 'header_cta_text',
           type: 'text',
           label: 'Header CTA Text',
@@ -54,187 +33,395 @@ export const BOWLING_LEAGUE_CONFIG = {
         }
       ],
       required: true,
-      description: 'Page header with navigation and hero content'
+      description: 'Page header with navigation and CTA button'
     },
     {
-      key: 'features_slider',
-      name: 'Features Slider',
+      key: 'book_your_event_half',
+      name: 'Book Your Event Half',
       order: 1,
       fields: [
         {
-          key: 'slider_1_title',
-          type: 'text',
-          label: 'Features Section Title',
-          required: false,
-          description: 'Title for the features section'
-        },
-        {
-          key: 'slider_1_items',
-          type: 'slider',
-          label: 'Feature Slides',
-          required: false,
-          description: 'Upload images and content for feature slides',
-          minSlides: 1,
-          maxSlides: 10
-        },
-        {
-          key: 'enabled',
-          type: 'checkbox',
-          label: 'Enable Features Slider',
-          required: false,
-          description: 'Show/hide features slider section'
-        }
-      ],
-      required: false,
-      description: 'Sliding showcase of bowling alley features and amenities'
-    },
-    {
-      key: 'league_schedule',
-      name: 'League Schedule',
-      order: 2,
-      fields: [
-        {
-          key: 'section_title',
+          key: 'title',
           type: 'text',
           label: 'Section Title',
-          required: false,
-          description: 'Title for the league schedule section'
-        },
-        {
-          key: 'section_subtitle',
-          type: 'textarea',
-          label: 'Section Subtitle',
-          required: false,
-          description: 'Subtitle or description for the league schedule'
-        },
-        {
-          key: 'schedule_table',
-          type: 'table',
-          label: 'League Schedule Table',
-          required: false,
-          description: 'Dynamic table for bowling league schedules',
-          columns: [
-            { key: 'day', label: 'Day', type: 'text' },
-            { key: 'league', label: 'League', type: 'text' },
-            { key: 'type', label: 'Type', type: 'text' },
-            { key: 'per_team', label: 'Per Team', type: 'number' },
-            { key: 'time', label: 'Time', type: 'text' }
-          ],
-          minRows: 1,
-          maxRows: 20
-        },
-        {
-          key: 'schedule_note',
-          type: 'textarea',
-          label: 'Schedule Note',
-          required: false,
-          description: 'Additional note or information about the schedule'
-        },
-        {
-          key: 'contact_info',
-          type: 'textarea',
-          label: 'Contact Information',
-          required: false,
-          description: 'Contact information for league sign-up or inquiries'
-        },
-        {
-          key: 'enabled',
-          type: 'checkbox',
-          label: 'Enable League Schedule',
-          required: false,
-          description: 'Show/hide league schedule section'
-        }
-      ],
-      required: false,
-      description: 'Dynamic table displaying bowling league schedules and information'
-    },
-    {
-      key: 'book_your_event',
-      name: 'Book Your Event',
-      order: 3,
-      fields: [
-        {
-          key: 'book_event_title',
-          type: 'text',
-          label: 'Event Section Title',
           required: false,
           description: 'Title for the book your event section'
         },
         {
-          key: 'book_event_desc',
-          type: 'rich_text',
-          label: 'Event Section Description',
-          required: false,
-          description: 'Description for the book your event section (supports HTML)'
-        },
-        {
-          key: 'book_event_image',
-          type: 'image',
-          label: 'Event Section Image',
-          required: false,
-          description: 'Background image for the book your event section'
-        },
-        {
-          key: 'book_event_cta_text',
+          key: 'subtitle',
           type: 'text',
-          label: 'Event CTA Text',
+          label: 'Section Subtitle',
           required: false,
-          description: 'Call to action button text'
+          description: 'Subtitle for the book your event section'
         },
         {
-          key: 'book_event_cta_link',
+          key: 'description',
+          type: 'textarea',
+          label: 'Description',
+          required: false,
+          description: 'Description text for the section'
+        },
+         {
+           key: 'background_image',
+           type: 'image',
+           label: 'Background Image',
+           required: false,
+           description: 'Background image for the section'
+         },
+         {
+           key: 'image_alt',
+           type: 'text',
+           label: 'Image Alt Text',
+           required: false,
+           description: 'Alternative text for the image (for accessibility)'
+         },
+         {
+           key: 'secondary_image',
+           type: 'image',
+           label: 'Secondary Image',
+           required: false,
+           description: 'Optional secondary image for additional visual content'
+         },
+         {
+           key: 'cta_text',
+           type: 'text',
+           label: 'CTA Button Text',
+           required: false,
+           description: 'Call to action button text'
+         },
+        {
+          key: 'cta_link',
           type: 'url',
-          label: 'Event CTA Link',
+          label: 'CTA Button Link',
           required: false,
           description: 'Call to action button link'
         },
         {
           key: 'enabled',
           type: 'checkbox',
-          label: 'Enable Book Your Event',
+          label: 'Enable Book Your Event Half',
           required: false,
-          description: 'Show/hide book your event section'
+          description: 'Show/hide book your event half section'
         }
       ],
       required: false,
-      description: 'Section promoting event bookings and party reservations'
+      description: 'Two-column event booking section'
     },
     {
-      key: 'events_slider',
-      name: 'Events Slider',
-      order: 4,
+      key: 'book_your_event_left',
+      name: 'Book Your Event Left',
+      order: 2,
       fields: [
         {
-          key: 'slider_2_title',
+          key: 'title',
           type: 'text',
-          label: 'Events Section Title',
+          label: 'Section Title',
           required: false,
-          description: 'Title for the events slider section'
+          description: 'Title for the book your event section'
         },
         {
-          key: 'slider_2_items',
-          type: 'slider',
-          label: 'Event Slides',
+          key: 'subtitle',
+          type: 'text',
+          label: 'Section Subtitle',
           required: false,
-          description: 'Upload images and content for event slides',
-          minSlides: 1,
-          maxSlides: 10
+          description: 'Subtitle for the book your event section'
+        },
+        {
+          key: 'description',
+          type: 'textarea',
+          label: 'Description',
+          required: false,
+          description: 'Description text for the section'
+        },
+        {
+          key: 'background_image',
+          type: 'image',
+          label: 'Background Image',
+          required: false,
+          description: 'Background image for the section'
+        },
+        {
+          key: 'image_position',
+          type: 'text',
+          label: 'Image Position (left/right)',
+          required: false,
+          description: 'Position of the image relative to content'
+        },
+         {
+           key: 'show_image',
+           type: 'checkbox',
+           label: 'Show Image',
+           required: false,
+           description: 'Show or hide the image'
+         },
+         {
+           key: 'image_alt',
+           type: 'text',
+           label: 'Image Alt Text',
+           required: false,
+           description: 'Alternative text for the image (for accessibility)'
+         },
+         {
+           key: 'secondary_image',
+           type: 'image',
+           label: 'Secondary Image',
+           required: false,
+           description: 'Optional secondary image for additional visual content'
+         },
+        {
+          key: 'cta_text',
+          type: 'text',
+          label: 'CTA Button Text',
+          required: false,
+          description: 'Call to action button text'
+        },
+        {
+          key: 'cta_link',
+          type: 'url',
+          label: 'CTA Button Link',
+          required: false,
+          description: 'Call to action button link'
         },
         {
           key: 'enabled',
           type: 'checkbox',
-          label: 'Enable Events Slider',
+          label: 'Enable Book Your Event Left',
           required: false,
-          description: 'Show/hide events slider section'
+          description: 'Show/hide book your event left section'
         }
       ],
       required: false,
-      description: 'Sliding showcase of upcoming events and promotions'
+      description: 'Left-aligned event booking section'
+    },
+    {
+      key: 'card_grid',
+      name: 'Card Grid',
+      order: 3,
+      fields: [
+        {
+          key: 'title',
+          type: 'text',
+          label: 'Section Title',
+          required: false,
+          description: 'Main title for the card grid section'
+        },
+        {
+          key: 'subtitle',
+          type: 'text',
+          label: 'Section Subtitle',
+          required: false,
+          description: 'Subtitle for the card grid section'
+        },
+        {
+          key: 'columns',
+          type: 'text',
+          label: 'Number of Columns (1-6)',
+          required: false,
+          description: 'Number of columns in the grid (1-6)'
+        },
+        {
+          key: 'rows',
+          type: 'text',
+          label: 'Number of Rows (optional)',
+          required: false,
+          description: 'Limit number of rows (leave empty for auto)'
+        },
+        {
+          key: 'max_cards_per_row',
+          type: 'text',
+          label: 'Max Cards Per Row',
+          required: false,
+          description: 'Maximum cards per row (default: 4)'
+        },
+        {
+          key: 'min_cards_per_row',
+          type: 'text',
+          label: 'Min Cards Per Row',
+          required: false,
+          description: 'Minimum cards per row (default: 1)'
+        },
+        {
+          key: 'card_style',
+          type: 'text',
+          label: 'Card Style (default/bordered)',
+          required: false,
+          description: 'Visual style for the cards'
+        },
+        {
+          key: 'cards',
+          type: 'table',
+          label: 'Cards',
+          required: false,
+          description: 'Add individual cards to the grid',
+          columns: [
+            { key: 'title', label: 'Card Title', type: 'text' },
+            { key: 'description', label: 'Description', type: 'richtext' },
+            { key: 'icon', label: 'Icon (Emoji)', type: 'text' },
+            { key: 'image', label: 'Image', type: 'image' },
+            { key: 'cta_text', label: 'CTA Text', type: 'text' },
+            { key: 'cta_link', label: 'CTA Link', type: 'text' }
+          ],
+          minRows: 0,
+          maxRows: 20
+        },
+        {
+          key: 'enabled',
+          type: 'checkbox',
+          label: 'Enable Card Grid',
+          required: false,
+          description: 'Show/hide card grid section'
+        }
+      ],
+      required: false,
+      description: 'Dynamic grid of service cards with customizable rows and columns'
+    },
+    {
+      key: 'table_section',
+      name: 'Table Section',
+      order: 4,
+      fields: [
+        {
+          key: 'title',
+          type: 'text',
+          label: 'Table Title',
+          required: false,
+          description: 'Title for the table section'
+        },
+        {
+          key: 'subtitle',
+          type: 'text',
+          label: 'Table Subtitle',
+          required: false,
+          description: 'Subtitle for the table section'
+        },
+        {
+          key: 'table_data',
+          type: 'table',
+          label: 'Table Data',
+          required: false,
+          description: 'Table data',
+          columns: [
+            { key: 'column1', label: 'Column 1', type: 'text' },
+            { key: 'column2', label: 'Column 2', type: 'text' },
+            { key: 'column3', label: 'Column 3', type: 'text' }
+          ],
+          minRows: 1,
+          maxRows: 50
+        },
+        {
+          key: 'enabled',
+          type: 'checkbox',
+          label: 'Enable Table Section',
+          required: false,
+          description: 'Show/hide table section'
+        }
+      ],
+      required: false,
+      description: 'Data table component for displaying structured information'
+    },
+    {
+      key: 'review_section',
+      name: 'Review Section',
+      order: 5,
+      fields: [
+        {
+          key: 'title',
+          type: 'text',
+          label: 'Section Title',
+          required: false,
+          description: 'Title for the review section'
+        },
+        {
+          key: 'subtitle',
+          type: 'text',
+          label: 'Section Subtitle',
+          required: false,
+          description: 'Subtitle for the review section'
+        },
+        {
+          key: 'reviews',
+          type: 'table',
+          label: 'Reviews',
+          required: false,
+          description: 'Customer reviews and testimonials displayed in a 3D slider carousel',
+          columns: [
+            { key: 'name', label: 'Customer Name', type: 'text' },
+            { key: 'review_subheading', label: 'Subheading/Title', type: 'text' },
+            { key: 'rating', label: 'Rating (1-5)', type: 'text' },
+            { key: 'text', label: 'Review Text', type: 'textarea' },
+            { key: 'location', label: 'Location', type: 'text' }
+          ],
+          minRows: 1,
+          maxRows: 20
+        },
+        {
+          key: 'show_ratings',
+          type: 'checkbox',
+          label: 'Show Star Ratings',
+          required: false,
+          description: 'Display star ratings on reviews'
+        },
+        {
+          key: 'show_locations',
+          type: 'checkbox',
+          label: 'Show Customer Locations',
+          required: false,
+          description: 'Display customer location information'
+        },
+        {
+          key: 'enabled',
+          type: 'checkbox',
+          label: 'Enable Review Section',
+          required: false,
+          description: 'Show/hide review section'
+        }
+      ],
+      required: false,
+      description: 'Customer testimonials and reviews section with 3D carousel slider'
+    },
+    {
+      key: 'faq_section',
+      name: 'FAQ Section',
+      order: 6,
+      fields: [
+        {
+          key: 'title',
+          type: 'text',
+          label: 'Section Title',
+          required: false,
+          description: 'Title for the FAQ section'
+        },
+        {
+          key: 'subtitle',
+          type: 'text',
+          label: 'Section Subtitle',
+          required: false,
+          description: 'Subtitle for the FAQ section'
+        },
+        {
+          key: 'faqs',
+          type: 'faq',
+          label: 'FAQ Items',
+          required: false,
+          description: 'Frequently asked questions',
+          minFAQs: 1,
+          maxFAQs: 20
+        },
+        {
+          key: 'enabled',
+          type: 'checkbox',
+          label: 'Enable FAQ Section',
+          required: false,
+          description: 'Show/hide FAQ section'
+        }
+      ],
+      required: false,
+      description: 'Frequently asked questions section'
     },
     {
       key: 'contact_form',
       name: 'Contact Form',
-      order: 5,
+      order: 7,
       fields: [
         {
           key: 'form_title',
@@ -245,17 +432,10 @@ export const BOWLING_LEAGUE_CONFIG = {
         },
         {
           key: 'form_subtitle',
-          type: 'textarea',
+          type: 'text',
           label: 'Form Subtitle',
           required: false,
-          description: 'Description for the contact form'
-        },
-        {
-          key: 'form_background',
-          type: 'image',
-          label: 'Form Background Image',
-          required: false,
-          description: 'Background image for the contact form section'
+          description: 'Subtitle for the contact form section'
         },
         {
           key: 'enabled',
@@ -266,162 +446,7 @@ export const BOWLING_LEAGUE_CONFIG = {
         }
       ],
       required: false,
-      description: 'Contact form for league inquiries and event bookings'
-    },
-    {
-      key: 'main_cta',
-      name: 'Main Call to Action',
-      order: 6,
-      fields: [
-        {
-          key: 'cta_text',
-          type: 'text',
-          label: 'CTA Button Text',
-          required: false,
-          description: 'Text for the main call to action button'
-        },
-        {
-          key: 'cta_link',
-          type: 'url',
-          label: 'CTA Button Link',
-          required: false,
-          description: 'Link for the main call to action button'
-        }
-      ],
-      required: false,
-      description: 'Main call to action settings used throughout the page'
+      description: 'Contact form for user inquiries and bookings'
     }
   ]
 }
-
-// Sample data for the bowling league schedule
-export const SAMPLE_LEAGUE_SCHEDULE = [
-  {
-    id: 1,
-    day: 'Monday Start September',
-    league: 'Christian Women',
-    type: 'Women',
-    per_team: 3,
-    time: '12:30pm'
-  },
-  {
-    id: 2,
-    day: 'Tuesday Start September',
-    league: 'Blue Hen Ladies',
-    type: 'Women',
-    per_team: 4,
-    time: '6:00pm'
-  },
-  {
-    id: 3,
-    day: 'Tuesday Start September',
-    league: 'Suburbanites',
-    type: 'Women',
-    per_team: 4,
-    time: '9:30am'
-  },
-  {
-    id: 4,
-    day: 'Tuesday Start September',
-    league: 'Newport Men',
-    type: 'Men',
-    per_team: 5,
-    time: '6:10pm'
-  },
-  {
-    id: 5,
-    day: 'Wednesday Start September',
-    league: 'Weds Mixed Seniors',
-    type: 'Senior Mixed',
-    per_team: 4,
-    time: '12:00pm'
-  },
-  {
-    id: 6,
-    day: 'Wednesday Start September',
-    league: 'Wednesday Men',
-    type: 'Men',
-    per_team: 5,
-    time: '6:20pm'
-  },
-  {
-    id: 7,
-    day: 'Thursday Start September',
-    league: 'Sparetimers',
-    type: 'Women',
-    per_team: 3,
-    time: '9:30am'
-  },
-  {
-    id: 8,
-    day: 'Thursday Start September',
-    league: 'Gems',
-    type: 'Mixed',
-    per_team: 4,
-    time: '9:30am'
-  },
-  {
-    id: 9,
-    day: 'Thursday Start September',
-    league: 'B & B Mixed',
-    type: 'Mixed',
-    per_team: 4,
-    time: '6:30pm'
-  },
-  {
-    id: 10,
-    day: 'Thursday Start September',
-    league: 'Mixed Majors',
-    type: 'Mixed',
-    per_team: 5,
-    time: '6:30pm'
-  },
-  {
-    id: 11,
-    day: 'Friday Start September',
-    league: 'Senior Red Pin',
-    type: 'Senior Mixed',
-    per_team: 4,
-    time: '12:00pm'
-  },
-  {
-    id: 12,
-    day: 'Friday Start September',
-    league: 'Stanton Suburban',
-    type: 'Mixed',
-    per_team: 4,
-    time: '6:30pm'
-  },
-  {
-    id: 13,
-    day: 'Saturday Start September',
-    league: 'Juniors',
-    type: 'Youth',
-    per_team: null,
-    time: '9:30am'
-  },
-  {
-    id: 14,
-    day: 'Saturday Start September',
-    league: 'Bantams',
-    type: 'Youth',
-    per_team: null,
-    time: '9:30am'
-  },
-  {
-    id: 15,
-    day: 'Saturday Start September',
-    league: 'Pee Wee (Bumper League)',
-    type: 'Youth',
-    per_team: null,
-    time: '9:30am'
-  },
-  {
-    id: 16,
-    day: 'Saturday Start September',
-    league: 'Saturday Night League',
-    type: 'Adult Mix',
-    per_team: 4,
-    time: '6:30pm'
-  }
-]

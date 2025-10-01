@@ -40,14 +40,48 @@ function MinusIcon(props) {
   );
 }
 
-function FAQAccordion({ questions, sample_questions }) {
+function FAQAccordion({ content = {}, themeColor = '#4F46E5', questions, sample_questions }) {
   const [openIndex, setOpenIndex] = useState(0);
 
-  const faqs = questions && questions.length > 0 ? questions : sample_questions;
+  // Extract from content object if provided, otherwise use legacy props
+  const {
+    title = '',
+    subtitle = '',
+    faqs: contentFaqs = []
+  } = content;
+
+  // Priority: contentFaqs > questions > sample_questions > empty array
+  const faqs = contentFaqs.length > 0
+    ? contentFaqs
+    : (questions && questions.length > 0 ? questions : (sample_questions || []));
+
+  // Don't render if no FAQs
+  if (!faqs || faqs.length === 0) {
+    return null;
+  }
 
   return (
-    <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 '>
-      {faqs.map((q, idx) => {
+    <section className='py-8 bg-white'>
+      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+        {/* Section Header */}
+        {(title || subtitle) && (
+          <div className="text-center mb-12">
+            {title && (
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                {title}
+              </h2>
+            )}
+            {subtitle && (
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                {subtitle}
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* FAQ Items */}
+        <div className='max-w-4xl mx-auto'>
+          {faqs.map((q, idx) => {
         const isOpen = openIndex === idx;
         return (
           <div
@@ -74,7 +108,9 @@ function FAQAccordion({ questions, sample_questions }) {
           </div>
         );
       })}
-    </div>
+        </div>
+      </div>
+    </section>
   );
 }
 

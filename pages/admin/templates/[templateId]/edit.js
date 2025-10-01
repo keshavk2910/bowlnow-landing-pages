@@ -185,6 +185,33 @@ export default function EditTemplateSections() {
     });
   };
 
+  // Populate default sections
+  const populateDefaultSections = async () => {
+    if (!confirm('This will populate the template with default sections. Continue?')) {
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/admin/templates/${templateId}/populate-sections`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        // Refresh the template data
+        await fetchTemplateAndComponents()
+        alert(`Successfully populated ${data.sectionsCount} default sections!`)
+      } else {
+        const error = await response.json()
+        alert(error.error || 'Failed to populate sections')
+      }
+    } catch (error) {
+      console.error('Error populating sections:', error)
+      alert('Failed to populate sections')
+    }
+  }
+
   // Field Management within Sections
   const addFieldToSection = (sectionIndex) => {
     const newField = {
@@ -460,12 +487,22 @@ export default function EditTemplateSections() {
             <h3 className='text-lg font-semibold text-gray-900'>
               Template Sections
             </h3>
-            <button
-              onClick={addSection}
-              className='bg-green-600 text-white px-4 py-2 rounded-md text-sm hover:bg-green-700'
-            >
-              Add Section
-            </button>
+            <div className="flex space-x-2">
+              {formData.config_schema.sections.length === 0 && (
+                <button
+                  onClick={populateDefaultSections}
+                  className='bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700'
+                >
+                  Populate Default Sections
+                </button>
+              )}
+              <button
+                onClick={addSection}
+                className='bg-green-600 text-white px-4 py-2 rounded-md text-sm hover:bg-green-700'
+              >
+                Add Section
+              </button>
+            </div>
           </div>
 
           <div className='p-6'>
@@ -498,12 +535,32 @@ export default function EditTemplateSections() {
                   Templates are organized into sections. Each section can
                   contain multiple fields.
                 </p>
-                <button
-                  onClick={addSection}
-                  className='bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700'
-                >
-                  Add Your First Section
-                </button>
+                <div className="space-y-2">
+                  <button
+                    onClick={populateDefaultSections}
+                    className='bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 mr-2'
+                  >
+                    Populate Default Sections
+                  </button>
+                  <button
+                    onClick={addSection}
+                    className='bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700'
+                  >
+                    Add Your First Section
+                  </button>
+                </div>
+                
+                {/* Debug Info */}
+                <div className="mt-8 p-4 bg-gray-100 rounded-lg text-left">
+                  <h4 className="text-sm font-medium text-gray-700 mb-2">Debug Info:</h4>
+                  <div className="text-xs text-gray-600 space-y-1">
+                    <div>Template ID: {templateId}</div>
+                    <div>Template Name: {template?.name}</div>
+                    <div>Template Type: {template?.type}</div>
+                    <div>Config Schema: {template?.config_schema ? 'Present' : 'Missing'}</div>
+                    <div>Sections Count: {template?.config_schema?.sections?.length || 0}</div>
+                  </div>
+                </div>
               </div>
             )}
           </div>
@@ -789,9 +846,12 @@ function FieldEditor({
             <option value='textarea'>Textarea</option>
             <option value='url'>URL Input</option>
             <option value='image'>Image Upload</option>
+            <option value='checkbox'>Checkbox</option>
             <option value='slider'>Image Slider</option>
             <option value='faq'>FAQ Section</option>
+            <option value='table'>Table/Grid</option>
             <option value='richtext'>Rich Text (WYSIWYG)</option>
+            <option value='cardgrid'>Card Grid</option>
           </select>
         </div>
 
@@ -836,39 +896,117 @@ function FieldEditor({
       </div>
 
       {/* Field-specific settings */}
-      {(field.type === 'slider' || field.type === 'faq') && (
+      {(field.type === 'slider' || field.type === 'faq' || field.type === 'table' || field.type === 'cardgrid') && (
         <div className='mt-6 pt-4 border-t border-gray-200'>
           <h6 className='text-sm font-medium text-gray-700 mb-3'>
-            {field.type === 'slider' ? 'Slider Settings' : 'FAQ Settings'}
+            {field.type === 'slider' ? 'Slider Settings' : 
+             field.type === 'faq' ? 'FAQ Settings' : 
+             field.type === 'table' ? 'Table Settings' :
+             field.type === 'cardgrid' ? 'Card Grid Settings' :
+             'Component Settings'}
           </h6>
-          <div className='grid grid-cols-2 gap-4'>
-            <div>
-              <label className='block text-xs font-medium text-gray-700 mb-1'>
-                Minimum {field.type === 'slider' ? 'Slides' : 'FAQs'}
-              </label>
-              <input
-                type='number'
-                min='1'
-                max='10'
-                value={field.type === 'slider' ? (field.minSlides || 1) : (field.minFAQs || 1)}
-                onChange={(e) => onUpdateField(sectionIndex, fieldIndex, field.type === 'slider' ? 'minSlides' : 'minFAQs', parseInt(e.target.value))}
-                className='w-full px-2 py-1 border border-gray-300 rounded text-sm'
-              />
+          
+          {field.type === 'table' ? (
+            <div className='space-y-4'>
+              <div className='grid grid-cols-2 gap-4'>
+                <div>
+                  <label className='block text-xs font-medium text-gray-700 mb-1'>
+                    Minimum Rows
+                  </label>
+                  <input
+                    type='number'
+                    min='0'
+                    max='100'
+                    value={field.minRows || 0}
+                    onChange={(e) => onUpdateField(sectionIndex, fieldIndex, 'minRows', parseInt(e.target.value))}
+                    className='w-full px-2 py-1 border border-gray-300 rounded text-sm'
+                  />
+                </div>
+                <div>
+                  <label className='block text-xs font-medium text-gray-700 mb-1'>
+                    Maximum Rows
+                  </label>
+                  <input
+                    type='number'
+                    min='1'
+                    max='100'
+                    value={field.maxRows || 50}
+                    onChange={(e) => onUpdateField(sectionIndex, fieldIndex, 'maxRows', parseInt(e.target.value))}
+                    className='w-full px-2 py-1 border border-gray-300 rounded text-sm'
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <label className='block text-xs font-medium text-gray-700 mb-1'>
+                  Table Columns (JSON format)
+                </label>
+                <textarea
+                  rows={4}
+                  value={field.columns ? JSON.stringify(field.columns, null, 2) : ''}
+                  onChange={(e) => {
+                    try {
+                      const columns = JSON.parse(e.target.value)
+                      onUpdateField(sectionIndex, fieldIndex, 'columns', columns)
+                    } catch (error) {
+                      // Invalid JSON, don't update
+                    }
+                  }}
+                  className='w-full px-2 py-1 border border-gray-300 rounded text-sm font-mono'
+                  placeholder='[{"key": "title", "label": "Title", "type": "text"}, {"key": "description", "label": "Description", "type": "text"}]'
+                />
+                <p className='text-xs text-gray-500 mt-1'>
+                  Define table columns in JSON format. Each column needs: key, label, type
+                </p>
+              </div>
             </div>
-            <div>
-              <label className='block text-xs font-medium text-gray-700 mb-1'>
-                Maximum {field.type === 'slider' ? 'Slides' : 'FAQs'}
-              </label>
-              <input
-                type='number'
-                min='1'
-                max={field.type === 'slider' ? 20 : 50}
-                value={field.type === 'slider' ? (field.maxSlides || 10) : (field.maxFAQs || 20)}
-                onChange={(e) => onUpdateField(sectionIndex, fieldIndex, field.type === 'slider' ? 'maxSlides' : 'maxFAQs', parseInt(e.target.value))}
-                className='w-full px-2 py-1 border border-gray-300 rounded text-sm'
-              />
+          ) : field.type === 'cardgrid' ? (
+            <div className='space-y-4'>
+              <div className='grid grid-cols-2 gap-4'>
+                <div>
+                  <label className='block text-xs font-medium text-gray-700 mb-1'>Columns</label>
+                  <input type='number' min='1' max='6' value={field.columns || 3} 
+                    onChange={(e) => onUpdateField(sectionIndex, fieldIndex, 'columns', parseInt(e.target.value))}
+                    className='w-full px-2 py-1 border border-gray-300 rounded text-sm' />
+                </div>
+                <div>
+                  <label className='block text-xs font-medium text-gray-700 mb-1'>Max Rows</label>
+                  <input type='number' min='1' max='10' value={field.maxRows || 3} 
+                    onChange={(e) => onUpdateField(sectionIndex, fieldIndex, 'maxRows', parseInt(e.target.value))}
+                    className='w-full px-2 py-1 border border-gray-300 rounded text-sm' />
+                </div>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className='grid grid-cols-2 gap-4'>
+              <div>
+                <label className='block text-xs font-medium text-gray-700 mb-1'>
+                  Minimum {field.type === 'slider' ? 'Slides' : 'FAQs'}
+                </label>
+                <input
+                  type='number'
+                  min='1'
+                  max='10'
+                  value={field.type === 'slider' ? (field.minSlides || 1) : (field.minFAQs || 1)}
+                  onChange={(e) => onUpdateField(sectionIndex, fieldIndex, field.type === 'slider' ? 'minSlides' : 'minFAQs', parseInt(e.target.value))}
+                  className='w-full px-2 py-1 border border-gray-300 rounded text-sm'
+                />
+              </div>
+              <div>
+                <label className='block text-xs font-medium text-gray-700 mb-1'>
+                  Maximum {field.type === 'slider' ? 'Slides' : 'FAQs'}
+                </label>
+                <input
+                  type='number'
+                  min='1'
+                  max={field.type === 'slider' ? 20 : 50}
+                  value={field.type === 'slider' ? (field.maxSlides || 10) : (field.maxFAQs || 20)}
+                  onChange={(e) => onUpdateField(sectionIndex, fieldIndex, field.type === 'slider' ? 'maxSlides' : 'maxFAQs', parseInt(e.target.value))}
+                  className='w-full px-2 py-1 border border-gray-300 rounded text-sm'
+                />
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
