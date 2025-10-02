@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react'
 import FileUpload from '../FileUpload'
 import RichTextField from './RichTextField'
 
-export default function TableField({ 
-  value = [], 
-  onChange, 
+export default function TableField({
+  value = [],
+  onChange,
   label = "Schedule Table",
   description = "Manage your schedule table data",
   columns = [],
@@ -14,18 +14,34 @@ export default function TableField({
   siteId = null,
   pageId = null
 }) {
-  const [tableData, setTableData] = useState(Array.isArray(value) ? value : [])
-  const [tableColumns, setTableColumns] = useState(Array.isArray(columns) && columns.length > 0 ? columns : [
-    { key: 'day', label: 'Day', type: 'text' },
-    { key: 'time', label: 'Time', type: 'text' },
-    { key: 'league', label: 'League', type: 'text' },
-    { key: 'type', label: 'Type', type: 'text' },
-    { key: 'per_team', label: 'Per Team', type: 'number' }
-  ])
+  // Support both old array format and new object format
+  const initialData = value?.table_data || (Array.isArray(value) ? value : [])
+  const initialColumns = value?.table_columns || columns
+
+  const [tableData, setTableData] = useState(initialData)
+  const [tableColumns, setTableColumns] = useState(
+    Array.isArray(initialColumns) && initialColumns.length > 0
+      ? initialColumns
+      : [
+          { key: 'day', label: 'Day', type: 'text' },
+          { key: 'time', label: 'Time', type: 'text' },
+          { key: 'league', label: 'League', type: 'text' },
+          { key: 'type', label: 'Type', type: 'text' },
+          { key: 'per_team', label: 'Per Team', type: 'number' }
+        ]
+  )
 
   useEffect(() => {
-    setTableData(Array.isArray(value) ? value : [])
+    const newData = value?.table_data || (Array.isArray(value) ? value : [])
+    setTableData(newData)
   }, [value])
+
+  useEffect(() => {
+    const newColumns = value?.table_columns || columns
+    if (Array.isArray(newColumns) && newColumns.length > 0) {
+      setTableColumns(newColumns)
+    }
+  }, [value?.table_columns, columns])
 
   const addRow = () => {
     if (tableData.length >= maxRows) {
@@ -38,18 +54,18 @@ export default function TableField({
       newRow[col.key] = col.type === 'number' ? 0 : ''
     })
     newRow.id = Date.now()
-    
+
     const updatedData = [...tableData, newRow]
     setTableData(updatedData)
-    onChange(updatedData)
+    onChange({ table_data: updatedData, table_columns: tableColumns })
   }
 
   const updateRow = (rowIndex, columnKey, value) => {
-    const updatedData = tableData.map((row, index) => 
+    const updatedData = tableData.map((row, index) =>
       index === rowIndex ? { ...row, [columnKey]: value } : row
     )
     setTableData(updatedData)
-    onChange(updatedData)
+    onChange({ table_data: updatedData, table_columns: tableColumns })
   }
 
   const removeRow = (rowIndex) => {
@@ -62,7 +78,7 @@ export default function TableField({
 
     const updatedData = tableData.filter((_, index) => index !== rowIndex)
     setTableData(updatedData)
-    onChange(updatedData)
+    onChange({ table_data: updatedData, table_columns: tableColumns })
   }
 
   const moveRow = (fromIndex, toIndex) => {
@@ -71,9 +87,9 @@ export default function TableField({
     const updatedData = [...tableData]
     const [movedRow] = updatedData.splice(fromIndex, 1)
     updatedData.splice(toIndex, 0, movedRow)
-    
+
     setTableData(updatedData)
-    onChange(updatedData)
+    onChange({ table_data: updatedData, table_columns: tableColumns })
   }
 
   const addColumn = () => {
@@ -98,7 +114,7 @@ export default function TableField({
       [columnKey]: columnType === 'number' ? 0 : ''
     }))
     setTableData(updatedData)
-    onChange(updatedData)
+    onChange({ table_data: updatedData, table_columns: updatedColumns })
   }
 
   const removeColumn = (columnKey) => {
@@ -118,7 +134,7 @@ export default function TableField({
       return rest
     })
     setTableData(updatedData)
-    onChange(updatedData)
+    onChange({ table_data: updatedData, table_columns: updatedColumns })
   }
 
   const renderCell = (row, column, rowIndex) => {

@@ -4,7 +4,10 @@
       "mcp__supabase__list_tables",
       "mcp__supabase__execute_sql",
       "Bash(npm run dev:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(curl:*)",
+      "Bash(python:*)",
+      "Bash(node:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

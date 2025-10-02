@@ -29,6 +29,7 @@ export default function BirthdayPartiesWithSlider({
   var {
     header = {},
     main_cta = {},
+    features_slider = {},
     contact_form,
     party_slider,
     party_started,
@@ -110,6 +111,18 @@ export default function BirthdayPartiesWithSlider({
             )}
           </div>
         </section>
+      )}
+
+      {/* Features Section */}
+      {features_slider.enabled && (
+        <section className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-15'>
+          <h3 className='text-3xl md:text-5xl font-bold text-black mb-4'>
+            {features_slider.slider_1_title || 'Our Features'}
+          </h3>
+        </section>
+      )}
+      {features_slider.enabled && (
+        <Slider1Generator content={features_slider} themeColor={themeColor} />
       )}
 
       {/* Book Your Event Left - Optional */}

@@ -18,6 +18,7 @@ export default function SliderField({
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    console.log('SliderField: Value changed from parent:', value);
     setSlides(Array.isArray(value) ? value : []);
   }, [value]);
 
@@ -62,6 +63,8 @@ export default function SliderField({
     const updatedSlides = slides.map((slide, i) =>
       i === index ? { ...slide, ...updates } : slide
     );
+    console.log('SliderField: Updating slide', index, 'with', updates);
+    console.log('SliderField: Updated slides:', updatedSlides);
     setSlides(updatedSlides);
     onChange(updatedSlides);
   };
@@ -123,16 +126,29 @@ export default function SliderField({
                 {/* Image Preview and Edit */}
                 <div className='space-y-2'>
                   <div className='aspect-video bg-gray-100 rounded-lg overflow-hidden'>
-                    <img
-                      src={slide.url}
-                      alt={slide.title || `Slide ${index + 1}`}
-                      className='w-full h-full object-cover'
-                    />
+                    {slide.url ? (
+                      <img
+                        key={slide.url}
+                        src={slide.url}
+                        alt={slide.title || `Slide ${index + 1}`}
+                        className='w-full h-full object-cover'
+                        onError={(e) => {
+                          console.error('Image load error:', slide.url)
+                          e.target.src = '/api/placeholder/400/300'
+                        }}
+                      />
+                    ) : (
+                      <div className='w-full h-full flex items-center justify-center text-gray-400'>
+                        <span>No image</span>
+                      </div>
+                    )}
                   </div>
                   <div className='space-y-2'>
                     <FileUpload
+                      key={`slide-upload-${slide.id || index}-${slide.url}`}
                       value={slide.url}
                       onFileUploaded={(uploadedFile) => {
+                        console.log('SliderField: File uploaded for slide', index, uploadedFile);
                         if (uploadedFile) {
                           updateSlideMultiple(index, {
                             url: uploadedFile.url,

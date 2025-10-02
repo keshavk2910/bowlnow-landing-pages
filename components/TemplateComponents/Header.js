@@ -18,7 +18,7 @@ const Header = forwardRef(function Header({ header = {}, themeColor = '#4F46E5',
               className='w-[99px] h-[80px]'
             />
           </div>
-          <div className=''>
+          {header.header_cta_link && (<div className=''>
             <a
               href={header.header_cta_link || '#form'}
               className='text-white px-6 py-2 rounded-full font-semibold'
@@ -29,7 +29,8 @@ const Header = forwardRef(function Header({ header = {}, themeColor = '#4F46E5',
             >
               {header.header_cta_text || 'Book an Event'}
             </a>
-          </div>
+          </div>)}
+          
         </div>
       </div>
     </header>

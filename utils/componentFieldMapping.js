@@ -178,7 +178,7 @@ export function getComponentFieldSchema(componentName) {
         { key: 'enabled', type: 'checkbox', required: false },
         { key: 'title', type: 'text', required: false },
         { key: 'subtitle', type: 'text', required: false },
-        { key: 'description', type: 'textarea', required: false },
+        { key: 'description', type: 'richtext', required: false },
         { key: 'background_image', type: 'image', required: false },
         { key: 'image_alt', type: 'text', required: false },
         { key: 'secondary_image', type: 'image', required: false },

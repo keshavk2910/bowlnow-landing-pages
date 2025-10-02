@@ -15,122 +15,164 @@ import 'swiper/css/effect-coverflow';
 const sliderStyles = `
   .slider2-modern-slide {
     display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    height: 600px;
-    border-radius: 2.5rem;
+    flex-direction: column;
+    height: auto;
+    border-radius: 1.5rem;
     overflow: hidden;
     position: relative;
-    box-shadow: 0 12px 48px 0 rgba(0,0,0,0.22);
-    background: #18181b;
-    transition: box-shadow 0.4s cubic-bezier(.4,0,.2,1);
+    box-shadow: 0 20px 60px 0 rgba(0,0,0,0.5);
+    transition: box-shadow 0.4s cubic-bezier(.4,0,.2,1), transform 0.4s cubic-bezier(.4,0,.2,1);
   }
-  @media (max-width: 900px) {
-    .slider2-modern-slide {
-      height: 65vh;
-      border-radius: 1.5rem;
-    }
-  }
-  @media (max-width: 640px) {
-    .slider2-modern-slide {
-      height: 60vh;
-      border-radius: 1rem;
-    }
-  }
-  @media (max-width: 480px) {
-    .slider2-modern-slide {
-      height: 65vh;
-      border-radius: 0.75rem;
-    }
+  .swiper-slide-active .slider2-modern-slide {
+    box-shadow: 0 25px 80px 0 rgba(0,0,0,0.7);
   }
   .slider2-modern-slide .slider2-modern-bg {
-    position: absolute;
-    inset: 0;
+    position: relative;
     width: 100%;
-    height: 100%;
+    height: 400px;
     background-size: cover;
     background-position: center;
-    z-index: 0;
-    transition: filter 0.4s cubic-bezier(.4,0,.2,1);
+    transition: transform 0.4s cubic-bezier(.4,0,.2,1);
+  }
+  @media (min-width: 640px) {
+    .slider2-modern-slide .slider2-modern-bg {
+      height: 500px;
+    }
+  }
+  @media (min-width: 1024px) {
+    .slider2-modern-slide .slider2-modern-bg {
+      height: 600px;
+    }
   }
   .slider2-modern-slide .slider2-modern-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg,rgba(0,0,0,0.20) 0%,rgba(0,0,0,0.75) 100%);
-    z-index: 1;
+    background: linear-gradient(180deg,rgba(0,0,0,0.1) 0%,rgba(0,0,0,0.3) 100%);
     pointer-events: none;
   }
   .slider2-modern-content {
     position: relative;
-    z-index: 2;
     width: 100%;
-    padding: 3.5rem 2.5rem 2.5rem 2.5rem;
+    padding: 2rem 1.5rem;
     text-align: center;
     color: #fff;
-    opacity: 0;
-    transform: translateY(32px) scale(0.97);
-    transition: opacity 0.5s cubic-bezier(.4,0,.2,1), transform 0.5s cubic-bezier(.4,0,.2,1);
-    will-change: opacity, transform;
-    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.4s cubic-bezier(.4,0,.2,1);
   }
-  @media (max-width: 640px) {
+  @media (min-width: 640px) {
     .slider2-modern-content {
-      padding: 1.5rem 1rem 1.5rem 1rem;
+      padding: 2.5rem 2rem;
     }
   }
-  .swiper-slide-active .slider2-modern-content {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    pointer-events: auto;
-    transition-delay: 0.1s;
+  @media (min-width: 1024px) {
+    .slider2-modern-content {
+      padding: 3rem 2.5rem;
+    }
+  }
+  .slider2-modern-content h4 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #fff;
+    line-height: 1.2;
+  }
+  @media (min-width: 640px) {
+    .slider2-modern-content h4 {
+      font-size: 2.25rem;
+      margin-bottom: 1.25rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .slider2-modern-content h4 {
+      font-size: 2.75rem;
+      margin-bottom: 1.5rem;
+    }
+  }
+  .slider2-description h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+  }
+  .slider2-description h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+  }
+  .slider2-description p {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+  }
+  .slider2-description ul,
+  .slider2-description ol {
+    margin: 0.75rem 0;
+    padding-left: 1.5rem;
+    color: rgba(255, 255, 255, 0.85);
+    text-align: left;
+  }
+  .slider2-description li {
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+  }
+  .slider2-description strong,
+  .slider2-description b {
+    font-weight: 600;
+    color: #fff;
   }
   .slider2-modern-btn {
     display: inline-block;
     margin-top: 1.5rem;
-    padding: 1rem 2.75rem;
+    padding: 0.875rem 2.5rem;
     border-radius: 9999px;
     border: 2px solid #fff;
-    background: rgba(255,255,255,0.08);
+    background: transparent;
     color: #fff;
     font-weight: 600;
-    font-size: 1.15rem;
+    font-size: 1rem;
     letter-spacing: 0.01em;
-    transition: background 0.2s, color 0.2s, border 0.2s;
+    transition: background 0.3s, transform 0.2s;
     text-decoration: none;
-    backdrop-filter: blur(2px);
   }
   .slider2-modern-btn:hover {
     background: #fff;
-    color: #18181b;
-    border-color: #fff;
+    color: #000;
+    transform: scale(1.05);
   }
   .slider2-modern-nav {
     position: absolute;
     top: 50%;
     z-index: 10;
     transform: translateY(-50%);
-    background: rgba(24,24,27,0.7);
-    border: 2px solid #fff;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.4);
     border-radius: 9999px;
-    width: 60px;
-    height: 60px;
+    width: 56px;
+    height: 56px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: background 0.2s, border 0.2s;
-    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.18);
+    transition: all 0.3s cubic-bezier(.4,0,.2,1);
+    box-shadow: 0 4px 20px 0 rgba(0,0,0,0.3);
+    backdrop-filter: blur(8px);
   }
   .slider2-modern-nav:hover {
-    background: #fff;
-    border-color: #fff;
+    background: rgba(255, 255, 255, 1);
+    border-color: rgba(255, 255, 255, 1);
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 6px 30px 0 rgba(255,255,255,0.3);
   }
   .slider2-modern-nav svg {
     stroke: #fff;
-    transition: stroke 0.2s;
+    transition: stroke 0.3s;
   }
   .slider2-modern-nav:hover svg {
-    stroke: #18181b;
+    stroke: #000;
   }
   /* Hide navigation on mobile */
   @media (max-width: 900px) {
@@ -141,23 +183,31 @@ const sliderStyles = `
   .slider2-modern-pagination {
     position: absolute;
     left: 50%;
-    bottom: 2.5rem;
+    bottom: 1.5rem;
     transform: translateX(-50%);
     z-index: 10;
     display: flex;
     gap: 0.75rem;
   }
   .slider2-modern-pagination .swiper-pagination-bullet {
-    width: 16px;
-    height: 16px;
-    background: #fff;
-    opacity: 0.4;
+    width: 14px;
+    height: 14px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 1;
     border-radius: 9999px;
-    transition: opacity 0.2s, background 0.2s;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s cubic-bezier(.4,0,.2,1);
+    cursor: pointer;
+  }
+  .slider2-modern-pagination .swiper-pagination-bullet:hover {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: rgba(255, 255, 255, 0.6);
   }
   .slider2-modern-pagination .swiper-pagination-bullet-active {
-    opacity: 1;
     background: #fff;
+    border-color: #fff;
+    width: 32px;
+    border-radius: 7px;
   }
   /* Swipe icon styles */
   .slider2-modern-swipe-icon {
@@ -235,7 +285,6 @@ const Slider2Section = ({ content, themeColor }) => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
-  const [activeSlideIndex, setActiveSlideIndex] = useState(1);
 
   // Detect mobile (width <= 900px)
   useEffect(() => {
@@ -272,8 +321,8 @@ const Slider2Section = ({ content, themeColor }) => {
   }
 
   return (
-    <section className='w-full mx-auto px-2 sm:px-4 lg:px-12 py-20 bg-black min-h-[90vh] flex flex-col justify-center slider2'>
-      <h3 className='text-4xl md:text-6xl font-bold text-white mb-12 text-center tracking-tight drop-shadow-lg'>
+    <section className='w-full mx-auto px-2 sm:px-4 lg:px-12 py-16 md:py-20 bg-black min-h-[90vh] flex flex-col justify-center slider2'>
+      <h3 className='text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8 md:mb-12 text-center tracking-tight'>
         {content?.slider2_title || 'Parties & Events'}
       </h3>
       <div className='w-full relative flex flex-col items-center'>
@@ -309,9 +358,6 @@ const Slider2Section = ({ content, themeColor }) => {
               swiper.navigation.update();
             }
           }}
-          onSlideChange={(swiper) => {
-            setActiveSlideIndex(swiper.realIndex);
-          }}
           pagination={{
             el: '.slider2-modern-pagination',
             clickable: true,
@@ -323,8 +369,8 @@ const Slider2Section = ({ content, themeColor }) => {
           }}
           className='slider2-modern-swiper w-full max-w-8xl'
           style={{
-            paddingBottom: '120px',
-            paddingTop: '40px',
+            paddingBottom: '80px',
+            paddingTop: '20px',
           }}
           breakpoints={{
             320: {
@@ -347,23 +393,35 @@ const Slider2Section = ({ content, themeColor }) => {
         >
           {loopedSlides.map((slide, idx) => (
             <SwiperSlide key={idx}>
-              <div
-                className={`slider2-modern-slide group border-2 border-white  `}
-              >
+              <div className='slider2-modern-slide'>
+                {/* Image Section */}
                 <div
                   className='slider2-modern-bg'
                   style={{
                     backgroundColor: themeColor || '#222',
                     backgroundImage: `url(${slide.image || slide.url})`,
                   }}
-                />
-                <div className='slider2-modern-overlay' />
+                >
+                  <div className='slider2-modern-overlay' />
+                </div>
+
+                {/* Text Content Section - Below Image */}
                 <div className='slider2-modern-content'>
+                  {slide.title && (
+                    <h4>{slide.title}</h4>
+                  )}
+                  {slide.description && (
+                    <div
+                      className='slider2-description'
+                      dangerouslySetInnerHTML={{ __html: slide.description }}
+                    />
+                  )}
                   {slide.buttonText && (
                     <a
                       href={slide.buttonLink}
                       className='slider2-modern-btn'
                       target='_blank'
+                      rel='noopener noreferrer'
                     >
                       {slide.buttonText}
                     </a>
@@ -475,25 +533,6 @@ const Slider2Section = ({ content, themeColor }) => {
           {/* Pagination */}
           <div className='slider2-modern-pagination' />
         </Swiper>
-
-        {/* Title and Description below slider */}
-        <div className='w-full max-w-4xl mx-auto mt-8 text-center text-white'>
-          {loopedSlides[activeSlideIndex] && (
-            <div className='transition-all duration-500 ease-in-out'>
-              {loopedSlides[activeSlideIndex].title && (
-                <h4 className='text-3xl md:text-5xl font-bold mb-6 drop-shadow-lg tracking-tight'>
-                  {loopedSlides[activeSlideIndex].title}
-                </h4>
-              )}
-              {loopedSlides[activeSlideIndex].description && (
-                <div
-                  className='text-white text-lg md:text-xl font-medium drop-shadow-md max-w-3xl mx-auto'
-                  dangerouslySetInnerHTML={{ __html: loopedSlides[activeSlideIndex].description }}
-                ></div>
-              )}
-            </div>
-          )}
-        </div>
       </div>
     </section>
   );

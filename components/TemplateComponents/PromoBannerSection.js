@@ -2,13 +2,13 @@ import React from 'react'
 
 export default function PromoBannerSection({ content = {}, themeColor = '#4F46E5', section = {} }) {
   // Section metadata
-  const sectionTitle = section.title || 'Promo Banner Section'
-  const sectionDescription = section.description || 'Promotional banner with image background and call-to-action'
+  const sectionTitle = section.title || ''
+  const sectionDescription = section.description || ''
   const {
-    title = 'Limited Time Offer',
-    subtitle = 'Don\'t miss out on our special promotion!',
-    cta_text = 'Claim Offer',
-    cta_link = '#',
+    title = '',
+    subtitle = '',
+    cta_text = '',
+    cta_link = '',
     background_image = '/api/placeholder/1600/600',
     overlay_opacity = 0.5,
     text_alignment = 'center',

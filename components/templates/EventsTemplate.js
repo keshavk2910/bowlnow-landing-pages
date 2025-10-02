@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import Slider1Generator from '../TemplateComponents/sliders/Slider1-Generator';
-import BookYourEventHalf from '../TemplateComponents/BookYourEventHalf';
+import BookYourEventLeft from '../TemplateComponents/BookYourEventLeft';
 import Slider2Section from '../TemplateComponents/sliders/Slider2Section';
 import Footer from '../TemplateComponents/Footer';
 import Header2 from '../TemplateComponents/Header2';
@@ -47,7 +47,7 @@ export default function EventsTemplate({
     events_slider = {},
     main_cta = {},
     contact_form = {},
-    book_your_event_half = {},
+    book_your_event_left = {},
   } = content;
   // Default values with proper null checking
   const heroTitle = header.hero_title || 'Welcome to Our Business';
@@ -148,13 +148,11 @@ export default function EventsTemplate({
       {features_slider.enabled && (
         <Slider1Generator content={features_slider} themeColor={themeColor} />
       )}
-      {book_your_event_half.enabled && (
-        <section className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-15'>
-          <BookYourEventHalf
-            content={book_your_event_half}
-            themeColor={themeColor}
-          />
-        </section>
+      {book_your_event_left.enabled && (
+        <BookYourEventLeft
+          content={book_your_event_left}
+          themeColor={themeColor}
+        />
       )}
       {events_slider.enabled && (
         <Slider2Section content={events_slider} themeColor={themeColor} />

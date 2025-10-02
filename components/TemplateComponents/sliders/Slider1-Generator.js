@@ -5,54 +5,14 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
-const DEFAULT_SLIDES = [
-  {
-    title: 'Open Bowling',
-    description:
-      'Bowling is fun for the whole family. Everyone can bowl, nobody has to sit on the side line.',
-    image:
-      'https://partners.bowlnow.com/wp-content/uploads/2025/04/t4200x2520-e1744691387553.webp',
-    link: '#open-bowling',
-    buttonText: 'Know More',
-  },
-  {
-    title: 'Specials',
-    description:
-      'Bowling is fun for the whole family. Everyone can bowl, nobody has to sit on the side line.',
-    image:
-      'https://partners.bowlnow.com/wp-content/uploads/2025/04/t4200x2520-e1744691387553.webp',
-    link: '#specials',
-    buttonText: 'Know More',
-  },
-  {
-    title: 'Company Events',
-    description:
-      'Perfect venue for team building and corporate celebrations. Create memorable experiences for your team.',
-    image:
-      'https://partners.bowlnow.com/wp-content/uploads/2025/04/t4200x2520-e1744691387553.webp',
-    link: '#company-events',
-    buttonText: 'Know More',
-  },
-  {
-    title: 'Birthday Parties',
-    description:
-      'Celebrate your special day with friends and family. Make your birthday unforgettable with our party packages.',
-    image:
-      'https://partners.bowlnow.com/wp-content/uploads/2025/04/t4200x2520-e1744691387553.webp',
-    link: '#birthday-parties',
-    buttonText: 'Know More',
-  },
-];
-
 const Slider1Generator = ({ content, themeColor }) => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   const paginationRef = useRef(null);
   const [swiperReady, setSwiperReady] = useState(false);
 
-  const actualSlides = content?.slider1?.length
-    ? content?.slider1
-    : DEFAULT_SLIDES;
+  // Get slides from content.slides (from SliderField) or content.slider1 (legacy)
+  const actualSlides = content?.slides || content?.slider1 || [];
 
   // Swiper navigation fix: wait for refs to be attached
   useEffect(() => {

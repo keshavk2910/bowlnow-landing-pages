@@ -176,9 +176,13 @@ export default function Review({ content = {}, themeColor = '#4F46E5', section =
   const rawReviews = content?.reviews || [];
   const show_ratings = content?.show_ratings !== false; // Default true
   const show_locations = content?.show_locations !== false; // Default true
-  console.log(rawReviews);
+
+  // Support both old array format and new object format
+  const actualReviews = rawReviews?.table_data || (Array.isArray(rawReviews) ? rawReviews : []);
+  console.log(actualReviews);
+
   // Filter out reviews with blank required fields (name and text)
-  const validReviews = rawReviews.filter(review =>
+  const validReviews = actualReviews.filter(review =>
     review?.name?.trim() && review?.review?.trim()
   );
   console.log(validReviews);

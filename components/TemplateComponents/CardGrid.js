@@ -15,12 +15,18 @@ export default function CardGrid({ content = {}, themeColor = '#4F46E5', section
     min_cards_per_row = 1
   } = content
 
+  // Support both old array format and new object format
+  const actualCards = cards?.table_data || (Array.isArray(cards) ? cards : [])
+
+  // Filter to show only enabled cards (cards where enabled !== false)
+  const enabledCards = actualCards.filter(card => card.enabled !== false)
+
   // Calculate actual columns based on user input and constraints
   const actualColumns = Math.min(Math.max(parseInt(columns) || 3, min_cards_per_row), max_cards_per_row)
-  
+
   // If rows is specified, limit the number of cards displayed
-  const maxCards = rows ? actualColumns * parseInt(rows) : cards.length
-  const displayCards = cards.slice(0, maxCards)
+  const maxCards = rows ? actualColumns * parseInt(rows) : enabledCards.length
+  const displayCards = enabledCards.slice(0, maxCards)
 
   // Dynamic grid classes based on actual columns
   const getGridCols = (cols) => {
@@ -94,7 +100,7 @@ export default function CardGrid({ content = {}, themeColor = '#4F46E5', section
                     <img
                       src={card.image}
                       alt={card.title || 'card'}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-fill"
                     />
                   </div>
                 ) : card.icon ? (

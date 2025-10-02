@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
-export default function TableSection({ 
-  content = {}, 
+export default function TableSection({
+  content = {},
   themeColor = '#4F46E5',
   className = ''
 }) {
@@ -16,16 +16,29 @@ export default function TableSection({
     hover_effect = true
   } = content
 
-  if (!enabled || !table_data || table_data.length === 0) {
+  // Support both old array format and new object format
+  const actualTableData = table_data?.table_data || (Array.isArray(table_data) ? table_data : [])
+  const actualTableColumns = table_data?.table_columns || table_columns
+
+  if (!enabled || !actualTableData || actualTableData.length === 0) {
     return null
   }
 
   // Default columns if none provided
-  const columns = table_columns && table_columns.length > 0 ? table_columns : [
+  const columns = actualTableColumns && actualTableColumns.length > 0 ? actualTableColumns : [
     { key: 'column1', label: 'Column 1', type: 'text' },
     { key: 'column2', label: 'Column 2', type: 'text' },
     { key: 'column3', label: 'Column 3', type: 'text' }
   ]
+
+  // Filter out columns where all data is null/empty
+  const visibleColumns = columns.filter(column => {
+    // Check if at least one row has a non-null/non-empty value for this column
+    return actualTableData.some(row => {
+      const value = row[column.key]
+      return value !== null && value !== undefined && value !== ''
+    })
+  })
 
   const getCellValue = (row, column) => {
     const value = row[column.key] || ''
@@ -82,7 +95,7 @@ export default function TableSection({
             <table className={tableClasses}>
               <thead className="bg-gray-50">
                 <tr>
-                  {columns.map((column) => (
+                  {visibleColumns.map((column) => (
                     <th
                       key={column.key}
                       className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -93,9 +106,9 @@ export default function TableSection({
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {table_data.map((row, rowIndex) => (
+                {actualTableData.map((row, rowIndex) => (
                   <tr key={row.id || rowIndex} className={rowClasses(rowIndex)}>
-                    {columns.map((column) => (
+                    {visibleColumns.map((column) => (
                       <td
                         key={column.key}
                         className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
@@ -111,9 +124,9 @@ export default function TableSection({
         </div>
 
         {/* Table Info */}
-        {table_data.length > 0 && (
+        {actualTableData.length > 0 && (
           <div className="mt-4 text-center text-sm text-gray-500">
-            Showing {table_data.length} {table_data.length === 1 ? 'row' : 'rows'}
+            Showing {actualTableData.length} {actualTableData.length === 1 ? 'row' : 'rows'}
           </div>
         )}
       </div>

@@ -58,14 +58,16 @@ export default function LandingPageTemplate({
     promo_banner = {},
     book_your_event_left = {},
     card_grid = {},
+    card_grid_2 = {},
+    card_grid_3 = {},
     register_now_section = {},
     review_section = {},
   } = content;
   // Default values with proper null checking
   const heroTitle = header.hero_title || 'Welcome to Our Business';
   const heroSubtitle = header.hero_subtitle || 'Experience excellence with our premium services';
-  const ctaText = main_cta.cta_text || 'Get Started';
-  const ctaLink = main_cta.cta_link || '#contact';
+  const ctaText = main_cta.cta_text || '';
+  const ctaLink = main_cta.cta_link || '';
   const heroBackground = header.hero_background || '/api/placeholder/1920/1080';
   const themeColor = site?.settings?.theme_color || '#4F46E5';
 
@@ -99,9 +101,9 @@ export default function LandingPageTemplate({
                     {heroSubtitle}
                   </p>
                 )}
-                <div className='space-y-4 sm:space-y-0 sm:space-x-4 sm:flex sm:justify-start'>
+                {header.ctaLink && ( <div className='space-y-4 sm:space-y-0 sm:space-x-4 sm:flex sm:justify-start'>
                   <a
-                    href={ctaLink}
+                    href={header.ctaLink}
                     className='inline-block px-8 py-3 text-lg font-semibold rounded-full transition-colors duration-200 text-white'
                     style={{
                       backgroundColor: themeColor,
@@ -114,9 +116,10 @@ export default function LandingPageTemplate({
                       (e.target.style.backgroundColor = themeColor)
                     }
                   >
-                    {ctaText}
+                    {header.ctaText}
                   </a>
-                </div>
+                </div>)}
+               
               </div>
             </div>
 
@@ -157,12 +160,7 @@ export default function LandingPageTemplate({
         <TableSection content={table_section} themeColor={themeColor} />
       )}
 
-      {/* Promo Banner Section */}
-      {promo_banner.enabled && (
-        <section className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-15'>
-          <PromoBannerSection content={promo_banner} themeColor={themeColor} />
-        </section>
-      )}
+      
 
       {/* Book Your Event Left Section */}
       {book_your_event_left.enabled && (
@@ -174,6 +172,17 @@ export default function LandingPageTemplate({
         <CardGrid content={card_grid} themeColor={themeColor} />
       )}
 
+      {/* Card Grid Section 2 */}
+      {card_grid_2.enabled && (
+        <CardGrid content={card_grid_2} themeColor={themeColor} />
+      )}
+
+      
+      {/* Card Grid Section 3 */}
+      {card_grid_3.enabled && (
+        <CardGrid content={card_grid_3} themeColor={themeColor} />
+      )}
+
       {/* Register Now Section */}
       {register_now_section.enabled && (
         <RegisterNowSection content={register_now_section} themeColor={themeColor} />
@@ -183,10 +192,7 @@ export default function LandingPageTemplate({
         <Slider2Section content={events_slider} themeColor={themeColor} />
       )}
 
-      {/* Review Section */}
-      {review_section.enabled && (
-        <Review content={review_section} themeColor={themeColor} />
-      )}
+      
 
       {/* Contact Form Section */}
       {contact_form.enabled && (
@@ -199,6 +205,18 @@ export default function LandingPageTemplate({
             sessionId={sessionId}
           />
         </div>
+      )}
+
+      {/* Review Section */}
+      {review_section.enabled && (
+        <Review content={review_section} themeColor={themeColor} />
+      )}
+
+      {/* Promo Banner Section */}
+      {promo_banner.enabled && (
+        <section className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-15'>
+          <PromoBannerSection content={promo_banner} themeColor={themeColor} />
+        </section>
       )}
 
       {/* Footer */}
